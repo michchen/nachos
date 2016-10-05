@@ -87,19 +87,13 @@ main(int argc, char **argv)
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
     
-#ifdef THREADS
-    //ThreadTest(2);
-    
-#endif
-    
-    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
+   for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
 	argCount = 1;
 	printf("%s\n", *argv);
         if (!strcmp(*argv, "-z"))               // print copyright
-            printf (copyright);
-        
-        
-    	if (strcmp(*(argv+1), "-P")) {
+            printf (copyright);   
+#ifdef THREADS   
+ 	if (strcmp(*(argv+1), "-P")) {
     		int input =  atoi(*(argv+1));
     		
     		argCount = 2;
@@ -115,6 +109,7 @@ main(int argc, char **argv)
 	    	else
 	    		ASSERT(false);
 	    }
+#endif
 #ifdef USER_PROGRAM
         
         if (!strcmp(*argv, "-x")) {        	// run a user program
