@@ -25,6 +25,17 @@
 #include "system.h"
 #include "syscall.h"
 
+void sysCallExec();
+void sysCallHalt();
+void sysCallExit();
+void sysCallFork();
+void sysCallJoin();
+void sysCallCreate();
+void sysCallOpen();
+void sysCallClose();
+void sysCallRead();
+void sysCallWrite();
+
 #ifdef USE_TLB
 
 //----------------------------------------------------------------------
@@ -38,6 +49,7 @@
 //      info for page referenced.
 //
 //----------------------------------------------------------------------
+
 
 void
 HandleTLBFault(int vaddr)
@@ -160,6 +172,39 @@ void sysCallJoin(){
 
 void sysCallCreate(){
   DEBUG('a', "Create, initiated by user program.\n");
+   // Grab kernel memory sufficient to hold argument string. Note that
+   // this imposes a restriction on the length of the string.
+  int whence;
+  char *stringarg;
+  stringarg = new(std::nothrow) char[128];                                         
+
+  // TOTALLY BOGUS. Just want to extract argument string from
+  // user-mode address space under the assumption that the
+  // memory map is the identity mapping and all pages are
+  // RAM-resident.
+
+    whence = machine->ReadRegister(4); // whence is VIRTUAL address
+                                       //   of first byte of arg string.
+                                       //   IN THIS CASE, virtual=physical.
+
+    fprintf(stderr,"String starts at address %d in user VAS\n", whence);
+
+  // Copy the string from user-land to kernel-land.
+
+    for (int i=0; i<127; i++)
+      if ((stringarg[i]=machine->mainMemory[whence++]) == '\0') break;
+    stringarg[127]='\0';               // Effectively truncates a string
+                                       //   if it's too long. Better,
+                                       //   get string length and error
+                                       //   before copy if too long.
+
+    fprintf(stderr, "Argument string is <%s>\n",stringarg);
+
+    delete [] stringarg;               // No memory leaks.
+
+  // Not returning, so no PC patch-up needed.
+
+    interrupt->Halt();
 }
 
 void sysCallOpen(){
