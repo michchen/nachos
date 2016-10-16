@@ -89,7 +89,6 @@ HandleTLBFault(int vaddr)
 //	"which" is the kind of exception.  The list of possible exceptions 
 //	are in machine.h.
 //----------------------------------------------------------------------
-
 void
 ExceptionHandler(ExceptionType which)
 {
@@ -97,20 +96,92 @@ ExceptionHandler(ExceptionType which)
 
     switch (which) {
       case SyscallException:
-	switch (type) {
-	  case SC_Halt:
-            DEBUG('a', "Shutdown, initiated by user program.\n");
-            interrupt->Halt();
+      	switch (type) {
+      	  case SC_Halt:
+            sysCallHalt();
+            break;
+          case SC_Exit:
+            sysCallExit();
+            break;
+          case SC_Exec:
+            sysCallExec();
+            break;
+          case SC_Join:
+            sysCallJoin();
+            break;
+          case SC_Create:
+            sysCallCreate();
+            break;
+          case SC_Open:
+            sysCallOpen();
+            break;
+          case SC_Read:
+            sysCallRead();
+            break;
+          case SC_Write:
+            sysCallWrite();
+            break;
+          case SC_Close:
+            sysCallClose();
+            break;
+          case SC_Fork:
+            sysCallFork();
+            break;
           default:
-	    printf("Undefined SYSCALL %d\n", type);
-	    ASSERT(false);
-	}
-#ifdef USE_TLB
-      case PageFaultException:
-	HandleTLBFault(machine->ReadRegister(BadVAddrReg));
-	break;
-#endif
-      default: ;
+      	    printf("Undefined SYSCALL %d\n", type);
+      	    ASSERT(false);
+      	}
+
+      #ifdef USE_TLB
+            case PageFaultException:
+      	HandleTLBFault(machine->ReadRegister(BadVAddrReg));
+      	break;
+      #endif
+
+      default: 
+        printf("Unexpected exception caught for user mode %d %d\n",which,type);
+        break;
     }
 }
 
+
+void sysCallHalt(){
+  DEBUG('a', "Shutdown, initiated by user program.\n");
+  interrupt->Halt();
+}
+
+void sysCallExit(){
+  DEBUG('a', "Exit, initiated by user program.\n");
+}
+
+void sysCallJoin(){
+  DEBUG('a', "Joining, initiated by user program.\n");
+}
+
+void sysCallCreate(){
+  DEBUG('a', "Create, initiated by user program.\n");
+}
+
+void sysCallOpen(){
+  DEBUG('a', "Open, initiated by user program.\n");
+}
+
+void sysCallRead(){
+  DEBUG('a', "Read, initiated by user program.\n");
+}
+
+void sysCallWrite(){
+  DEBUG('a', "Write, initiated by user program.\n");
+}
+
+void sysCallClose(){
+  DEBUG('a', "Close, initiated by user program.\n");
+}
+
+void sysCallFork(){
+  DEBUG('a', "Fork, initiated by user program.\n");
+}
+
+void sysCallExec(){
+  DEBUG('a', "Execute, initiated by user program.\n");
+}
