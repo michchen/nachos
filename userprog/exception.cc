@@ -104,6 +104,7 @@ HandleTLBFault(int vaddr)
 void
 ExceptionHandler(ExceptionType which)
 {
+
     int type = machine->ReadRegister(2);
 
     switch (which) {
@@ -152,6 +153,7 @@ ExceptionHandler(ExceptionType which)
 
       default: 
         printf("Unexpected exception caught for user mode %d %d\n",which,type);
+        interrupt->Halt();
         break;
     }
 }
@@ -183,28 +185,37 @@ void sysCallCreate(){
   // memory map is the identity mapping and all pages are
   // RAM-resident.
 
-    whence = machine->ReadRegister(4); // whence is VIRTUAL address
-                                       //   of first byte of arg string.
-                                       //   IN THIS CASE, virtual=physical.
+  whence = machine->ReadRegister(4); // whence is VIRTUAL address
+                                     //   of first byte of arg string.
+                                     //   IN THIS CASE, virtual=physical.
 
-    fprintf(stderr,"String starts at address %d in user VAS\n", whence);
+  fprintf(stderr,"String starts at address %d in user VAS\n", whence);
 
-  // Copy the string from user-land to kernel-land.
+// Copy the string from user-land to kernel-land.
 
-    for (int i=0; i<127; i++)
-      if ((stringarg[i]=machine->mainMemory[whence++]) == '\0') break;
-    stringarg[127]='\0';               // Effectively truncates a string
-                                       //   if it's too long. Better,
-                                       //   get string length and error
+  for (int i=0; i<127; i++)
+    if ((stringarg[i]=machine->mainMemory[whence++]) == '\0') break;
+  stringarg[127]='\0';               // Effectively truncates a string
+                                     //   if it's too long. Better,
+                                     //   get string length and error
                                        //   before copy if too long.
 
     fprintf(stderr, "Argument string is <%s>\n",stringarg);
 
+    bool result = fileSystem->Create(stringarg,1);
+    fprintf(stderr, "File created? <%d>\n",result);
     delete [] stringarg;               // No memory leaks.
-
+    
+    int tmp;
+    tmp = machine->ReadRegister(PCReg);
+    machine->WriteRegister(PrevPCReg, tmp);
+    tmp = machine->ReadRegister(NextPCReg);
+    machine->WriteRegister(PCReg, tmp);
+    tmp += 4;
+    machine->WriteRegister(NextPCReg, tmp);
   // Not returning, so no PC patch-up needed.
 
-    interrupt->Halt();
+    //interrupt->Halt();
 }
 
 void sysCallOpen(){
