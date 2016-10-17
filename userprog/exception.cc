@@ -35,6 +35,7 @@ void sysCallOpen();
 void sysCallClose();
 void sysCallRead();
 void sysCallWrite();
+void incrementPC();
 
 #ifdef USE_TLB
 
@@ -259,6 +260,8 @@ void sysCallRead(){
   char *buffer = (char *)machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
+
+  incrementPC();
 }
 
 void sysCallWrite(){
@@ -266,6 +269,8 @@ void sysCallWrite(){
   char *buffer = (char *)machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
+
+  incrementPC();
 }
 
 void sysCallClose(){
@@ -283,4 +288,15 @@ void sysCallFork(){
 
 void sysCallExec(){
   DEBUG('a', "Execute, initiated by user program.\n");
+}
+
+void incrementPC()
+{
+  int tmp;
+  tmp = machine->ReadRegister(PCReg);
+  machine->WriteRegister(PrevPCReg, tmp);
+  tmp = machine->ReadRegister(NextPCReg);
+  machine->WriteRegister(PCReg, tmp);
+  tmp += 4;
+  machine->WriteRegister(NextPCReg, tmp);
 }
