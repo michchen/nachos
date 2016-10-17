@@ -22,6 +22,7 @@ private:
 	Semaphore *readAvail;
 	Semaphore *writeDone;
 	Console *console;
+	Lock *lock;
 };
 
 #endif //SYNCHCONSCOLE_H

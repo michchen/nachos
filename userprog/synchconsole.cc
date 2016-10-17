@@ -16,12 +16,14 @@ SynchConsole::SynchConsole(char *file) {
 	readAvail = new(std::nothrow) Semaphore("read lock", 0);
 	writeDone = new(std::nothrow) Semaphore("write lock", 0);
 	console = new(std::nothrow) Console(file, file, ReadAvail, WriteFinish, 0);
+	lock = new(std::nothrow) Lock("synch console lock");
 }
 
 SynchConsole::~SynchConsole() {
 	delete readAvail;
 	delete writeDone;
 	delete console;
+	delete lock;
 }
 
 void

@@ -15,6 +15,7 @@
 int
 main()
 {
+	Open("derp");
     Halt();
     /* not reached */
 }
