@@ -26,13 +26,30 @@ SynchConsole::~SynchConsole() {
 	delete lock;
 }
 
-void
-SynchConsole::ReadFile(){
+char *
+SynchConsole::ReadFile(char *buffer, int size){
+	char ch;
+	int curIndex = 0;
 	printf("%s\n", "reading not yet implemented");
+	lock->Acquire();
+	readAvail->P();
+	for (curIndex = 0; curIndex < size; curIndex++){
+		ch = console->GetChar();
+		buffer[curIndex] = ch;
+		if(ch == '\0') {
+			lock->Release();
+			return buffer;
+		}
+	}
+
+	lock->Release();
+	return buffer;
+
+
 }
 
 void
-SynchConsole::WriteFile() {
+SynchConsole::WriteFile(char *buffer, int size) {
 	printf("%s\n", "writing not yet implemented");
 }
 

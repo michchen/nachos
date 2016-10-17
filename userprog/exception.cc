@@ -245,7 +245,7 @@ void sysCallOpen(){
       fprintf(stderr, "%s\n", "Looks like it worked");
     }
 
-    machine->WriteRegister(2, file);
+    //machine->WriteRegister(2, file);
 
     delete [] stringarg;               // No memory leaks.
 

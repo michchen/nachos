@@ -3,6 +3,7 @@
 
 #include "console.h"
 #include "synch.h"
+#include "syscall.h"
 
 class SynchConsole{
 public:
@@ -10,9 +11,9 @@ public:
 
 	~SynchConsole();
 
-	void ReadFile();
+	char * ReadFile(char *buffer, int size);
 
-	void WriteFile();
+	void WriteFile(char *buffer, int size);
 
 	void ReadDone();
 
