@@ -256,10 +256,16 @@ void sysCallOpen(){
 
 void sysCallRead(){
   DEBUG('a', "Read, initiated by user program.\n");
+  char *buffer = (char *)machine->ReadRegister(4);
+  int size = machine->ReadRegister(5);
+  OpenFileId id = machine->ReadRegister(6);
 }
 
 void sysCallWrite(){
   DEBUG('a', "Write, initiated by user program.\n");
+  char *buffer = (char *)machine->ReadRegister(4);
+  int size = machine->ReadRegister(5);
+  OpenFileId id = machine->ReadRegister(6);
 }
 
 void sysCallClose(){
