@@ -40,6 +40,7 @@ Thread::Thread(const char* threadName)
     status = JUST_CREATED;
 #ifdef USER_PROGRAM
     space = NULL;
+    curNumFiles = 0;
 #endif
 }
 
@@ -316,5 +317,50 @@ Thread::RestoreUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
 	machine->WriteRegister(i, userRegisters[i]);
+}
+
+int
+Thread::AddFile(OpenFile* file)
+{
+    int fd = -1;
+
+    if (curNumFiles == MaxOpenFiles) {
+        fprintf(stderr, "%s\n", "Maximum file number reached");
+        return fd;
+    }
+
+    for(int i = 0; i < MaxOpenFiles; i++)
+    {
+        if (openFiles[i] == NULL) {
+            openFiles[i] = file;
+            fd = i;
+            curNumFiles++;
+        }
+    }
+
+    return fd;
+}
+
+bool
+Thread::RemoveFile(int fd)
+{
+    if (fd > MaxOpenFiles) {
+        return false;
+    }
+    else if (fd < 0) {
+        return false;
+    }
+    else {
+        openFiles[fd] = NULL;
+
+        if (openFiles[fd] != NULL) {
+            return false;
+        }
+        else {
+            curNumFiles--;
+            return true;
+        }
+    }
+
 }
 #endif
