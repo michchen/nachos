@@ -216,6 +216,11 @@ void sysCallCreate(){
 
     bool result = fileSystem->Create(stringarg,1);
     fprintf(stderr, "File created? <%d>\n",result);
+
+    if(result == false) {
+      fprintf(stderr, "%s\n", "issue creating the file");
+      interrupt->Halt();
+    }
     delete [] stringarg;               // No memory leaks.
     
     incrementPC();
@@ -308,6 +313,8 @@ void sysCallClose(){
     fprintf(stderr, "%s\n", "error closing a file");
     interrupt->Halt();
   }
+
+  fprintf(stderr, "%s\n", "worked?????");
 
   incrementPC();
 
