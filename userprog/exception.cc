@@ -279,7 +279,6 @@ void sysCallClose(){
 
   fd = machine->ReadRegister(4);
 
-
 }
 
 void sysCallFork(){
