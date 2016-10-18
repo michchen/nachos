@@ -262,7 +262,15 @@ void sysCallOpen(){
       fprintf(stderr, "%s\n", "Looks like it worked");
     }
 
-    //machine->WriteRegister(2, file);
+    int fd = currentThread->AddFile(file);
+    if (fd == -1){
+      fprintf(stderr, "%s\n", "Failed to add file to openfile array");
+      interrupt->Halt();
+    }
+
+    machine->WriteRegister(2, fd);
+
+    incrementPC();
 
     delete [] stringarg;               // No memory leaks.
     incrementPC();
@@ -294,6 +302,14 @@ void sysCallClose(){
   int fd;
 
   fd = machine->ReadRegister(4);
+
+  bool result = currentThread->RemoveFile(fd);
+  if(result == false) {
+    fprintf(stderr, "%s\n", "error closing a file");
+    interrupt->Halt();
+  }
+
+  incrementPC();
 
 }
 

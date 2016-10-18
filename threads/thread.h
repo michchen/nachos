@@ -55,6 +55,7 @@
 // WATCH OUT IF THIS ISN'T BIG ENOUGH!!!!!
 #define StackSize	(4 * 1024)	// in words
 
+#define MaxOpenFiles 128
 
 // Thread state
 enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };
@@ -120,9 +121,14 @@ class Thread {
 // one for its state while executing user code, one for its state 
 // while executing kernel code.
     int userRegisters[NumTotalRegs];	// user-level CPU register state
+    OpenFile* openFiles[MaxOpenFiles];
+    int curNumFiles;
+
   public:
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
+    int AddFile(OpenFile* file);
+    bool RemoveFile(int fd);
 
     AddrSpace *space;			// User code this thread is running.
 #endif
