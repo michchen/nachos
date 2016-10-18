@@ -107,7 +107,7 @@ ExceptionHandler(ExceptionType which)
 {
 
     int type = machine->ReadRegister(2);
-
+    
     switch (which) {
       case SyscallException:
       	switch (type) {
@@ -144,8 +144,9 @@ ExceptionHandler(ExceptionType which)
           default:
       	    printf("Undefined SYSCALL %d\n", type);
       	    ASSERT(false);
-      	}
-
+            break;
+        }
+      break;
       #ifdef USE_TLB
             case PageFaultException:
       	HandleTLBFault(machine->ReadRegister(BadVAddrReg));
@@ -159,6 +160,16 @@ ExceptionHandler(ExceptionType which)
     }
 }
 
+void incrementPC()
+{
+  int tmp;
+  tmp = machine->ReadRegister(PCReg);
+  machine->WriteRegister(PrevPCReg, tmp);
+  tmp = machine->ReadRegister(NextPCReg);
+  machine->WriteRegister(PCReg, tmp);
+  tmp += 4;
+  machine->WriteRegister(NextPCReg, tmp);
+}
 
 void sysCallHalt(){
   DEBUG('a', "Shutdown, initiated by user program.\n");
@@ -207,13 +218,7 @@ void sysCallCreate(){
     fprintf(stderr, "File created? <%d>\n",result);
     delete [] stringarg;               // No memory leaks.
     
-    int tmp;
-    tmp = machine->ReadRegister(PCReg);
-    machine->WriteRegister(PrevPCReg, tmp);
-    tmp = machine->ReadRegister(NextPCReg);
-    machine->WriteRegister(PCReg, tmp);
-    tmp += 4;
-    machine->WriteRegister(NextPCReg, tmp);
+    incrementPC();
   // Not returning, so no PC patch-up needed.
 
     //interrupt->Halt();
@@ -260,7 +265,7 @@ void sysCallOpen(){
     //machine->WriteRegister(2, file);
 
     delete [] stringarg;               // No memory leaks.
-
+    incrementPC();
   // Not returning, so no PC patch-up needed.
 
     
@@ -298,15 +303,4 @@ void sysCallFork(){
 
 void sysCallExec(){
   DEBUG('a', "Execute, initiated by user program.\n");
-}
-
-void incrementPC()
-{
-  int tmp;
-  tmp = machine->ReadRegister(PCReg);
-  machine->WriteRegister(PrevPCReg, tmp);
-  tmp = machine->ReadRegister(NextPCReg);
-  machine->WriteRegister(PCReg, tmp);
-  tmp += 4;
-  machine->WriteRegister(NextPCReg, tmp);
 }
