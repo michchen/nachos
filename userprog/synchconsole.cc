@@ -50,7 +50,14 @@ SynchConsole::ReadFile(char *buffer, int size){
 
 void
 SynchConsole::WriteFile(char *buffer, int size) {
+	int curIndex;
 	printf("%s\n", "writing not yet implemented");
+	lock->Acquire();
+	for(curIndex = 0; curIndex < size; curIndex++) {
+		console->PutChar(buffer[curIndex]);
+	}
+	writeDone->P();
+	lock->Release();
 }
 
 void
