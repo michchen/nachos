@@ -20,6 +20,7 @@
 #include "synch.h"
 #include "system.h"
 
+
 #define STACK_FENCEPOST 0xdeadbeef	// this is put at the top of the
 					// execution stack, for detecting 
 					// stack overflows
@@ -41,6 +42,10 @@ Thread::Thread(const char* threadName)
 #ifdef USER_PROGRAM
     space = NULL;
     curNumFiles = 0;
+    for(int i = 2; i < MaxOpenFiles; i++) {
+        openFiles[i] = NULL;
+    }
+
 #endif
 }
 
@@ -329,38 +334,54 @@ Thread::AddFile(OpenFile* file)
         return fd;
     }
 
-    for(int i = 0; i < MaxOpenFiles; i++)
+    for(int i = 2; i < MaxOpenFiles; i++)
     {
         if (openFiles[i] == NULL) {
             openFiles[i] = file;
             fd = i;
             curNumFiles++;
+            return fd;
         }
     }
 
     return fd;
 }
 
-bool
+OpenFile*
 Thread::RemoveFile(int fd)
 {
     if (fd > MaxOpenFiles) {
-        return false;
+        return NULL;
     }
     else if (fd < 0) {
-        return false;
+        return NULL;
     }
     else {
+        OpenFile* temp = openFiles[fd];
         openFiles[fd] = NULL;
 
         if (openFiles[fd] != NULL) {
-            return false;
+            return NULL;
         }
         else {
             curNumFiles--;
-            return true;
+            return temp;
         }
     }
 
+}
+
+OpenFile*
+Thread::GetFile(int fd)
+{
+    if (fd > MaxOpenFiles) {
+        return NULL;
+    }
+    else if (fd < 0) {
+        return NULL;
+    }
+    else {
+        return openFiles[fd];
+    }
 }
 #endif

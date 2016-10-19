@@ -12,10 +12,10 @@ static void WriteFinish(int arg) {
 }
 
 
-SynchConsole::SynchConsole(char *file) {
+SynchConsole::SynchConsole() {
 	readAvail = new(std::nothrow) Semaphore("read lock", 0);
 	writeDone = new(std::nothrow) Semaphore("write lock", 0);
-	console = new(std::nothrow) Console(file, file, ReadAvail, WriteFinish, 0);
+	console = new(std::nothrow) Console(NULL, NULL, ReadAvail, WriteFinish, 0);
 	lock = new(std::nothrow) Lock("synch console lock");
 }
 
@@ -26,38 +26,35 @@ SynchConsole::~SynchConsole() {
 	delete lock;
 }
 
-char *
-SynchConsole::ReadFile(char *buffer, int size){
+int
+SynchConsole::Read(char buffer, int size){
 	char ch;
 	int curIndex = 0;
 	printf("%s\n", "reading not yet implemented");
 	lock->Acquire();
 	readAvail->P();
-	for (curIndex = 0; curIndex < size; curIndex++){
-		ch = console->GetChar();
-		buffer[curIndex] = ch;
-		if(ch == '\0') {
-			lock->Release();
-			return buffer;
-		}
-	}
+	ch = console->GetChar();
+	buffer = ch;
 
 	lock->Release();
-	return buffer;
+	return curIndex;
 
 
 }
 
 void
-SynchConsole::WriteFile(char *buffer, int size) {
+SynchConsole::Write(char buffer, int size) {
 	int curIndex;
-	printf("%s\n", "writing not yet implemented");
 	lock->Acquire();
-	for(curIndex = 0; curIndex < size; curIndex++) {
-		console->PutChar(buffer[curIndex]);
-	}
+	fprintf(stderr, "%s\n", "is the problem before");
+
+	console->PutChar(buffer);
+	fprintf(stderr, "%s\n", "put is successful");
+
 	writeDone->P();
+	fprintf(stderr, "%s\n", "lock has been P'd");
 	lock->Release();
+	return;
 }
 
 void

@@ -25,6 +25,7 @@
 #include "system.h"
 #include "syscall.h"
 
+
 void sysCallExec();
 void sysCallHalt();
 void sysCallExit();
@@ -36,6 +37,8 @@ void sysCallClose();
 void sysCallRead();
 void sysCallWrite();
 void incrementPC();
+
+
 
 #ifdef USE_TLB
 
@@ -107,7 +110,8 @@ ExceptionHandler(ExceptionType which)
 {
 
     int type = machine->ReadRegister(2);
-    
+
+    fprintf(stderr, "%s %d\n", "Here is the type", type);
     switch (which) {
       case SyscallException:
       	switch (type) {
@@ -273,12 +277,15 @@ void sysCallOpen(){
       interrupt->Halt();
     }
 
+
     machine->WriteRegister(2, fd);
 
     incrementPC();
 
+    
+
     delete [] stringarg;               // No memory leaks.
-    incrementPC();
+    //incrementPC();
   // Not returning, so no PC patch-up needed.
 
     
@@ -286,18 +293,86 @@ void sysCallOpen(){
 
 void sysCallRead(){
   DEBUG('a', "Read, initiated by user program.\n");
-  char *buffer = (char *)machine->ReadRegister(4);
+  int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
+  char *stringarg;
+  stringarg = new(std::nothrow) char[128];  
+  int result = -1;
+
+  fprintf(stderr, "%s %d %d\n", "entering the read", size, id);
+
+  for (int i=0; i<size; i++) {
+    if ((stringarg[i]=machine->mainMemory[bufStart++]) == '\0') break;
+  }
+  stringarg[127]='\0';   
+
+  fprintf(stderr, "Argument string is <%s>\n",stringarg);
+
+  //int result = synchConArr[id]->ReadFile(buffer, size);
+  if (id == 1) {
+    fprintf(stderr, "%s\n", "Can't read from stdout");
+    interrupt->Halt();
+  }
+  else if (id == 0) {
+    fprintf(stderr, "%s\n", "going to be calling the read");
+    //result = synchcon->Read(stringarg, size);
+    for (int j = 0; j<size; j++) {
+      fprintf(stderr, "%c\n", stringarg[j]);
+      //result = synchcon->Read(stringarg[j], 1);
+      if (result == 0) {
+        fprintf(stderr, "%s\n", "read failed");
+        interrupt->Halt();
+      }
+    }
+  }
+  else {
+    OpenFile* file = currentThread->GetFile(id);
+    result = file->Read(stringarg, size);
+  }
+
+  printf("%s\n", "Did we return from the read");
+
+  if (result == -1) {
+    fprintf(stderr, "%s\n", "Error reading");
+    interrupt->Halt();
+  }
+
+  machine->WriteRegister(2, result);
 
   incrementPC();
 }
 
 void sysCallWrite(){
   DEBUG('a', "Write, initiated by user program.\n");
-  char *buffer = (char *)machine->ReadRegister(4);
+  int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
+  char *stringarg;
+  stringarg = new(std::nothrow) char[128];  
+
+  for (int i=0; i<127; i++)
+    if ((stringarg[i]=machine->mainMemory[bufStart++]) == '\0') break;
+  stringarg[127]='\0'; 
+
+  fprintf(stderr, "%s %s %d %d\n", "Here is the size and fd", stringarg, size, id );
+
+  if (id == 0) {
+    fprintf(stderr, "%s\n", "Can't write to stdin");
+    interrupt->Halt();
+  }
+  else if (id == 1) {
+    for (int j = 0; j<size; j++) {
+      //fprintf(stderr, "%c\n", stringarg[j]);
+      synchcon->Write(stringarg[j], 1);
+    }
+  }
+  else {
+    OpenFile* file = currentThread->GetFile(id);
+    file->Write(stringarg, size);
+  }
+
+  //synchConArr[id]->WriteFile(buffer, size);
 
   incrementPC();
 }
@@ -308,11 +383,15 @@ void sysCallClose(){
 
   fd = machine->ReadRegister(4);
 
-  bool result = currentThread->RemoveFile(fd);
-  if(result == false) {
+  OpenFile* result = currentThread->RemoveFile(fd);
+  if(result == NULL) {
     fprintf(stderr, "%s\n", "error closing a file");
     interrupt->Halt();
   }
+
+  delete result;
+
+  //synchConArr[fd] = NULL;
 
   fprintf(stderr, "%s\n", "worked?????");
 

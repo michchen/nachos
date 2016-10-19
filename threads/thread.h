@@ -128,7 +128,8 @@ class Thread {
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
     int AddFile(OpenFile* file);
-    bool RemoveFile(int fd);
+    OpenFile* RemoveFile(int fd);
+    OpenFile* GetFile(int fd);
 
     AddrSpace *space;			// User code this thread is running.
 #endif

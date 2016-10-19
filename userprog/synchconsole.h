@@ -1,5 +1,5 @@
-#ifndef SYNCHCONSCOLE_H
-#define SYNCHCONSCOLE_H
+#ifndef SYNCHCONSOLE_H
+#define SYNCHCONSOLE_H
 
 #include "console.h"
 #include "synch.h"
@@ -7,13 +7,13 @@
 
 class SynchConsole{
 public:
-	SynchConsole(char *file);
+	SynchConsole();
 
 	~SynchConsole();
 
-	char * ReadFile(char *buffer, int size);
+	int Read(char buffer, int size);
 
-	void WriteFile(char *buffer, int size);
+	void Write(char buffer, int size);
 
 	void ReadDone();
 
@@ -26,4 +26,4 @@ private:
 	Lock *lock;
 };
 
-#endif //SYNCHCONSCOLE_H
+#endif //SYNCHCONSOLE_H
