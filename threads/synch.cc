@@ -103,7 +103,6 @@ Semaphore::V()
 #ifdef CHANGED
 Lock::Lock(const char* debugName) 
 {
-	//binarysem = new Semaphore(debugName, 1);
 	name = debugName;
 	locker = NULL;
 	currentState = FREE;
@@ -132,9 +131,8 @@ void Lock::Release()
 {
 	Thread *thread;
 	
-	ASSERT(isHeldByCurrentThread());
-
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
+	ASSERT(isHeldByCurrentThread());
 
 	thread = (Thread *) lockqueue->Remove();
 	if(thread != NULL){
@@ -168,27 +166,27 @@ Condition::~Condition()
 void Condition::Wait(Lock* conditionLock) 
 { 
 	//ASSERT(false);
-	ASSERT(conditionLock->isHeldByCurrentThread());
-
-	//Semaphore *temp = new Semaphore(name,0);
-	threadqueue->Append((Thread *) currentThread);
 	
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
+	ASSERT(conditionLock->isHeldByCurrentThread());
+	//Semaphore *temp = new Semaphore(name,0);
 	
 	//printf("Lock realsed\n");
-	conditionLock->Release();				// release the lock before going to sleep to avoid deadlock
+	conditionLock->Release();	
+	threadqueue->Append((Thread *) currentThread);// release the lock before going to sleep to avoid deadlock
 	currentThread->Sleep();
 
-	(void) interrupt->SetLevel(oldLevel);
 	
 	//printf("Lock re-acquired %s\n",conditionLock->name);								// tell the thread to sleep
-		conditionLock->Acquire();				// re-acquire the lock upon wakeup (given to us in specs)
+	conditionLock->Acquire();				// re-acquire the lock upon wakeup (given to us in specs)
+	(void) interrupt->SetLevel(oldLevel);
 	//delete temp;
 }
 void Condition::Signal(Lock* conditionLock) 
 {
-	ASSERT(conditionLock->isHeldByCurrentThread());
 
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
+	ASSERT(conditionLock->isHeldByCurrentThread());
 	//Semaphore *temp; 
 	Thread *temp;
 	if(!threadqueue->IsEmpty())
@@ -196,10 +194,12 @@ void Condition::Signal(Lock* conditionLock)
 		temp = (Thread *) threadqueue->Remove();
 		scheduler->ReadyToRun(temp);
 	}
+	(void) interrupt->SetLevel(oldLevel);
 
 }
 void Condition::Broadcast(Lock* conditionLock) 
 { 
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	ASSERT(conditionLock->isHeldByCurrentThread());
 
 	Thread *temp;
@@ -207,6 +207,7 @@ void Condition::Broadcast(Lock* conditionLock)
 		temp = (Thread *) threadqueue->Remove();
 		scheduler->ReadyToRun(temp);
 	}
+	(void) interrupt->SetLevel(oldLevel);
 
 }
 #endif //CHANGED
