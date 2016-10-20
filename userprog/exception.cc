@@ -220,7 +220,6 @@ void sysCallCreate(){
     delete [] stringarg;               // No memory leaks.
     
     incrementPC();
-  // Not returning, so no PC patch-up needed.
 
 }
 
@@ -230,11 +229,6 @@ void sysCallOpen(){
   char *stringarg;
   stringarg = new(std::nothrow) char[128];
   int fd;                                       
-
-  // TOTALLY BOGUS. Just want to extract argument string from
-  // user-mode address space under the assumption that the
-  // memory map is the identity mapping and all pages are
-  // RAM-resident.
 
     whence = machine->ReadRegister(4); // whence is VIRTUAL address
                                        //   of first byte of arg string.
@@ -327,7 +321,7 @@ void sysCallWrite(){
   char *stringarg;
   stringarg = new(std::nothrow) char[128];  
 
-  for (int i=0; i<127; i++)
+  for (int i=0; i<size; i++)
     if ((stringarg[i]=machine->mainMemory[bufStart++]) == '\0') break;
   stringarg[127]='\0'; 
 

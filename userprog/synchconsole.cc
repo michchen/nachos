@@ -52,7 +52,6 @@ SynchConsole::Read(char *buffer, int size){
 
 void
 SynchConsole::Write(char buffer, int size) {
-	int curIndex;
 	lock->Acquire();
 
 	console->PutChar(buffer);
