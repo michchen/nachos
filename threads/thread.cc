@@ -39,6 +39,7 @@ Thread::Thread(const char* threadName)
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
+#ifdef CHANGED
 #ifdef USER_PROGRAM
     space = NULL;
     curNumFiles = 0;
@@ -46,6 +47,7 @@ Thread::Thread(const char* threadName)
         openFiles[i] = NULL;
     }
 
+#endif
 #endif
 }
 
@@ -324,6 +326,8 @@ Thread::RestoreUserState()
 	machine->WriteRegister(i, userRegisters[i]);
 }
 
+#ifdef CHANGED
+
 int
 Thread::AddFile(OpenFile* file)
 {
@@ -384,4 +388,5 @@ Thread::GetFile(int fd)
         return openFiles[fd];
     }
 }
+#endif
 #endif

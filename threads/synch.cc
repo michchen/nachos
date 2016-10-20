@@ -65,17 +65,12 @@ void
 Semaphore::P()
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);	// disable interrupts
-    printf("%s\n", "where is da issue");
     while (value == 0) { 			// semaphore not available
 	queue->Append((void *)currentThread);	// so go to sleep
-	printf("%s\n", "where is da issue 2");
 	currentThread->Sleep();
-	printf("%s\n", "where is da issue 3");
     } 
     value--; 					// semaphore available, 
 						// consume its value
-    printf("%s\n", "where is da issue 4");
-    
     (void) interrupt->SetLevel(oldLevel);	// re-enable interrupts
 }
 
@@ -106,6 +101,7 @@ Semaphore::V()
 #ifdef CHANGED
 Lock::Lock(const char* debugName) 
 {
+	//binarysem = new Semaphore(debugName, 1);
 	name = debugName;
 	locker = NULL;
 	currentState = FREE;
@@ -134,8 +130,9 @@ void Lock::Release()
 {
 	Thread *thread;
 	
-	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	ASSERT(isHeldByCurrentThread());
+
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
 	thread = (Thread *) lockqueue->Remove();
 	if(thread != NULL){
@@ -169,27 +166,27 @@ Condition::~Condition()
 void Condition::Wait(Lock* conditionLock) 
 { 
 	//ASSERT(false);
+	ASSERT(conditionLock->isHeldByCurrentThread());
+
+	//Semaphore *temp = new Semaphore(name,0);
+	threadqueue->Append((Thread *) currentThread);
 	
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-	ASSERT(conditionLock->isHeldByCurrentThread());
-	//Semaphore *temp = new Semaphore(name,0);
 	
 	//printf("Lock realsed\n");
-	conditionLock->Release();	
-	threadqueue->Append((Thread *) currentThread);// release the lock before going to sleep to avoid deadlock
+	conditionLock->Release();				// release the lock before going to sleep to avoid deadlock
 	currentThread->Sleep();
 
+	(void) interrupt->SetLevel(oldLevel);
 	
 	//printf("Lock re-acquired %s\n",conditionLock->name);								// tell the thread to sleep
-	conditionLock->Acquire();				// re-acquire the lock upon wakeup (given to us in specs)
-	(void) interrupt->SetLevel(oldLevel);
+		conditionLock->Acquire();				// re-acquire the lock upon wakeup (given to us in specs)
 	//delete temp;
 }
 void Condition::Signal(Lock* conditionLock) 
 {
-
-	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	ASSERT(conditionLock->isHeldByCurrentThread());
+
 	//Semaphore *temp; 
 	Thread *temp;
 	if(!threadqueue->IsEmpty())
@@ -197,12 +194,10 @@ void Condition::Signal(Lock* conditionLock)
 		temp = (Thread *) threadqueue->Remove();
 		scheduler->ReadyToRun(temp);
 	}
-	(void) interrupt->SetLevel(oldLevel);
 
 }
 void Condition::Broadcast(Lock* conditionLock) 
 { 
-	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	ASSERT(conditionLock->isHeldByCurrentThread());
 
 	Thread *temp;
@@ -210,7 +205,6 @@ void Condition::Broadcast(Lock* conditionLock)
 		temp = (Thread *) threadqueue->Remove();
 		scheduler->ReadyToRun(temp);
 	}
-	(void) interrupt->SetLevel(oldLevel);
 
 }
 #endif //CHANGED

@@ -1,5 +1,6 @@
 #ifndef SYNCHCONSOLE_H
 #define SYNCHCONSOLE_H
+#ifdef CHANGED
 
 #include "console.h"
 #include "synch.h"
@@ -11,7 +12,7 @@ public:
 
 	~SynchConsole();
 
-	int Read(char buffer, int size);
+	int Read(char *buffer, int size);
 
 	void Write(char buffer, int size);
 
@@ -19,11 +20,7 @@ public:
 
 	void WriteDone();
 
-private:
-	Semaphore *readAvail;
-	Semaphore *writeDone;
-	Console *console;
-	Lock *lock;
 };
 
 #endif //SYNCHCONSOLE_H
+#endif

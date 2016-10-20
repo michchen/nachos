@@ -105,13 +105,15 @@ HandleTLBFault(int vaddr)
 //	"which" is the kind of exception.  The list of possible exceptions 
 //	are in machine.h.
 //----------------------------------------------------------------------
+
+#ifdef CHANGED
 void
 ExceptionHandler(ExceptionType which)
 {
 
     int type = machine->ReadRegister(2);
 
-    fprintf(stderr, "%s %d\n", "Here is the type", type);
+    //fprintf(stderr, "%s %d\n", "Here is the type", type);
     switch (which) {
       case SyscallException:
       	switch (type) {
@@ -196,16 +198,9 @@ void sysCallCreate(){
   char *stringarg;
   stringarg = new(std::nothrow) char[128];                                         
 
-  // TOTALLY BOGUS. Just want to extract argument string from
-  // user-mode address space under the assumption that the
-  // memory map is the identity mapping and all pages are
-  // RAM-resident.
-
   whence = machine->ReadRegister(4); // whence is VIRTUAL address
                                      //   of first byte of arg string.
                                      //   IN THIS CASE, virtual=physical.
-
-  fprintf(stderr,"String starts at address %d in user VAS\n", whence);
 
 // Copy the string from user-land to kernel-land.
 
@@ -216,28 +211,25 @@ void sysCallCreate(){
                                      //   get string length and error
                                        //   before copy if too long.
 
-    fprintf(stderr, "Argument string is <%s>\n",stringarg);
 
     bool result = fileSystem->Create(stringarg,1);
-    fprintf(stderr, "File created? <%d>\n",result);
 
     if(result == false) {
-      fprintf(stderr, "%s\n", "issue creating the file");
-      interrupt->Halt();
+      DEBUG('a', "%s\n", "issue creating the file");
     }
     delete [] stringarg;               // No memory leaks.
     
     incrementPC();
   // Not returning, so no PC patch-up needed.
 
-    //interrupt->Halt();
 }
 
 void sysCallOpen(){
   DEBUG('a', "Open, initiated by user program.\n");
   int whence;
   char *stringarg;
-  stringarg = new(std::nothrow) char[128];                                         
+  stringarg = new(std::nothrow) char[128];
+  int fd;                                       
 
   // TOTALLY BOGUS. Just want to extract argument string from
   // user-mode address space under the assumption that the
@@ -248,7 +240,6 @@ void sysCallOpen(){
                                        //   of first byte of arg string.
                                        //   IN THIS CASE, virtual=physical.
 
-    fprintf(stderr,"String starts at address %d in user VAS\n", whence);
 
   // Copy the string from user-land to kernel-land.
 
@@ -259,24 +250,19 @@ void sysCallOpen(){
                                        //   get string length and error
                                        //   before copy if too long.
 
-    fprintf(stderr, "Argument string is <%s>\n",stringarg);
 
     OpenFile *file = fileSystem->Open(stringarg);
 
     if(file == NULL) {
-      fprintf(stderr, "%s\n", "no file found");
-      interrupt->Halt();
+      DEBUG('a', "%s\n", "no file found");
+      fd = -1;
     }
     else {
-      fprintf(stderr, "%s\n", "Looks like it worked");
+      fd = currentThread->AddFile(file);
+      if (fd == -1){
+        DEBUG('a', "%s\n", "Failed to add file to openfile array");
+      }
     }
-
-    int fd = currentThread->AddFile(file);
-    if (fd == -1){
-      fprintf(stderr, "%s\n", "Failed to add file to openfile array");
-      interrupt->Halt();
-    }
-
 
     machine->WriteRegister(2, fd);
 
@@ -285,8 +271,6 @@ void sysCallOpen(){
     
 
     delete [] stringarg;               // No memory leaks.
-    //incrementPC();
-  // Not returning, so no PC patch-up needed.
 
     
 }
@@ -297,50 +281,42 @@ void sysCallRead(){
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
   char *stringarg;
-  stringarg = new(std::nothrow) char[128];  
+  stringarg = new(std::nothrow) char[size];  
   int result = -1;
 
-  fprintf(stderr, "%s %d %d\n", "entering the read", size, id);
-
-  for (int i=0; i<size; i++) {
-    if ((stringarg[i]=machine->mainMemory[bufStart++]) == '\0') break;
-  }
-  stringarg[127]='\0';   
-
-  fprintf(stderr, "Argument string is <%s>\n",stringarg);
-
-  //int result = synchConArr[id]->ReadFile(buffer, size);
   if (id == 1) {
-    fprintf(stderr, "%s\n", "Can't read from stdout");
-    interrupt->Halt();
+    DEBUG('a', "%s\n", "Can't read from stdout");
   }
   else if (id == 0) {
-    fprintf(stderr, "%s\n", "going to be calling the read");
-    //result = synchcon->Read(stringarg, size);
-    for (int j = 0; j<size; j++) {
-      fprintf(stderr, "%c\n", stringarg[j]);
-      //result = synchcon->Read(stringarg[j], 1);
+      result = synchcon->Read(stringarg, size);
       if (result == 0) {
-        fprintf(stderr, "%s\n", "read failed");
-        interrupt->Halt();
+        DEBUG('a', "%s\n", "read failed");
+        result = -1;
       }
-    }
+      for(int i = 0; i<size; i++) {
+        machine->mainMemory[bufStart+i] = stringarg[i];
+      }
+
   }
   else {
     OpenFile* file = currentThread->GetFile(id);
-    result = file->Read(stringarg, size);
+    if (file != NULL) {
+      result = file->Read(stringarg, size);
+      for(int i = 0; i<size; i++) {
+          machine->mainMemory[bufStart+i] = stringarg[i];
+      }
+    }
+    
   }
 
-  printf("%s\n", "Did we return from the read");
-
   if (result == -1) {
-    fprintf(stderr, "%s\n", "Error reading");
-    interrupt->Halt();
+    DEBUG('a', "%s\n", "Error reading");
   }
 
   machine->WriteRegister(2, result);
 
   incrementPC();
+  delete [] stringarg; 
 }
 
 void sysCallWrite(){
@@ -355,15 +331,12 @@ void sysCallWrite(){
     if ((stringarg[i]=machine->mainMemory[bufStart++]) == '\0') break;
   stringarg[127]='\0'; 
 
-  fprintf(stderr, "%s %s %d %d\n", "Here is the size and fd", stringarg, size, id );
 
   if (id == 0) {
-    fprintf(stderr, "%s\n", "Can't write to stdin");
-    interrupt->Halt();
+    DEBUG('a', "%s\n", "Can't write to stdin");
   }
   else if (id == 1) {
     for (int j = 0; j<size; j++) {
-      //fprintf(stderr, "%c\n", stringarg[j]);
       synchcon->Write(stringarg[j], 1);
     }
   }
@@ -372,7 +345,6 @@ void sysCallWrite(){
     file->Write(stringarg, size);
   }
 
-  //synchConArr[id]->WriteFile(buffer, size);
 
   incrementPC();
 }
@@ -385,18 +357,13 @@ void sysCallClose(){
 
   OpenFile* result = currentThread->RemoveFile(fd);
   if(result == NULL) {
-    fprintf(stderr, "%s\n", "error closing a file");
-    interrupt->Halt();
+    DEBUG('a', "%s\n", "error closing a file");
+  }
+  else {
+    delete result;    
   }
 
-  delete result;
-
-  //synchConArr[fd] = NULL;
-
-  fprintf(stderr, "%s\n", "worked?????");
-
   incrementPC();
-
 }
 
 void sysCallFork(){
@@ -406,3 +373,4 @@ void sysCallFork(){
 void sysCallExec(){
   DEBUG('a', "Execute, initiated by user program.\n");
 }
+#endif

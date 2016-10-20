@@ -1,5 +1,10 @@
+#ifdef CHANGED
 #include "synchconsole.h"
 
+static Console *console;
+static Semaphore *readAvail;
+static Semaphore *writeDone;
+static Lock *lock;
 
 static void ReadAvail(int arg) { 
 
@@ -27,15 +32,18 @@ SynchConsole::~SynchConsole() {
 }
 
 int
-SynchConsole::Read(char buffer, int size){
+SynchConsole::Read(char *buffer, int size){
 	char ch;
 	int curIndex = 0;
-	printf("%s\n", "reading not yet implemented");
 	lock->Acquire();
-	readAvail->P();
-	ch = console->GetChar();
-	buffer = ch;
+	while (curIndex < size){
+		readAvail->P();
+		ch = console->GetChar();
 
+		*buffer = ch;
+		curIndex++;
+		buffer++;
+	}
 	lock->Release();
 	return curIndex;
 
@@ -46,13 +54,10 @@ void
 SynchConsole::Write(char buffer, int size) {
 	int curIndex;
 	lock->Acquire();
-	fprintf(stderr, "%s\n", "is the problem before");
 
 	console->PutChar(buffer);
-	fprintf(stderr, "%s\n", "put is successful");
 
 	writeDone->P();
-	fprintf(stderr, "%s\n", "lock has been P'd");
 	lock->Release();
 	return;
 }
@@ -66,3 +71,5 @@ void
 SynchConsole::WriteDone() {
 	writeDone->V(); 
 }
+
+#endif

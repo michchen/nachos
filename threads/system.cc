@@ -27,9 +27,11 @@ FileSystem  *fileSystem;
 SynchDisk   *synchDisk;
 #endif
 
+#ifdef CHANGED
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 Machine *machine;	// user program memory and registers
 SynchConsole *synchcon;
+#endif
 #endif
 
 #ifdef NETWORK
@@ -150,7 +152,9 @@ Initialize(int argc, char **argv)
     
 #ifdef USER_PROGRAM
     machine = new(std::nothrow) Machine(debugUserProg);	// this must come first
+#ifdef CHANGED
     synchcon = new(std::nothrow) SynchConsole();
+#endif
 #endif
 
 #ifdef FILESYS
@@ -177,9 +181,12 @@ Cleanup()
 #ifdef NETWORK
     delete postOffice;
 #endif
-    
+
+#ifdef CHANGED
 #ifdef USER_PROGRAM
     delete machine;
+    delete synchcon;
+#endif
 #endif
 
 #ifdef FILESYS_NEEDED
