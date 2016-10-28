@@ -91,7 +91,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     pageTable = new(std::nothrow) TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = i;
+	pageTable[i].physicalPage = pagemap.Find();
 	pageTable[i].valid = true;
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
@@ -103,7 +103,10 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
-    bzero(machine->mainMemory, size);
+    //bzero(machine->mainMemory, size);
+    for (int j = 0; j < numPages; j++ ) {
+        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+    }
 
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
@@ -192,4 +195,37 @@ void AddrSpace::RestoreState()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 #endif
+}
+
+
+unsigned int AddrSpace::AddrTranslation(int virtaddr)
+{
+    unsigned int vpn, offset;
+    TranslationEntry *entry;
+    unsigned int pageFrame;
+    unsigned int physaddr;
+
+    vpn = (unsigned) virtAddr / PageSize;
+    offset = (unsigned) virtAddr % PageSize;
+
+    if (vpn >= pageTableSize) {
+        DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
+            virtAddr, pageTableSize);
+        return -1;
+    } else if (!pageTable[vpn].valid) {
+        DEBUG('a', "Page table miss, virtual address  %d!\n", 
+            virtAddr);
+        return -1;
+    }
+    entry = &pageTable[vpn];
+
+    pageFrame = entry->physicalPage;
+
+    if (pageFrame >= NumPhysPages) { 
+        DEBUG('a', "*** frame %d > %d!\n", pageFrame, NumPhysPages);
+        return -1;
+    }
+
+    physaddr = pageFrame * PageSize + offset;
+    return physaddr;
 }
