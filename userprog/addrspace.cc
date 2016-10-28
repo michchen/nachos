@@ -91,7 +91,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     pageTable = new(std::nothrow) TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = pagemap.Find();
+	pageTable[i].physicalPage = pagemap->Find();
 	pageTable[i].valid = true;
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
@@ -200,7 +200,7 @@ void AddrSpace::RestoreState()
 }
 
 
-unsigned int AddrSpace::AddrTranslation(int virtaddr)
+unsigned int AddrSpace::AddrTranslation(int virtAddr)
 {
     unsigned int vpn, offset;
     TranslationEntry *entry;

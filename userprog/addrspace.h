@@ -30,7 +30,7 @@ class AddrSpace {
 
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
-    unsigned int AddrTranslation(int virtaddr);
+    unsigned int AddrTranslation(int virtAddr);
 
   private:
 #ifndef USE_TLB
