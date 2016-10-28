@@ -19,6 +19,7 @@ Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
 
+
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -31,6 +32,7 @@ SynchDisk   *synchDisk;
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 Machine *machine;	// user program memory and registers
 SynchConsole *synchcon;
+BitMap *pagemap;    //used to keep track of physical pages
 #endif
 #endif
 
@@ -154,6 +156,7 @@ Initialize(int argc, char **argv)
     machine = new(std::nothrow) Machine(debugUserProg);	// this must come first
 #ifdef CHANGED
     synchcon = new(std::nothrow) SynchConsole();
+    pagemap = new(std::nothrow) BitMap(NumPhysPages);
 #endif
 #endif
 

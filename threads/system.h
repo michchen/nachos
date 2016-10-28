@@ -30,12 +30,14 @@ extern Interrupt *interrupt;			// interrupt status
 extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 
+
 #ifdef USER_PROGRAM
 #ifdef CHANGED
 #include "machine.h"
 #include "synchconsole.h"
 extern Machine* machine;	// user program memory and registers
 extern SynchConsole* synchcon;
+extern BitMap *pagemap;
 #endif
 #endif
 
