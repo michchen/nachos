@@ -15,7 +15,9 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
+#include "bitmap.h"
 #include <new>
+
 
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
