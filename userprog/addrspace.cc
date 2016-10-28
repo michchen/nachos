@@ -98,6 +98,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 	pageTable[i].readOnly = false;  // if the code segment was entirely on 
 					// a separate page, we could set its 
 					// pages to be read-only
+	fprintf(stderr, "%s\n","ignored?" );
     }
 #endif    
 
@@ -118,6 +119,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);
     }
+    fprintf(stderr, "%s\n", "what");
 
 }
 
