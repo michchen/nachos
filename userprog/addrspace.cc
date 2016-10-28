@@ -208,9 +208,9 @@ unsigned int AddrSpace::AddrTranslation(int virtaddr)
     vpn = (unsigned) virtAddr / PageSize;
     offset = (unsigned) virtAddr % PageSize;
 
-    if (vpn >= pageTableSize) {
+    if (vpn >= machine->pageTableSize) {
         DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
-            virtAddr, pageTableSize);
+            virtAddr, machine->pageTableSize);
         return -1;
     } else if (!pageTable[vpn].valid) {
         DEBUG('a', "Page table miss, virtual address  %d!\n", 
