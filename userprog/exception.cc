@@ -184,10 +184,19 @@ void sysCallHalt(){
 
 void sysCallExit(){
   DEBUG('a', "Exit, initiated by user program.\n");
+  int status;
+  status = machine->ReadRegister(4);
+  machine->WriteRegister(2, status);
+  incrementPC();
+  currentThread->Finish();
+
 }
 
 void sysCallJoin(){
   DEBUG('a', "Joining, initiated by user program.\n");
+  SpaceId procId;
+  procId = machine->ReadRegister(4);
+  
 }
 
 void sysCallCreate(){
