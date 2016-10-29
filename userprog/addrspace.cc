@@ -91,7 +91,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     pageTable = new(std::nothrow) TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = i;
+	pageTable[i].physicalPage = pagemap->Find();
 	pageTable[i].valid = true;
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
@@ -103,20 +103,35 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
-    bzero(machine->mainMemory, size);
+    //bzero(machine->mainMemory, size);
+    for (int j = 0; j < numPages; j++ ) {
+        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+    }
 
+    int virtaddr;
+    int addrtrans;
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
-			noffH.code.size, noffH.code.inFileAddr);
+        virtaddr = noffH.code.virtualAddr;
+        while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
+            addrtrans = AddrTranslation(virtaddr);
+            executable->ReadAt(&(machine->mainMemory[addrtrans]),
+			     1, noffH.code.inFileAddr + (virtaddr - noffH.code.virtualAddr));
+            virtaddr++;
+        }
     }
     if (noffH.initData.size > 0) {
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
 			noffH.initData.virtualAddr, noffH.initData.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
-			noffH.initData.size, noffH.initData.inFileAddr);
+        virtaddr = noffH.code.virtualAddr;
+        while (virtaddr < (noffH.initData.size + noffH.initData.virtualAddr)) {
+            addrtrans = AddrTranslation(virtaddr);
+            executable->ReadAt(&(machine->mainMemory[addrtrans]),
+			1, noffH.initData.inFileAddr + (virtaddr-noffH.initData.virtualAddr));
+            virtaddr++;
+        }
     }
 
 }
@@ -192,4 +207,37 @@ void AddrSpace::RestoreState()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 #endif
+}
+
+
+unsigned int AddrSpace::AddrTranslation(int virtAddr)
+{
+    unsigned int vpn, offset;
+    TranslationEntry *entry;
+    unsigned int pageFrame;
+    unsigned int physaddr;
+
+    vpn = (unsigned) virtAddr / PageSize;
+    offset = (unsigned) virtAddr % PageSize;
+
+    if (vpn >= machine->pageTableSize) {
+        DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
+            virtAddr, machine->pageTableSize);
+        return -1;
+    } else if (!pageTable[vpn].valid) {
+        DEBUG('a', "Page table miss, virtual address  %d!\n", 
+            virtAddr);
+        return -1;
+    }
+    entry = &pageTable[vpn];
+
+    pageFrame = entry->physicalPage;
+
+    if (pageFrame >= NumPhysPages) { 
+        DEBUG('a', "*** frame %d > %d!\n", pageFrame, NumPhysPages);
+        return -1;
+    }
+
+    physaddr = pageFrame * PageSize + offset;
+    return physaddr;
 }
