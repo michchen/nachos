@@ -362,6 +362,27 @@ void sysCallClose(){
 
 void sysCallFork(){
   DEBUG('a', "Fork, initiated by user program.\n");
+  Thread *forkedThread = new Thread("Forked Thread");
+  //To do copy the parents address space and open files.
+  //forkedThread->space = new(std::nothrow) AddrSpace("");
+  
+  incrementPC();
+
+  //Todo: What to do with the space id
+  //Thread->sid = spaceId++;
+
+  machine->WriteRegister(2,0);
+
+  currentThread->saveUserState();
+  forkedThread->saveUserState();
+
+  forkedThread->Fork(machine->Run(),0);
+  
+  currentThread->Yield();
+
+  currentThread->RestoreUserState();
+  //Return to parent process
+  machine->WriteRegister(2,1);
 }
 
 void sysCallExec(){
