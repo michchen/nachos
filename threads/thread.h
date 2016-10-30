@@ -102,6 +102,14 @@ class Thread {
     void setStatus(ThreadStatus st) { status = st; }
     const char* getName() { return (name); }
     void Print() { printf("%s, ", name); }
+    
+    #ifdef CHANGED
+
+    int getThreadId(){ return threadID;}
+    Thread* getParent() { return parent;}
+
+
+    #endif
 
   private:
     // some of the private data for this class is listed above
@@ -113,6 +121,16 @@ class Thread {
     const char* name;
 
     void StackAllocate(VoidFunctionPtr func, int arg);
+    
+    #ifdef CHANGED
+
+    int threadID;
+
+    Thread *parent;
+
+    int exitState;
+
+    #endif
     					// Allocate a stack for thread.
 					// Used internally by Fork()
 
