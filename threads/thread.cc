@@ -42,6 +42,8 @@ Thread::Thread(const char* threadName)
 #ifdef CHANGED
 #ifdef USER_PROGRAM
     space = NULL;
+    threadId = 0;
+    parent = currentThread;
     SpaceId sid;
     curNumFiles = 0;
     for(int i = 2; i < MaxOpenFiles; i++) {
