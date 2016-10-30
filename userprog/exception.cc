@@ -184,6 +184,7 @@ void sysCallHalt(){
 
 void sysCallExit(){
   DEBUG('a', "Exit, initiated by user program.\n");
+  int arg = machine->ReadRegister(4);
 }
 
 void sysCallJoin(){
@@ -414,7 +415,6 @@ void sysCallExec(){
 
     //return the address space identifier to the calling process
     machine->WriteRegister(2,newProcess->getThreadId());
-
 
     //saveUser state just in case of failure (Maybe we dont need this?)
     currentThread->SaveUserState();

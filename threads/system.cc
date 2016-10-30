@@ -34,7 +34,6 @@ Machine *machine;	// user program memory and registers
 SynchConsole *synchcon;
 BitMap *pagemap;    //used to keep track of physical pages
 List *activeProcesses;
-List *exitingProcesses;
 #endif
 #endif
 
