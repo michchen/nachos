@@ -184,7 +184,10 @@ void sysCallHalt(){
 
 void sysCallExit(){
   DEBUG('a', "Exit, initiated by user program.\n");
-  int arg = machine->ReadRegister(4);
+  int result = machine->ReadRegister(4);
+  int threadID = currentThread->getThreadId();
+
+  currentThread->exitState = result; 
 }
 
 void sysCallJoin(){
