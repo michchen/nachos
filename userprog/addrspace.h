@@ -32,6 +32,12 @@ class AddrSpace {
     void RestoreState();		// info on a context switch 
     unsigned int AddrTranslation(int virtAddr);
     void ExecFunc(OpenFile *executable);
+    
+    #ifndef CHANGED
+    AddrSpace(AddrSpace *parentData);
+    TranslationEntry* getPageTable(){return pageTable;};
+    int getNumPages(){return numPages;};
+    #endif
 
   private:
 #ifndef USE_TLB

@@ -33,7 +33,7 @@ SynchDisk   *synchDisk;
 Machine *machine;	// user program memory and registers
 SynchConsole *synchcon;
 BitMap *pagemap;    //used to keep track of physical pages
-List *activeProcesses;
+ProcessMonitor *processMonitor;
 #endif
 #endif
 
@@ -158,6 +158,7 @@ Initialize(int argc, char **argv)
 #ifdef CHANGED
     synchcon = new(std::nothrow) SynchConsole();
     pagemap = new(std::nothrow) BitMap(NumPhysPages);
+    processMonitor = new(std::nothrow) ProcessMonitor();
 #endif
 #endif
 

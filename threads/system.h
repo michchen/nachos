@@ -37,9 +37,11 @@ extern Timer *timer;				// the hardware alarm clock
 #ifdef CHANGED
 #include "machine.h"
 #include "synchconsole.h"
+#include "processMonitor.h"
 extern Machine* machine;	// user program memory and registers
 extern SynchConsole* synchcon;
 extern BitMap *pagemap;
+extern ProcessMonitor *processMonitor;
 #endif
 #endif
 

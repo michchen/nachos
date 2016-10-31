@@ -113,6 +113,7 @@ ExceptionHandler(ExceptionType which)
 
     int type = machine->ReadRegister(2);
 
+    int totalThreads;
     //fprintf(stderr, "%s %d\n", "Here is the type", type);
     switch (which) {
       case SyscallException:
@@ -374,16 +375,17 @@ void sysCallFork(){
   DEBUG('a', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
-  //forkedThread->space = new(std::nothrow) AddrSpace("");
-  
-  incrementPC();
+  forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
 
   //Todo: What to do with the space id
-  //Thread->sid = spaceId++;
   int arg = machine->ReadRegister(4);
-  machine->WriteRegister(2,0);
+
+  
 
   currentThread->SaveUserState();
+
+  machine->WriteRegister(2,0);
+
   forkedThread->SaveUserState();
 
   forkedThread->Fork(machine->Run(),0);
@@ -393,6 +395,8 @@ void sysCallFork(){
   currentThread->RestoreUserState();
   //Return to parent process
   machine->WriteRegister(2,1);
+
+  incrementPC();
 }
 
 //Extra info needed for the system!
