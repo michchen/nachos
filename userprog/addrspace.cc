@@ -86,18 +86,21 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
+    int bitmapAddr;
 #ifndef USE_TLB
 // first, set up the translation 
     pageTable = new(std::nothrow) TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
-	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = pagemap->Find();
-	pageTable[i].valid = true;
-	pageTable[i].use = false;
-	pageTable[i].dirty = false;
-	pageTable[i].readOnly = false;  // if the code segment was entirely on 
-					// a separate page, we could set its 
-					// pages to be read-only
+    	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
+        bitmapAddr = pagemap->Find();
+        ASSERT(bitmapAddr != -1);
+    	pageTable[i].physicalPage = bitmapAddr;
+    	pageTable[i].valid = true;
+    	pageTable[i].use = false;
+    	pageTable[i].dirty = false;
+    	pageTable[i].readOnly = false;  // if the code segment was entirely on 
+    					// a separate page, we could set its 
+    					// pages to be read-only
     }
 #endif    
 
@@ -240,4 +243,54 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
 
     physaddr = pageFrame * PageSize + offset;
     return physaddr;
+}
+
+void
+AddrSpace::ExecFunc(OpenFile *executable) {
+    for (int i = 0; i < numPages; i++) {
+        pageMap.Clear(pageTable[i].physicalPage);
+    }
+
+    int bitmapAddr;
+
+    for (i = 0; i < numPages; i++) {  // for now, virtual page # = phys page #
+        bitmapAddr = pagemap->Find();
+        ASSERT(bitmapAddr != -1);
+        pageTable[i].physicalPage = bitmapAddr;
+    }
+
+// zero out the entire address space, to zero the unitialized data segment 
+// and the stack segment
+    //bzero(machine->mainMemory, size);
+    for (int j = 0; j < numPages; j++ ) {
+        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+    }
+
+    int virtaddr;
+    int addrtrans;
+// then, copy in the code and data segments into memory
+    if (noffH.code.size > 0) {
+        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+            noffH.code.virtualAddr, noffH.code.size);
+        virtaddr = noffH.code.virtualAddr;
+        while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
+            addrtrans = AddrTranslation(virtaddr);
+            executable->ReadAt(&(machine->mainMemory[addrtrans]),
+                 1, noffH.code.inFileAddr + (virtaddr - noffH.code.virtualAddr));
+            virtaddr++;
+        }
+    }
+    if (noffH.initData.size > 0) {
+        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+            noffH.initData.virtualAddr, noffH.initData.size);
+        virtaddr = noffH.code.virtualAddr;
+        while (virtaddr < (noffH.initData.size + noffH.initData.virtualAddr)) {
+            addrtrans = AddrTranslation(virtaddr);
+            executable->ReadAt(&(machine->mainMemory[addrtrans]),
+            1, noffH.initData.inFileAddr + (virtaddr-noffH.initData.virtualAddr));
+            virtaddr++;
+        }
+    }
+
+
 }

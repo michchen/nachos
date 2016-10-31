@@ -187,7 +187,13 @@ void sysCallExit(){
   int result = machine->ReadRegister(4);
   int threadID = currentThread->getThreadId();
 
-  currentThread->exitState = result; 
+  // currentThread->exitState = result; 
+
+  machine->WriteRegister(2, result);
+
+  currentThread->Finish();
+
+
 }
 
 void sysCallJoin(){
@@ -377,8 +383,8 @@ void sysCallFork(){
   int arg = machine->ReadRegister(4);
   machine->WriteRegister(2,0);
 
-  currentThread->saveUserState();
-  forkedThread->saveUserState();
+  currentThread->SaveUserState();
+  forkedThread->SaveUserState();
 
   forkedThread->Fork(machine->Run(),0);
   
@@ -398,41 +404,61 @@ void sysCallFork(){
 void sysCallExec(){
   DEBUG('a', "Execute, initiated by user program.\n");
 
-  char fileName[128];
+  char *fileName;
   int argStart = machine->ReadRegister(4);
   AddrSpace *space;
+  fileName = new(std::nothrow) char[128];
+  int i;
   //Get Filename to open for User Program
-  for (int i=0; i<128; i++)
-    if ((fileName[i]=machine->mainMemory[argStart++]) == '\0') break;
-  fileName[127]='\0'; 
+  // for (int i=0; i<128; i++)
+  //   if ((fileName[i]=machine->mainMemory[argStart++]) == '\0') break;
+  // fileName[127]='\0'; 
+
+  i = 0;
+  while (fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)] != '\0' && i < 127) {
+      i++;
+      argStart++;
+  }
+
   //Initialize its registers
   OpenFile *exec = fileSystem->Open(fileName);
   //Invoke it through machine running.
   incrementPC();
   if(exec != NULL){
-    //Create a new Thread
-    Thread *newProcess = new Thread("Executed Program Thread");
-    //Allocate a new address space object for the new Thread.
-    space = new(std::nothrow) AddrSpace(exec);
-    newProcess->space = space;
 
-    //return the address space identifier to the calling process
-    machine->WriteRegister(2,newProcess->getThreadId());
+    space->ExecFunc(exec);
 
-    //saveUser state just in case of failure (Maybe we dont need this?)
-    currentThread->SaveUserState();
+    delete exec;    //delete the executable
 
-    //Prep registers to look like just starting
-    currentThread->space->InitRegisters();
-    currentThread->space->RestoreState();
-    //Run the Process
-    newThread->Fork(machine->Run(),0);
-    //Inheriting open files from former execution????
+    space->InitRegisters();   // set the initial register values
+    space->RestoreState();    // load page table register
 
-    //Should not have reached here so return failure.
-    currentThread->RestoreUserState();
-    DEBUG('a', "%s\n", "Forking has failed somehow");
-    machine->WriteRegister(2,-1);
+
+    // //Create a new Thread
+    // Thread *newProcess = new Thread("Executed Program Thread");
+    // //Allocate a new address space object for the new Thread.
+    // space = new(std::nothrow) AddrSpace(exec);
+    // newProcess->space = space;
+
+    // //return the address space identifier to the calling process
+    // machine->WriteRegister(2,newProcess->getThreadId());
+
+    // //saveUser state just in case of failure (Maybe we dont need this?)
+    // currentThread->SaveUserState();
+
+    // //Prep registers to look like just starting
+    // currentThread->space->InitRegisters();
+    // currentThread->space->RestoreState();
+    // //Run the Process
+    // newProcess->Fork(machine->Run(),0);
+    // //Inheriting open files from former execution????
+
+    // //Should not have reached here so return failure.
+    // currentThread->RestoreUserState();
+    // DEBUG('a', "%s\n", "Forking has failed somehow");
+    // machine->WriteRegister(2,-1);
+
+
 
   }
   else{

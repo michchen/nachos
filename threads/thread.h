@@ -105,7 +105,7 @@ class Thread {
     
     #ifdef CHANGED
 
-    int getThreadId(){ return threadID;}
+    int getThreadId(){ return threadId;}
     Thread* getParent() { return parent;}
 
 
@@ -124,7 +124,7 @@ class Thread {
     
     #ifdef CHANGED
 
-    int threadID;
+    int threadId;
 
     Thread *parent;
 
