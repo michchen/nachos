@@ -113,7 +113,7 @@ ExceptionHandler(ExceptionType which)
 
     int type = machine->ReadRegister(2);
 
-    //fprintf(stderr, "%s %d\n", "Here is the type", type);
+    fprintf(stderr, "%s %d\n", "Here is the type", type);
     switch (which) {
       case SyscallException:
       	switch (type) {
@@ -331,9 +331,14 @@ void sysCallWrite(){
   char *stringarg;
   stringarg = new(std::nothrow) char[128];  
 
-  for (int i=0; i<size; i++)
-    if ((stringarg[i]=machine->mainMemory[bufStart++]) == '\0') break;
+  ASSERT(currentThread->space != NULL);
+  for (int i=0; i<size; i++) {
+    if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(bufStart)]) == '\0') break;
+    bufStart++;
+  }
   stringarg[127]='\0'; 
+
+  fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
 
   if (id == 0) {
@@ -406,7 +411,7 @@ void sysCallExec(){
 
   char *fileName;
   int argStart = machine->ReadRegister(4);
-  AddrSpace *space;
+  //AddrSpace *space;
   fileName = new(std::nothrow) char[128];
   int i;
   //Get Filename to open for User Program
@@ -414,27 +419,36 @@ void sysCallExec(){
   //   if ((fileName[i]=machine->mainMemory[argStart++]) == '\0') break;
   // fileName[127]='\0'; 
 
-  fprintf(stderr, "%s\n", "doing some stuff");
+  fprintf(stderr, "%s %d\n", "doing some stuff", argStart);
 
-  i = 0;
-  while (fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)] != '\0' && i < 127) {
-      i++;
-      argStart++;
+  // i = 0;
+  // while (fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)] != '\0' && i < 127) {
+  //     i++;
+  //     argStart++;
+  //     fprintf(stderr, "%c\n", fileName[i]);
+  // }
+
+  ASSERT(currentThread->space != NULL);
+  for (int i=0; i<127; i++) {
+    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
+    argStart++;
   }
 
   //Initialize its registers
   fprintf(stderr, "%s %s\n", "about to do the open", fileName);
   OpenFile *exec = fileSystem->Open(fileName);
+
   //Invoke it through machine running.
   incrementPC();
   if(exec != NULL){
 
-    space->ExecFunc(exec);
+    fprintf(stderr, "%s\n", "yes?");
+    currentThread->space->ExecFunc(exec);
 
     delete exec;    //delete the executable
 
-    space->InitRegisters();   // set the initial register values
-    space->RestoreState();    // load page table register
+    currentThread->space->InitRegisters();   // set the initial register values
+    currentThread->space->RestoreState();    // load page table register
 
 
     // //Create a new Thread
@@ -466,6 +480,7 @@ void sysCallExec(){
   }
   else{
     DEBUG('a', "%s\n", "Error Opening File");
+    fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
   }
 }

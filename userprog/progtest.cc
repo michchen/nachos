@@ -24,21 +24,27 @@
 void
 StartProcess(char *filename)
 {
+    fprintf(stderr, "%s\n", "Attempting to start the process");
     OpenFile *executable = fileSystem->Open(filename);
     AddrSpace *space;
+    fprintf(stderr, "%s %s\n", "woop", filename);
 
     if (executable == NULL) {
-	printf("Unable to open file %s\n", filename);
+	   printf("Unable to open file %s\n", filename);
 	return;
     }
+    fprintf(stderr, "%s\n", "attempting to create an addrspace");
     space = new(std::nothrow) AddrSpace(executable);    
     currentThread->space = space;
+    fprintf(stderr, "%s\n","ok?" );
 
+    fprintf(stderr, "%s\n", "step");
     delete executable;			// close file
 
     space->InitRegisters();		// set the initial register values
     space->RestoreState();		// load page table register
 
+    printf("%s\n", "here we go");
     machine->Run();			// jump to the user progam
     ASSERT(false);			// machine->Run never returns;
 					// the address space exits

@@ -106,9 +106,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
-    //bzero(machine->mainMemory, size);
+    //bzero(machine->mainMemory, size);   pageTable[i].physicalPage * PageSize
     for (int j = 0; j < numPages; j++ ) {
-        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+        bzero(&(machine->mainMemory[AddrTranslation(pageTable[i].virtualPage)]), PageSize);
     }
 
     int virtaddr;
@@ -120,6 +120,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         virtaddr = noffH.code.virtualAddr;
         while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
             addrtrans = AddrTranslation(virtaddr);
+            ASSERT(addrtrans != -1);
             executable->ReadAt(&(machine->mainMemory[addrtrans]),
 			     1, noffH.code.inFileAddr + (virtaddr - noffH.code.virtualAddr));
             virtaddr++;
@@ -131,11 +132,14 @@ AddrSpace::AddrSpace(OpenFile *executable)
         virtaddr = noffH.code.virtualAddr;
         while (virtaddr < (noffH.initData.size + noffH.initData.virtualAddr)) {
             addrtrans = AddrTranslation(virtaddr);
+            ASSERT(addrtrans != -1);
             executable->ReadAt(&(machine->mainMemory[addrtrans]),
 			1, noffH.initData.inFileAddr + (virtaddr-noffH.initData.virtualAddr));
             virtaddr++;
         }
     }
+
+    fprintf(stderr, "%s\n","finished creating the addrspace" );
 
 }
 
@@ -223,13 +227,15 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
     vpn = (unsigned) virtAddr / PageSize;
     offset = (unsigned) virtAddr % PageSize;
 
-    if (vpn >= machine->pageTableSize) {
+    if (vpn >= numPages) {
         DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
-            virtAddr, machine->pageTableSize);
+            virtAddr, numPages);
+        fprintf(stderr, "%s %d %d\n", "error 1", virtAddr, numPages);
         return -1;
     } else if (!pageTable[vpn].valid) {
         DEBUG('a', "Page table miss, virtual address  %d!\n", 
             virtAddr);
+        fprintf(stderr, "%s\n", "error 2");
         return -1;
     }
     entry = &pageTable[vpn];
@@ -238,6 +244,7 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
 
     if (pageFrame >= NumPhysPages) { 
         DEBUG('a', "*** frame %d > %d!\n", pageFrame, NumPhysPages);
+        fprintf(stderr, "%s\n", "error 3");
         return -1;
     }
 
@@ -289,7 +296,7 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 // and the stack segment
     //bzero(machine->mainMemory, size);
     for (int j = 0; j < numPages; j++ ) {
-        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+        bzero(&(machine->mainMemory[AddrTranslation(pageTable[i].virtualPage)]), PageSize);
     }
 
     int virtaddr;
