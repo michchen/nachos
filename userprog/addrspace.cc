@@ -248,9 +248,35 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
 void
 AddrSpace::ExecFunc(OpenFile *executable) {
     for (int i = 0; i < numPages; i++) {
-        pageMap.Clear(pageTable[i].physicalPage);
+        pagemap->Clear(pageTable[i].physicalPage);
     }
 
+    NoffHeader noffH;
+    unsigned int size;
+#ifndef USE_TLB
+    unsigned int i;
+#endif
+
+    executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    if ((noffH.noffMagic != NOFFMAGIC) && 
+        (WordToHost(noffH.noffMagic) == NOFFMAGIC))
+        SwapHeader(&noffH);
+    ASSERT(noffH.noffMagic == NOFFMAGIC);
+
+// how big is address space?
+    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
+            + UserStackSize;    // we need to increase the size
+                        // to leave room for the stack
+    numPages = divRoundUp(size, PageSize);
+    size = numPages * PageSize;
+
+    ASSERT(numPages <= NumPhysPages);       // check we're not trying
+                        // to run anything too big --
+                        // at least until we have
+                        // virtual memory
+
+    DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
+                    numPages, size);
     int bitmapAddr;
 
     for (i = 0; i < numPages; i++) {  // for now, virtual page # = phys page #
