@@ -376,23 +376,23 @@ void sysCallFork(){
   //To do copy the parents address space and open files.
   //forkedThread->space = new(std::nothrow) AddrSpace("");
   
-  incrementPC();
+  // incrementPC();
 
-  //Todo: What to do with the space id
-  //Thread->sid = spaceId++;
-  int arg = machine->ReadRegister(4);
-  machine->WriteRegister(2,0);
+  // //Todo: What to do with the space id
+  // //Thread->sid = spaceId++;
+  // int arg = machine->ReadRegister(4);
+  // machine->WriteRegister(2,0);
 
-  currentThread->SaveUserState();
-  forkedThread->SaveUserState();
+  // currentThread->SaveUserState();
+  // forkedThread->SaveUserState();
 
-  forkedThread->Fork(machine->Run(),0);
+  // forkedThread->Fork(machine->Run(),0);
   
-  currentThread->Yield();
+  // currentThread->Yield();
 
-  currentThread->RestoreUserState();
-  //Return to parent process
-  machine->WriteRegister(2,1);
+  // currentThread->RestoreUserState();
+  // //Return to parent process
+  // machine->WriteRegister(2,1);
 }
 
 //Extra info needed for the system!
@@ -414,6 +414,8 @@ void sysCallExec(){
   //   if ((fileName[i]=machine->mainMemory[argStart++]) == '\0') break;
   // fileName[127]='\0'; 
 
+  fprintf(stderr, "%s\n", "doing some stuff");
+
   i = 0;
   while (fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)] != '\0' && i < 127) {
       i++;
@@ -421,6 +423,7 @@ void sysCallExec(){
   }
 
   //Initialize its registers
+  fprintf(stderr, "%s %s\n", "about to do the open", fileName);
   OpenFile *exec = fileSystem->Open(fileName);
   //Invoke it through machine running.
   incrementPC();
