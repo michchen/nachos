@@ -31,6 +31,7 @@ SynchDisk   *synchDisk;
 #ifdef THREADS
 ProcessMonitor *processMonitor;
 #endif
+
 #ifdef CHANGED
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 Machine *machine;	// user program memory and registers

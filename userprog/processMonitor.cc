@@ -7,15 +7,24 @@ ProcessMonitor::ProcessMonitor(){
 	monitorLock = new(std::nothrow) Lock("process monitor Lock");
 	monitorSemaphore = new(std::nothrow) Semaphore("process Semaphore");
 	totalThreads = 0;
+	exitStatus = -5;
 }
-
+void ProcessMonitor::setExitStatus(int threadID, int exitStatus){
+	if(activeThreads[threadID] != NULL){
+		ThreadBlocks *temp = activeThreads[threadID];
+		temp->exitStatus = exitStatus;
+	}
+	else{
+		DEBUG('a', 'Thread Does not exist!');
+	}
+}
 ProcessMonitor::~ProcessMonitor(){
 	delete activeThreads;
 	delete monitorLock;
 	delete monitorSemaphore;
 }
 
-int assignId(){
+int ProcessMonitor::assignId(){
 	for(int i = 0; i < MAX_THREAD_COUNT; i++){
 		if(activeThreads[i] == NULL)
 			return i;
@@ -23,8 +32,8 @@ int assignId(){
 	DEBUG('a', "Too many active threads unable to assign id");
 	return -1;
 }
-ProcessMonitor::void createAdd()
-ProcessMonitor::int addThread(Thread *thread){
+
+int ProcessMonitor::addThread(Thread *thread){
 	int spaceID = assignId();
 	if(spaceID == -1){
 		waitingThreads->Append(thread);
@@ -40,18 +49,27 @@ ProcessMonitor::int addThread(Thread *thread){
 		newBlock->semaphore = new(std::nothrow) Semaphore("new semaphore fork lock");
 		activeThreads[spaceID] = newBlock;
 		totalThreads++;
-		return 1;
+		return spaceID;
 	}
 }
 
-ProcessMonitor::void removeThread(Thread *thread){
+void ProcessMonitor::removeThread(Thread *thread){
 	if(thread != NULL){
 		totalThreads--;
 		int threadID = thread->getThreadID();
+		delete activeThreads[threadID];
 		activeThreads[threadID] = NULL;
 		delete thread;
 	}
 	else{
 		DEBUG('a', "Thread is null. Unable to delete");
 	}
+}
+
+void ProcessMonitor::lock(){
+	DEBUG('a', "Locking Monitor Lock");
+}
+
+void ProcessMonitor::unlock(){
+	DEBUG('a', "Unlocking Monitor Lock");
 }
