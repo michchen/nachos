@@ -107,7 +107,7 @@ class Thread {
 
     int getThreadId(){ return threadId;}
     Thread* getParent() { return parent;}
-
+    void setThreadId(int x){ threadId = x;}
 
     #endif
 

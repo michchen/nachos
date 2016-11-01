@@ -43,6 +43,38 @@ SwapHeader (NoffHeader *noffH)
 	noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
 
+AddrSpace::AddrSpace(AddrSpace *parentData){
+    unsigned int tnumPages = parentData->getNumPages();
+    unsigned int tsize = parentData->getNumPages() * PageSize;
+    int bitmapAddr;
+    pageTable = new(std::nothrow) TranslationEntry[numPages];
+    for (unsigned int i = 0; i < tnumPages; i++) {
+        pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
+        bitmapAddr = pagemap->Find();
+        ASSERT(bitmapAddr != -1);
+        pageTable[i].physicalPage = bitmapAddr;
+        pageTable[i].valid = true;
+        pageTable[i].use = false;
+        pageTable[i].dirty = false;
+        pageTable[i].readOnly = false;  // if the code segment was entirely on 
+                        // a separate page, we could set its 
+                        // pages to be read-only
+    }
+
+    int virtaddr;
+    int pvirtaddr;
+    TranslationEntry *parentTable = parentData->getPageTable();    
+    
+    for (unsigned int j = 0; j < tsize; j++ ) {
+        virtaddr = pageTable[j].virtualPage;
+        pvirtaddr = parentTable[j].virtualPage;
+        machine->mainMemory[AddrTranslation(virtaddr)] = machine->mainMemory[AddrTranslation(pvirtaddr)];
+    }
+    //inherit openfiles as well
+
+    
+
+}
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
 // 	Create an address space to run a user program.

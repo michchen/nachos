@@ -114,6 +114,10 @@ ExceptionHandler(ExceptionType which)
     int type = machine->ReadRegister(2);
 
     fprintf(stderr, "%s %d\n", "Here is the type", type);
+
+    int totalThreads;
+    //fprintf(stderr, "%s %d\n", "Here is the type", type);
+
     switch (which) {
       case SyscallException:
       	switch (type) {
@@ -165,7 +169,11 @@ ExceptionHandler(ExceptionType which)
         break;
     }
 }
-
+void runMachine(){
+  currentThread->RestoreUserState();
+  currentThread->space->RestoreState();
+  machine->Run();
+}
 void incrementPC()
 {
   int tmp;
@@ -385,25 +393,36 @@ void sysCallFork(){
   DEBUG('a', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
-  //forkedThread->space = new(std::nothrow) AddrSpace("");
-  
-  // incrementPC();
 
-  // //Todo: What to do with the space id
-  // //Thread->sid = spaceId++;
-  // int arg = machine->ReadRegister(4);
-  // machine->WriteRegister(2,0);
+  forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
 
-  // currentThread->SaveUserState();
-  // forkedThread->SaveUserState();
+  //Todo: What to do with the space id
+  int arg = machine->ReadRegister(4);
 
-  // forkedThread->Fork(machine->Run(),0);
-  
-  // currentThread->Yield();
+  processMonitor->lock();
+  int spaceId = processMonitor->addThread(forkedThread);
+  processMonitor->unlock();
 
-  // currentThread->RestoreUserState();
-  // //Return to parent process
-  // machine->WriteRegister(2,1);
+  if(spaceId ==-1){
+    DEBUG('a',"CREATION FAILURE");
+    return;
+  }
+
+
+  currentThread->SaveUserState();
+
+  machine->WriteRegister(2,0);
+
+  forkedThread->SaveUserState();
+
+  forkedThread->Fork((VoidFunctionPtr) runMachine,0);
+
+  currentThread->RestoreUserState();
+  //Return to parent process
+  machine->WriteRegister(2,1);
+
+  incrementPC();
+
 }
 
 //Extra info needed for the system!

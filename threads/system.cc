@@ -28,12 +28,14 @@ FileSystem  *fileSystem;
 SynchDisk   *synchDisk;
 #endif
 
+#ifdef THREADS
+ProcessMonitor *processMonitor;
+#endif
 #ifdef CHANGED
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 Machine *machine;	// user program memory and registers
 SynchConsole *synchcon;
 BitMap *pagemap;    //used to keep track of physical pages
-List *activeProcesses;
 #endif
 #endif
 
@@ -152,7 +154,10 @@ Initialize(int argc, char **argv)
 
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
-    
+
+#ifdef THREADS
+    processMonitor = new(std::nothrow) ProcessMonitor();
+#endif
 #ifdef USER_PROGRAM
     machine = new(std::nothrow) Machine(debugUserProg);	// this must come first
 #ifdef CHANGED

@@ -42,7 +42,7 @@ Thread::Thread(const char* threadName)
 #ifdef CHANGED
 #ifdef USER_PROGRAM
     space = NULL;
-    threadId = 0;
+    threadId = -1;
     parent = currentThread;
     SpaceId sid;
     curNumFiles = 0;
