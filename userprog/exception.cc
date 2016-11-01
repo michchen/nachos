@@ -223,9 +223,9 @@ void sysCallCreate(){
 // Copy the string from user-land to kernel-land.
 
   ASSERT(currentThread->space != NULL);
-  for (int i=0; i<size; i++) {
-    if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(bufStart)]) == '\0') break;
-    bufStart++;
+  for (int i=0; i<127; i++) {
+    if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(whence)]) == '\0') break;
+    whence++;
   }
   stringarg[127]='\0';              // Effectively truncates a string
                                      //   if it's too long. Better,
@@ -259,9 +259,9 @@ void sysCallOpen(){
   // Copy the string from user-land to kernel-land.
 
   ASSERT(currentThread->space != NULL);
-  for (int i=0; i<size; i++) {
-    if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(bufStart)]) == '\0') break;
-    bufStart++;
+  for (int i=0; i<127; i++) {
+    if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(whence)]) == '\0') break;
+    whence++;
   }
   stringarg[127]='\0';              // Effectively truncates a string
                                        //   if it's too long. Better,
