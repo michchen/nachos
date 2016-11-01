@@ -44,11 +44,11 @@ SwapHeader (NoffHeader *noffH)
 }
 
 AddrSpace::AddrSpace(AddrSpace *parentData){
-    numPages = parentData->numPages;
-    int size = parentData->getNumPages() * PageSize;
+    unsigned int tnumPages = parentData->getNumPages();
+    unsigned int tsize = parentData->getNumPages() * PageSize;
     int bitmapAddr;
     pageTable = new(std::nothrow) TranslationEntry[numPages];
-    for (i = 0; i < numPages; i++) {
+    for (unsigned int i = 0; i < tnumPages; i++) {
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
         ASSERT(bitmapAddr != -1);
@@ -63,10 +63,9 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
 
     int virtaddr;
     int pvirtaddr;
-    int addrtrans;
     TranslationEntry *parentTable = parentData->getPageTable();    
     
-    for (int j = 0; j < size; j++ ) {
+    for (unsigned int j = 0; j < tsize; j++ ) {
         virtaddr = pageTable[j].virtualPage;
         pvirtaddr = parentTable[j].virtualPage;
         machine->mainMemory[AddrTranslation(virtaddr)] = machine->mainMemory[AddrTranslation(pvirtaddr)];

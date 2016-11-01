@@ -32,7 +32,9 @@ extern Interrupt *interrupt;			// interrupt status
 extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 
-
+#ifdef THREADS 
+extern ProcessMonitor *processMonitor;
+#endif
 #ifdef USER_PROGRAM
 #ifdef CHANGED
 #include "machine.h"
@@ -41,7 +43,7 @@ extern Timer *timer;				// the hardware alarm clock
 extern Machine* machine;	// user program memory and registers
 extern SynchConsole* synchcon;
 extern BitMap *pagemap;
-extern ProcessMonitor *processMonitor;
+
 #endif
 #endif
 

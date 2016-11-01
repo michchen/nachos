@@ -166,7 +166,11 @@ ExceptionHandler(ExceptionType which)
         break;
     }
 }
-
+void runMachine(){
+  currentThread->RestoreUserState();
+  currentThread->space->RestoreState();
+  machine->Run();
+}
 void incrementPC()
 {
   int tmp;
@@ -380,7 +384,15 @@ void sysCallFork(){
   //Todo: What to do with the space id
   int arg = machine->ReadRegister(4);
 
-  
+  processMonitor->lock();
+  int spaceId = processMonitor->addThread(forkedThread);
+  processMonitor->unlock();
+
+  if(spaceId ==-1){
+    DEBUG('a',"CREATION FAILURE");
+    return;
+  }
+
 
   currentThread->SaveUserState();
 
@@ -388,9 +400,7 @@ void sysCallFork(){
 
   forkedThread->SaveUserState();
 
-  forkedThread->Fork(machine->Run(),0);
-  
-  currentThread->Yield();
+  forkedThread->Fork((VoidFunctionPtr) runMachine,0);
 
   currentThread->RestoreUserState();
   //Return to parent process

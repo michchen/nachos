@@ -58,7 +58,8 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 list.o: ../threads/list.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/list.h ../threads/utility.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdlib.h \
@@ -112,7 +113,7 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
  ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
  ../userprog/synchconsole.h ../machine/console.h ../threads/synch.h \
- ../userprog/syscall.h
+ ../userprog/syscall.h ../threads/processMonitor.h
 synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/synch.h ../threads/thread.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -144,7 +145,8 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/synchlist.h ../threads/list.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -206,7 +208,8 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/thread.h ../threads/utility.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdlib.h \
@@ -239,7 +242,7 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
  ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
  ../filesys/openfile.h ../userprog/synchconsole.h ../machine/console.h \
- ../threads/synch.h ../userprog/syscall.h
+ ../threads/synch.h ../userprog/syscall.h ../threads/processMonitor.h
 utility.o: ../threads/utility.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
  ../threads/copyright.h /usr/include/stdlib.h /usr/include/features.h \
@@ -293,8 +296,9 @@ threadtest.o: ../threads/threadtest.cc /usr/include/stdc-predef.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
  ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
- ../threads/elevatorMonitor.h ../threads/synch.h \
- /usr/include/c++/4.8/vector /usr/include/c++/4.8/bits/stl_algobase.h \
+ ../threads/processMonitor.h ../threads/elevatorMonitor.h \
+ ../threads/synch.h /usr/include/c++/4.8/vector \
+ /usr/include/c++/4.8/bits/stl_algobase.h \
  /usr/include/c++/4.8/bits/functexcept.h \
  /usr/include/c++/4.8/bits/exception_defines.h \
  /usr/include/c++/4.8/bits/cpp_type_traits.h \
@@ -350,7 +354,7 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
  ../filesys/openfile.h ../userprog/synchconsole.h ../machine/console.h \
- ../threads/synch.h ../userprog/syscall.h
+ ../threads/synch.h ../userprog/syscall.h ../threads/processMonitor.h
 sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h /usr/include/unistd.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
@@ -402,7 +406,7 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
  ../userprog/synchconsole.h ../machine/console.h ../threads/synch.h \
- ../userprog/syscall.h
+ ../userprog/syscall.h ../threads/processMonitor.h
 stats.o: ../machine/stats.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
@@ -455,7 +459,8 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 elevatorMonitor.o: ../threads/elevatorMonitor.cc \
  /usr/include/stdc-predef.h ../threads/elevatorMonitor.h \
  ../threads/system.h ../threads/copyright.h ../threads/utility.h \
@@ -490,8 +495,8 @@ elevatorMonitor.o: ../threads/elevatorMonitor.cc \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
  ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
- ../threads/synch.h /usr/include/c++/4.8/vector \
- /usr/include/c++/4.8/bits/stl_algobase.h \
+ ../threads/processMonitor.h ../threads/synch.h \
+ /usr/include/c++/4.8/vector /usr/include/c++/4.8/bits/stl_algobase.h \
  /usr/include/c++/4.8/bits/functexcept.h \
  /usr/include/c++/4.8/bits/exception_defines.h \
  /usr/include/c++/4.8/bits/cpp_type_traits.h \
@@ -547,7 +552,7 @@ bridgeMonitor.o: ../threads/bridgeMonitor.cc /usr/include/stdc-predef.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
  ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
- ../threads/synch.h
+ ../threads/processMonitor.h ../threads/synch.h
 prodconMonitor.o: ../threads/prodconMonitor.cc /usr/include/stdc-predef.h \
  ../threads/prodconMonitor.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -581,7 +586,7 @@ prodconMonitor.o: ../threads/prodconMonitor.cc /usr/include/stdc-predef.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
  ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
- ../threads/synch.h
+ ../threads/processMonitor.h ../threads/synch.h
 addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -615,7 +620,7 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
  ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
- ../userprog/addrspace.h ../bin/noff.h
+ ../threads/processMonitor.h ../userprog/addrspace.h ../bin/noff.h
 bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../userprog/bitmap.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -648,7 +653,7 @@ bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../userprog/synchconsole.h ../machine/console.h \
- ../threads/synch.h ../userprog/syscall.h
+ ../threads/synch.h ../userprog/syscall.h ../threads/processMonitor.h
 exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -681,7 +686,8 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -715,7 +721,7 @@ progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
  ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
- ../userprog/addrspace.h
+ ../threads/processMonitor.h ../userprog/addrspace.h
 console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/console.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -748,7 +754,8 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -781,7 +788,8 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -814,7 +822,8 @@ mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -847,7 +856,8 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/synchconsole.h \
- ../machine/console.h ../threads/synch.h ../userprog/syscall.h
+ ../machine/console.h ../threads/synch.h ../userprog/syscall.h \
+ ../threads/processMonitor.h
 synchconsole.o: ../userprog/synchconsole.cc /usr/include/stdc-predef.h \
  ../userprog/synchconsole.h ../machine/console.h ../threads/copyright.h \
  ../threads/utility.h ../threads/copyright.h ../machine/sysdep.h \
@@ -878,6 +888,8 @@ synchconsole.o: ../userprog/synchconsole.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/exception \
  /usr/include/c++/4.8/bits/atomic_lockfree_defines.h ../threads/list.h \
  ../userprog/syscall.h
+processMonitor.o: ../userprog/processMonitor.cc \
+ /usr/include/stdc-predef.h ../userprog/processMonitor.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
