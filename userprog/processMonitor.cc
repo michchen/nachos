@@ -3,7 +3,6 @@
 ProcessMonitor::ProcessMonitor(){
 	activeThreads = new ThreadBlocks *[MAX_THREAD_COUNT]{};
 	waitingThreads = new List();
-	exitingThreads = new List();
 	monitorLock = new(std::nothrow) Lock("process monitor Lock");
 	monitorSemaphore = new(std::nothrow) Semaphore("process Semaphore");
 	totalThreads = 0;

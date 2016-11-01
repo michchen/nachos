@@ -1,5 +1,5 @@
-#ifdef PROCESS_MONITOR
-#define PROCESS_MONITOR
+#ifndef PROCESS_MONITOR_H
+#define PROCESS_MONITOR_H
 #ifdef CHANGED
 
 #include "synch.h"
@@ -8,15 +8,15 @@
 struct ThreadBlocks{
 	int threadId;
 	int parentId;
-	int exitStatus
+	int exitStatus;
 	bool done;
 	Lock *lock;
 	Semaphore *semaphore;
 };
 class ProcessMonitor{
 	public:
-		processMonitor();
-		~processMonitor();
+		ProcessMonitor();
+		~ProcessMonitor();
 		int addThread(Thread *thread);
 		void lock();
 		void unlock();
@@ -33,5 +33,5 @@ class ProcessMonitor{
 		static List *waitingThreads;
 };
 
-#endif //PROCESS_MONITOR
+#endif //PROCESS_MONITOR_H
 #endif

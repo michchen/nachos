@@ -18,8 +18,6 @@ Interrupt *interrupt;			// interrupt status
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
-
-
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -144,8 +142,9 @@ Initialize(int argc, char **argv)
     interrupt = new(std::nothrow) Interrupt;			// start up interrupt handling
     scheduler = new(std::nothrow) Scheduler();		// initialize the ready queue
     if (randomYield)				// start the timer (if needed)
-	timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
+	   timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
     threadToBeDestroyed = NULL;
+    processMonitor = new(std::nothrow) ProcessMonitor();
 
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
@@ -156,9 +155,6 @@ Initialize(int argc, char **argv)
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
 
-#ifdef THREADS
-    processMonitor = new(std::nothrow) ProcessMonitor();
-#endif
 #ifdef USER_PROGRAM
     machine = new(std::nothrow) Machine(debugUserProg);	// this must come first
 #ifdef CHANGED
@@ -191,7 +187,9 @@ Cleanup()
 #ifdef NETWORK
     delete postOffice;
 #endif
-
+#ifdef THREADS
+    delete processMonitor;
+#endif
 #ifdef CHANGED
 #ifdef USER_PROGRAM
     delete machine;
