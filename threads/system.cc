@@ -27,7 +27,7 @@ SynchDisk   *synchDisk;
 #endif
 
 #ifdef THREADS
-ProcessMonitor *processMonitor;
+// ProcessMonitor *processMonitor;
 #endif
 
 #ifdef CHANGED
@@ -144,7 +144,7 @@ Initialize(int argc, char **argv)
     if (randomYield)				// start the timer (if needed)
 	   timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
     threadToBeDestroyed = NULL;
-    processMonitor = new(std::nothrow) ProcessMonitor();
+   // processMonitor = new(std::nothrow) ProcessMonitor();
 
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
@@ -188,7 +188,7 @@ Cleanup()
     delete postOffice;
 #endif
 #ifdef THREADS
-    delete processMonitor;
+    //delete processMonitor;
 #endif
 #ifdef CHANGED
 #ifdef USER_PROGRAM

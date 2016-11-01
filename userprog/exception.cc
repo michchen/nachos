@@ -390,38 +390,38 @@ void sysCallClose(){
 }
 
 void sysCallFork(){
-  DEBUG('a', "Fork, initiated by user program.\n");
-  Thread *forkedThread = new Thread("Forked Thread");
-  //To do copy the parents address space and open files.
+  // DEBUG('a', "Fork, initiated by user program.\n");
+  // Thread *forkedThread = new Thread("Forked Thread");
+  // //To do copy the parents address space and open files.
 
-  forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
+  // forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
 
-  //Todo: What to do with the space id
-  int arg = machine->ReadRegister(4);
+  // //Todo: What to do with the space id
+  // int arg = machine->ReadRegister(4);
 
-  processMonitor->lock();
-  int spaceId = processMonitor->addThread(forkedThread);
-  processMonitor->unlock();
+  // processMonitor->lock();
+  // int spaceId = processMonitor->addThread(forkedThread);
+  // processMonitor->unlock();
 
-  if(spaceId ==-1){
-    DEBUG('a',"CREATION FAILURE");
-    return;
-  }
+  // if(spaceId ==-1){
+  //   DEBUG('a',"CREATION FAILURE");
+  //   return;
+  // }
 
 
-  currentThread->SaveUserState();
+  // currentThread->SaveUserState();
 
-  machine->WriteRegister(2,0);
+  // machine->WriteRegister(2,0);
 
-  forkedThread->SaveUserState();
+  // forkedThread->SaveUserState();
 
-  forkedThread->Fork((VoidFunctionPtr) runMachine,0);
+  // forkedThread->Fork((VoidFunctionPtr) runMachine,0);
 
-  currentThread->RestoreUserState();
-  //Return to parent process
-  machine->WriteRegister(2,1);
+  // currentThread->RestoreUserState();
+  // //Return to parent process
+  // machine->WriteRegister(2,1);
 
-  incrementPC();
+  // incrementPC();
 
 }
 
@@ -435,33 +435,42 @@ void sysCallExec(){
   DEBUG('a', "Execute, initiated by user program.\n");
 
   char *fileName;
-  int argStart = machine->ReadRegister(4);
-  //AddrSpace *space;
+  //int argStart = machine->ReadRegister(4);
+  int argc = machine->ReadRegister(4);
   fileName = new(std::nothrow) char[128];
   int i;
-  //Get Filename to open for User Program
-  // for (int i=0; i<128; i++)
-  //   if ((fileName[i]=machine->mainMemory[argStart++]) == '\0') break;
-  // fileName[127]='\0'; 
+  char** argv;
 
-  fprintf(stderr, "%s %d\n", "doing some stuff", argStart);
+  fprintf(stderr, "%s %d\n", "doing some stuff", argc);
 
-  // i = 0;
-  // while (fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)] != '\0' && i < 127) {
-  //     i++;
-  //     argStart++;
-  //     fprintf(stderr, "%c\n", fileName[i]);
-  // }
-
-  ASSERT(currentThread->space != NULL);
-  for (int i=0; i<127; i++) {
-    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
-    argStart++;
+  if (argc < 0) {
+    DEBUG('a', "Argc is negative, switching it to 0\n");
+    argc = 0;
   }
 
+
+  if (argc > 0) {
+    argv = new(std::nothrow) char*[argc];
+    int argvData = machine->ReadRegister(5);
+    for ( i = 0; i < argc; i++) {
+      argv[i] = new(std::nothrow) char[128];
+      for (int j=0; j<127; j++) {
+        if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(argvData)]) == '\0') break;
+        argvData++;
+      }
+
+    }
+  }
+
+  // ASSERT(currentThread->space != NULL);
+  // for (int i=0; i<127; i++) {
+  //   if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
+  //   argStart++;
+  // }
+
   //Initialize its registers
-  fprintf(stderr, "%s %s\n", "about to do the open", fileName);
-  OpenFile *exec = fileSystem->Open(fileName);
+  fprintf(stderr, "%s %s\n", "about to do the open", argv[0]);
+  OpenFile *exec = fileSystem->Open(argv[0]);
 
   //Invoke it through machine running.
   incrementPC();
