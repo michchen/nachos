@@ -45,10 +45,10 @@ SwapHeader (NoffHeader *noffH)
 
 AddrSpace::AddrSpace(AddrSpace *parentData){
     unsigned int tnumPages = parentData->getNumPages();
-    unsigned int tsize = parentData->getNumPages() * PageSize;
+    unsigned int tsize = parentData->size;
     int bitmapAddr;
     pageTable = new(std::nothrow) TranslationEntry[tnumPages];
-    //fprintf(stderr, "%s %d\n", "here is the number f pages", tnumPages);
+    fprintf(stderr, "%s %d %d\n", "here is the number of pages", tnumPages,tsize);
     for (unsigned int i = 0; i < tnumPages; i++) {
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
@@ -66,10 +66,8 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
     int pvirtaddr;
     TranslationEntry *parentTable = parentData->getPageTable();    
     
-    for (unsigned int j = 0; j < tnumPages; j++ ) {
-        virtaddr = pageTable[j].virtualPage;
-        pvirtaddr = parentTable[j].virtualPage;
-        machine->mainMemory[parentData->AddrTranslation(virtaddr)] = machine->mainMemory[parentData->AddrTranslation(pvirtaddr)];
+    for (unsigned int j = 0; j < tsize; j++ ) {
+        machine->mainMemory[AddrTranslation(j)] = machine->mainMemory[parentData->AddrTranslation(j)];
     }
     //inherit openfiles as well
 
@@ -94,7 +92,6 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
 AddrSpace::AddrSpace(OpenFile *executable)
 {
     NoffHeader noffH;
-    unsigned int size;
 #ifndef USE_TLB
     unsigned int i;
 #endif

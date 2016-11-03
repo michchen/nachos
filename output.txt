@@ -1,0 +1,2765 @@
+-d
+a
+-x
+Initializing address space, num pages 18, size 2304
+Initializing code segment, at 0x0, size 1104
+Initializing data segment, at 0x450, size 64
+Initializing stack register to 2288
+Reading VA 0x0, size 4
+	Translate 0x0, read: phys addr = 0x0
+	value read = 0c000030
+Reading VA 0x4, size 4
+	Translate 0x4, read: phys addr = 0x4
+	value read = 00000000
+Reading VA 0xc0, size 4
+	Translate 0xc0, read: phys addr = 0xc0
+	value read = 27bdffe0
+Reading VA 0xc4, size 4
+	Translate 0xc4, read: phys addr = 0xc4
+	value read = afbf001c
+Writing VA 0x8ec, size 4, value 0x8
+	Translate 0x8ec, write: phys addr = 0x8ec
+Reading VA 0xc8, size 4
+	Translate 0xc8, read: phys addr = 0xc8
+	value read = afbe0018
+Writing VA 0x8e8, size 4, value 0x0
+	Translate 0x8e8, write: phys addr = 0x8e8
+Reading VA 0xcc, size 4
+	Translate 0xcc, read: phys addr = 0xcc
+	value read = 0c00002c
+Reading VA 0xd0, size 4
+	Translate 0xd0, read: phys addr = 0xd0
+	value read = 03a0f021
+Reading VA 0xb0, size 4
+	Translate 0xb0, read: phys addr = 0xb0
+	value read = 03e00008
+Reading VA 0xb4, size 4
+	Translate 0xb4, read: phys addr = 0xb4
+	value read = 00000000
+Reading VA 0xd4, size 4
+	Translate 0xd4, read: phys addr = 0xd4
+	value read = 3c040000
+Reading VA 0xd8, size 4
+	Translate 0xd8, read: phys addr = 0xd8
+	value read = 24840450
+Reading VA 0xdc, size 4
+	Translate 0xdc, read: phys addr = 0xdc
+	value read = 0c00004d
+Reading VA 0xe0, size 4
+	Translate 0xe0, read: phys addr = 0xe0
+	value read = 24050001
+Reading VA 0x134, size 4
+	Translate 0x134, read: phys addr = 0x134
+	value read = 27bdffe0
+Reading VA 0x138, size 4
+	Translate 0x138, read: phys addr = 0x138
+	value read = afbf001c
+Writing VA 0x8cc, size 4, value 0xe4
+	Translate 0x8cc, write: phys addr = 0x8cc
+Reading VA 0x13c, size 4
+	Translate 0x13c, read: phys addr = 0x13c
+	value read = afbe0018
+Writing VA 0x8c8, size 4, value 0x8d0
+	Translate 0x8c8, write: phys addr = 0x8c8
+Reading VA 0x140, size 4
+	Translate 0x140, read: phys addr = 0x140
+	value read = 03a0f021
+Reading VA 0x144, size 4
+	Translate 0x144, read: phys addr = 0x144
+	value read = afc40020
+Writing VA 0x8d0, size 4, value 0x450
+	Translate 0x8d0, write: phys addr = 0x8d0
+Reading VA 0x148, size 4
+	Translate 0x148, read: phys addr = 0x148
+	value read = afc50024
+Writing VA 0x8d4, size 4, value 0x1
+	Translate 0x8d4, write: phys addr = 0x8d4
+Reading VA 0x14c, size 4
+	Translate 0x14c, read: phys addr = 0x14c
+	value read = afc00010
+Writing VA 0x8c0, size 4, value 0x0
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x150, size 4
+	Translate 0x150, read: phys addr = 0x150
+	value read = 8fc20020
+Reading VA 0x8d0, size 4
+	Translate 0x8d0, read: phys addr = 0x8d0
+	value read = 00000450
+Reading VA 0x154, size 4
+	Translate 0x154, read: phys addr = 0x154
+	value read = 00000000
+Reading VA 0x158, size 4
+	Translate 0x158, read: phys addr = 0x158
+	value read = afc20014
+Writing VA 0x8c4, size 4, value 0x450
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000450
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x451
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x450, size 1
+	Translate 0x450, read: phys addr = 0x450
+	value read = 00000050
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000000
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x1
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000451
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x452
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x451, size 1
+	Translate 0x451, read: phys addr = 0x451
+	value read = 00000041
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000001
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x2
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000452
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x453
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x452, size 1
+	Translate 0x452, read: phys addr = 0x452
+	value read = 00000052
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000002
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x3
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000453
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x454
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x453, size 1
+	Translate 0x453, read: phys addr = 0x453
+	value read = 00000045
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000003
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x4
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000454
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x455
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x454, size 1
+	Translate 0x454, read: phys addr = 0x454
+	value read = 0000004e
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000004
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x5
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000455
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x456
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x455, size 1
+	Translate 0x455, read: phys addr = 0x455
+	value read = 00000054
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000005
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x6
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000456
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x457
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x456, size 1
+	Translate 0x456, read: phys addr = 0x456
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000006
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x7
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000457
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x458
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x457, size 1
+	Translate 0x457, read: phys addr = 0x457
+	value read = 00000065
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000007
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x8
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000458
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x459
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x458, size 1
+	Translate 0x458, read: phys addr = 0x458
+	value read = 00000078
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000008
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x9
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000459
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x45a
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x459, size 1
+	Translate 0x459, read: phys addr = 0x459
+	value read = 00000069
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000009
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xa
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000045a
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x45b
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x45a, size 1
+	Translate 0x45a, read: phys addr = 0x45a
+	value read = 00000073
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000a
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xb
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000045b
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x45c
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x45b, size 1
+	Translate 0x45b, read: phys addr = 0x45b
+	value read = 00000074
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000b
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xc
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000045c
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x45d
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x45c, size 1
+	Translate 0x45c, read: phys addr = 0x45c
+	value read = 00000073
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000c
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xd
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000045d
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x45e
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x45d, size 1
+	Translate 0x45d, read: phys addr = 0x45d
+	value read = 0000000a
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000d
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xe
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000045e
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x45f
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x45e, size 1
+	Translate 0x45e, read: phys addr = 0x45e
+	value read = 00000000
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x17c, size 4
+	Translate 0x17c, read: phys addr = 0x17c
+	value read = 08000067
+Reading VA 0x180, size 4
+	Translate 0x180, read: phys addr = 0x180
+	value read = 00000000
+Reading VA 0x19c, size 4
+	Translate 0x19c, read: phys addr = 0x19c
+	value read = 8fc40020
+Reading VA 0x8d0, size 4
+	Translate 0x8d0, read: phys addr = 0x8d0
+	value read = 00000450
+Reading VA 0x1a0, size 4
+	Translate 0x1a0, read: phys addr = 0x1a0
+	value read = 8fc50010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000e
+Reading VA 0x1a4, size 4
+	Translate 0x1a4, read: phys addr = 0x1a4
+	value read = 8fc60024
+Reading VA 0x8d4, size 4
+	Translate 0x8d4, read: phys addr = 0x8d4
+	value read = 00000001
+Reading VA 0x1a8, size 4
+	Translate 0x1a8, read: phys addr = 0x1a8
+	value read = 0c000020
+Reading VA 0x1ac, size 4
+	Translate 0x1ac, read: phys addr = 0x1ac
+	value read = 00000000
+Reading VA 0x80, size 4
+	Translate 0x80, read: phys addr = 0x80
+	value read = 24020007
+Reading VA 0x84, size 4
+	Translate 0x84, read: phys addr = 0x84
+	value read = 0000000c
+Write, initiated by user program.
+PARENT exists
+Reading VA 0x88, size 4
+	Translate 0x88, read: phys addr = 0x88
+	value read = 03e00008
+Reading VA 0x8c, size 4
+	Translate 0x8c, read: phys addr = 0x8c
+	value read = 00000000
+Reading VA 0x1b0, size 4
+	Translate 0x1b0, read: phys addr = 0x1b0
+	value read = 03c0e821
+Reading VA 0x1b4, size 4
+	Translate 0x1b4, read: phys addr = 0x1b4
+	value read = 8fbf001c
+Reading VA 0x8cc, size 4
+	Translate 0x8cc, read: phys addr = 0x8cc
+	value read = 000000e4
+Reading VA 0x1b8, size 4
+	Translate 0x1b8, read: phys addr = 0x1b8
+	value read = 8fbe0018
+Reading VA 0x8c8, size 4
+	Translate 0x8c8, read: phys addr = 0x8c8
+	value read = 000008d0
+Reading VA 0x1bc, size 4
+	Translate 0x1bc, read: phys addr = 0x1bc
+	value read = 03e00008
+Reading VA 0x1c0, size 4
+	Translate 0x1c0, read: phys addr = 0x1c0
+	value read = 27bd0020
+Reading VA 0xe4, size 4
+	Translate 0xe4, read: phys addr = 0xe4
+	value read = 0c000028
+Reading VA 0xe8, size 4
+	Translate 0xe8, read: phys addr = 0xe8
+	value read = 00000000
+Reading VA 0xa0, size 4
+	Translate 0xa0, read: phys addr = 0xa0
+	value read = 24020009
+Reading VA 0xa4, size 4
+	Translate 0xa4, read: phys addr = 0xa4
+	value read = 0000000c
+Fork, initiated by user program.
+Forking Called
+Locking Monitor LockUnlocking Monitor LockParent sleeping
+Child Called
+Reading VA 0xa8, size 4
+	Translate 0xa8, read: phys addr = 0xa8
+	value read = 03e00008
+Reading VA 0xac, size 4
+	Translate 0xac, read: phys addr = 0xac
+	value read = 00000000
+Reading VA 0xec, size 4
+	Translate 0xec, read: phys addr = 0xec
+	value read = afc20010
+Writing VA 0x8e0, size 4, value 0x0
+	Translate 0x8e0, write: phys addr = 0x8e0
+Reading VA 0xf0, size 4
+	Translate 0xf0, read: phys addr = 0xf0
+	value read = 8fc20010
+Reading VA 0x8e0, size 4
+	Translate 0x8e0, read: phys addr = 0x8e0
+	value read = 00000000
+Reading VA 0xf4, size 4
+	Translate 0xf4, read: phys addr = 0xf4
+	value read = 00000000
+Reading VA 0xf8, size 4
+	Translate 0xf8, read: phys addr = 0xf8
+	value read = 10400005
+Reading VA 0xfc, size 4
+	Translate 0xfc, read: phys addr = 0xfc
+	value read = 00000000
+Reading VA 0x110, size 4
+	Translate 0x110, read: phys addr = 0x110
+	value read = 3c040000
+Reading VA 0x114, size 4
+	Translate 0x114, read: phys addr = 0x114
+	value read = 24840460
+Reading VA 0x118, size 4
+	Translate 0x118, read: phys addr = 0x118
+	value read = 0c00004d
+Reading VA 0x11c, size 4
+	Translate 0x11c, read: phys addr = 0x11c
+	value read = 24050001
+Reading VA 0x134, size 4
+	Translate 0x134, read: phys addr = 0x134
+	value read = 27bdffe0
+Reading VA 0x138, size 4
+	Translate 0x138, read: phys addr = 0x138
+	value read = afbf001c
+Writing VA 0x8cc, size 4, value 0x120
+	Translate 0x8cc, write: phys addr = 0x8cc
+Reading VA 0x13c, size 4
+	Translate 0x13c, read: phys addr = 0x13c
+	value read = afbe0018
+Writing VA 0x8c8, size 4, value 0x8d0
+	Translate 0x8c8, write: phys addr = 0x8c8
+Reading VA 0x140, size 4
+	Translate 0x140, read: phys addr = 0x140
+	value read = 03a0f021
+Reading VA 0x144, size 4
+	Translate 0x144, read: phys addr = 0x144
+	value read = afc40020
+Writing VA 0x8d0, size 4, value 0x460
+	Translate 0x8d0, write: phys addr = 0x8d0
+Reading VA 0x148, size 4
+	Translate 0x148, read: phys addr = 0x148
+	value read = afc50024
+Writing VA 0x8d4, size 4, value 0x1
+	Translate 0x8d4, write: phys addr = 0x8d4
+Reading VA 0x14c, size 4
+	Translate 0x14c, read: phys addr = 0x14c
+	value read = afc00010
+Writing VA 0x8c0, size 4, value 0x0
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x150, size 4
+	Translate 0x150, read: phys addr = 0x150
+	value read = 8fc20020
+Reading VA 0x8d0, size 4
+	Translate 0x8d0, read: phys addr = 0x8d0
+	value read = 00000460
+Reading VA 0x154, size 4
+	Translate 0x154, read: phys addr = 0x154
+	value read = 00000000
+Reading VA 0x158, size 4
+	Translate 0x158, read: phys addr = 0x158
+	value read = afc20014
+Writing VA 0x8c4, size 4, value 0x460
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000460
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x461
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x460, size 1
+	Translate 0x460, read: phys addr = 0x460
+	value read = 00000043
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000000
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x1
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000461
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x462
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x461, size 1
+	Translate 0x461, read: phys addr = 0x461
+	value read = 00000068
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000001
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x2
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000462
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x463
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x462, size 1
+	Translate 0x462, read: phys addr = 0x462
+	value read = 00000069
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000002
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x3
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000463
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x464
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x463, size 1
+	Translate 0x463, read: phys addr = 0x463
+	value read = 0000006c
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000003
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x4
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000464
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x465
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x464, size 1
+	Translate 0x464, read: phys addr = 0x464
+	value read = 00000064
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000004
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x5
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000465
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x466
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x465, size 1
+	Translate 0x465, read: phys addr = 0x465
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000005
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x6
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000466
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x467
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x466, size 1
+	Translate 0x466, read: phys addr = 0x466
+	value read = 00000061
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000006
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x7
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000467
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x468
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x467, size 1
+	Translate 0x467, read: phys addr = 0x467
+	value read = 00000066
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000007
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x8
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000468
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x469
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x468, size 1
+	Translate 0x468, read: phys addr = 0x468
+	value read = 00000074
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000008
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x9
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000469
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x46a
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x469, size 1
+	Translate 0x469, read: phys addr = 0x469
+	value read = 00000065
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000009
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xa
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000046a
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x46b
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x46a, size 1
+	Translate 0x46a, read: phys addr = 0x46a
+	value read = 00000072
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000a
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xb
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000046b
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x46c
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x46b, size 1
+	Translate 0x46b, read: phys addr = 0x46b
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000b
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xc
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000046c
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x46d
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x46c, size 1
+	Translate 0x46c, read: phys addr = 0x46c
+	value read = 00000066
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000c
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xd
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000046d
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x46e
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x46d, size 1
+	Translate 0x46d, read: phys addr = 0x46d
+	value read = 0000006f
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000d
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xe
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000046e
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x46f
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x46e, size 1
+	Translate 0x46e, read: phys addr = 0x46e
+	value read = 00000072
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000e
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0xf
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000046f
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x470
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x46f, size 1
+	Translate 0x46f, read: phys addr = 0x46f
+	value read = 0000006b
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000000f
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x10
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000470
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x471
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x470, size 1
+	Translate 0x470, read: phys addr = 0x470
+	value read = 0000003b
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000010
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x11
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000471
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x472
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x471, size 1
+	Translate 0x471, read: phys addr = 0x471
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000011
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x12
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000472
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x473
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x472, size 1
+	Translate 0x472, read: phys addr = 0x472
+	value read = 0000006b
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000012
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x13
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000473
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x474
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x473, size 1
+	Translate 0x473, read: phys addr = 0x473
+	value read = 00000069
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000013
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x14
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000474
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x475
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x474, size 1
+	Translate 0x474, read: phys addr = 0x474
+	value read = 00000064
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000014
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x15
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000475
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x476
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x475, size 1
+	Translate 0x475, read: phys addr = 0x475
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000015
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x16
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000476
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x477
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x476, size 1
+	Translate 0x476, read: phys addr = 0x476
+	value read = 00000070
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000016
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x17
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000477
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x478
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x477, size 1
+	Translate 0x477, read: phys addr = 0x477
+	value read = 00000069
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000017
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x18
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000478
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x479
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x478, size 1
+	Translate 0x478, read: phys addr = 0x478
+	value read = 00000064
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000018
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x19
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 00000479
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x47a
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x479, size 1
+	Translate 0x479, read: phys addr = 0x479
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 00000019
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x1a
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000047a
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x47b
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x47a, size 1
+	Translate 0x47a, read: phys addr = 0x47a
+	value read = 00000069
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000001a
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x1b
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000047b
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x47c
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x47b, size 1
+	Translate 0x47b, read: phys addr = 0x47b
+	value read = 00000073
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000001b
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x1c
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000047c
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x47d
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x47c, size 1
+	Translate 0x47c, read: phys addr = 0x47c
+	value read = 00000020
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x184, size 4
+	Translate 0x184, read: phys addr = 0x184
+	value read = 8fc30010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000001c
+Reading VA 0x188, size 4
+	Translate 0x188, read: phys addr = 0x188
+	value read = 00000000
+Reading VA 0x18c, size 4
+	Translate 0x18c, read: phys addr = 0x18c
+	value read = 24620001
+Reading VA 0x190, size 4
+	Translate 0x190, read: phys addr = 0x190
+	value read = 00401821
+Reading VA 0x194, size 4
+	Translate 0x194, read: phys addr = 0x194
+	value read = 08000057
+Reading VA 0x198, size 4
+	Translate 0x198, read: phys addr = 0x198
+	value read = afc30010
+Writing VA 0x8c0, size 4, value 0x1d
+	Translate 0x8c0, write: phys addr = 0x8c0
+Reading VA 0x15c, size 4
+	Translate 0x15c, read: phys addr = 0x15c
+	value read = 8fc20014
+Reading VA 0x8c4, size 4
+	Translate 0x8c4, read: phys addr = 0x8c4
+	value read = 0000047d
+Reading VA 0x160, size 4
+	Translate 0x160, read: phys addr = 0x160
+	value read = 00000000
+Reading VA 0x164, size 4
+	Translate 0x164, read: phys addr = 0x164
+	value read = 24430001
+Reading VA 0x168, size 4
+	Translate 0x168, read: phys addr = 0x168
+	value read = afc30014
+Writing VA 0x8c4, size 4, value 0x47e
+	Translate 0x8c4, write: phys addr = 0x8c4
+Reading VA 0x16c, size 4
+	Translate 0x16c, read: phys addr = 0x16c
+	value read = 80420000
+Reading VA 0x47d, size 1
+	Translate 0x47d, read: phys addr = 0x47d
+	value read = 00000000
+Reading VA 0x170, size 4
+	Translate 0x170, read: phys addr = 0x170
+	value read = 00000000
+Reading VA 0x174, size 4
+	Translate 0x174, read: phys addr = 0x174
+	value read = 14400003
+Reading VA 0x178, size 4
+	Translate 0x178, read: phys addr = 0x178
+	value read = 00000000
+Reading VA 0x17c, size 4
+	Translate 0x17c, read: phys addr = 0x17c
+	value read = 08000067
+Reading VA 0x180, size 4
+	Translate 0x180, read: phys addr = 0x180
+	value read = 00000000
+Reading VA 0x19c, size 4
+	Translate 0x19c, read: phys addr = 0x19c
+	value read = 8fc40020
+Reading VA 0x8d0, size 4
+	Translate 0x8d0, read: phys addr = 0x8d0
+	value read = 00000460
+Reading VA 0x1a0, size 4
+	Translate 0x1a0, read: phys addr = 0x1a0
+	value read = 8fc50010
+Reading VA 0x8c0, size 4
+	Translate 0x8c0, read: phys addr = 0x8c0
+	value read = 0000001d
+Reading VA 0x1a4, size 4
+	Translate 0x1a4, read: phys addr = 0x1a4
+	value read = 8fc60024
+Reading VA 0x8d4, size 4
+	Translate 0x8d4, read: phys addr = 0x8d4
+	value read = 00000001
+Reading VA 0x1a8, size 4
+	Translate 0x1a8, read: phys addr = 0x1a8
+	value read = 0c000020
+Reading VA 0x1ac, size 4
+	Translate 0x1ac, read: phys addr = 0x1ac
+	value read = 00000000
+Reading VA 0x80, size 4
+	Translate 0x80, read: phys addr = 0x80
+	value read = 24020007
+Reading VA 0x84, size 4
+	Translate 0x84, read: phys addr = 0x84
+	value read = 0000000c
+Write, initiated by user program.
+Child after fork; kid pid is Reading VA 0x88, size 4
+	Translate 0x88, read: phys addr = 0x988
+	value read = 03e00008
+Reading VA 0x8c, size 4
+	Translate 0x8c, read: phys addr = 0x98c
+	value read = 00000000
+Reading VA 0x1b0, size 4
+	Translate 0x1b0, read: phys addr = 0xab0
+	value read = 03c0e821
+Reading VA 0x1b4, size 4
+	Translate 0x1b4, read: phys addr = 0xab4
+	value read = 8fbf001c
+Reading VA 0x8cc, size 4
+	Translate 0x8cc, read: phys addr = 0x11cc
+	value read = 000000e4
+Reading VA 0x1b8, size 4
+	Translate 0x1b8, read: phys addr = 0xab8
+	value read = 8fbe0018
+Reading VA 0x8c8, size 4
+	Translate 0x8c8, read: phys addr = 0x11c8
+	value read = 000008d0
+Reading VA 0x1bc, size 4
+	Translate 0x1bc, read: phys addr = 0xabc
+	value read = 03e00008
+Reading VA 0x1c0, size 4
+	Translate 0x1c0, read: phys addr = 0xac0
+	value read = 27bd0020
+Reading VA 0xe4, size 4
+	Translate 0xe4, read: phys addr = 0x9e4
+	value read = 0c000028
+Reading VA 0xe8, size 4
+	Translate 0xe8, read: phys addr = 0x9e8
+	value read = 00000000
+Reading VA 0xa0, size 4
+	Translate 0xa0, read: phys addr = 0x9a0
+	value read = 24020009
+Reading VA 0xa4, size 4
+	Translate 0xa4, read: phys addr = 0x9a4
+	value read = 0000000c
+Fork, initiated by user program.

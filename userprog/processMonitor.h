@@ -20,7 +20,7 @@ class ProcessMonitor{
 		int addThread(Thread *thread,Thread *parent);
 		void lock();
 		void unlock();
-		void removeThread(Thread *thread);
+		void removeThread(int threadID);
 		int getTotalThreads(){return totalThreads;};
 		int setExitStatus(int threadID, int exitStatus);
 		int assignID();

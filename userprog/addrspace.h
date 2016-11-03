@@ -36,7 +36,7 @@ class AddrSpace {
     
     TranslationEntry* getPageTable(){return pageTable;};
     int getNumPages(){return numPages;};
-    
+    unsigned int size;
 
   private:
 #ifndef USE_TLB

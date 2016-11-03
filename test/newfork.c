@@ -15,7 +15,7 @@ main()
 
   prints("PARENT exists\n", ConsoleOutput);
   kid = Fork();
-  if (kid != 0) {
+ if (kid != 0) {
     prints("PARENT after fork; kid pid is ", ConsoleOutput);
     printd((int)kid, ConsoleOutput);
     prints("\n", ConsoleOutput);
@@ -33,7 +33,6 @@ main()
     /* You may want to put some real code here */
     Exit(17);
   }
-
 }
 
 /* Print a null-terminated string "s" on open file descriptor "file". */
