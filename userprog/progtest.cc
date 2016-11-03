@@ -27,7 +27,6 @@ StartProcess(char *filename)
     fprintf(stderr, "%s\n", "Attempting to start the process");
     OpenFile *executable = fileSystem->Open(filename);
     AddrSpace *space;
-    fprintf(stderr, "%s %s\n", "woop", filename);
 
     if (executable == NULL) {
 	   printf("Unable to open file %s\n", filename);

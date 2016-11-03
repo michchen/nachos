@@ -47,7 +47,8 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
     unsigned int tnumPages = parentData->getNumPages();
     unsigned int tsize = parentData->getNumPages() * PageSize;
     int bitmapAddr;
-    pageTable = new(std::nothrow) TranslationEntry[numPages];
+    pageTable = new(std::nothrow) TranslationEntry[tnumPages];
+    //fprintf(stderr, "%s %d\n", "here is the number f pages", tnumPages);
     for (unsigned int i = 0; i < tnumPages; i++) {
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
@@ -65,10 +66,10 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
     int pvirtaddr;
     TranslationEntry *parentTable = parentData->getPageTable();    
     
-    for (unsigned int j = 0; j < tsize; j++ ) {
+    for (unsigned int j = 0; j < tnumPages; j++ ) {
         virtaddr = pageTable[j].virtualPage;
         pvirtaddr = parentTable[j].virtualPage;
-        machine->mainMemory[AddrTranslation(virtaddr)] = machine->mainMemory[AddrTranslation(pvirtaddr)];
+        machine->mainMemory[parentData->AddrTranslation(virtaddr)] = machine->mainMemory[parentData->AddrTranslation(pvirtaddr)];
     }
     //inherit openfiles as well
 
@@ -122,6 +123,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 #ifndef USE_TLB
 // first, set up the translation 
     pageTable = new(std::nothrow) TranslationEntry[numPages];
+    //fprintf(stderr, "%s %d\n", "here is the number f pages", numPages);
     for (i = 0; i < numPages; i++) {
     	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
@@ -140,7 +142,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 // and the stack segment
     //bzero(machine->mainMemory, size);   pageTable[i].physicalPage * PageSize
     for (int j = 0; j < numPages; j++ ) {
-        bzero(&(machine->mainMemory[AddrTranslation(pageTable[i].virtualPage)]), PageSize);
+        bzero(&(machine->mainMemory[AddrTranslation(pageTable[j].virtualPage)]), PageSize);
     }
 
     int virtaddr;
@@ -150,6 +152,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
         virtaddr = noffH.code.virtualAddr;
+        //fprintf(stderr, "%s %d\n", "this shit", virtaddr);
         while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
             addrtrans = AddrTranslation(virtaddr);
             ASSERT(addrtrans != -1);
@@ -158,6 +161,8 @@ AddrSpace::AddrSpace(OpenFile *executable)
             virtaddr++;
         }
     }
+
+   // fprintf(stderr, "%s\n", "dne ith ne part");
     if (noffH.initData.size > 0) {
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
 			noffH.initData.virtualAddr, noffH.initData.size);
@@ -171,7 +176,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         }
     }
 
-    fprintf(stderr, "%s\n","finished creating the addrspace" );
+   // fprintf(stderr, "%s\n","finished creating the addrspace" );
 
 }
 
@@ -262,7 +267,7 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
     if (vpn >= numPages) {
         DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
             virtAddr, numPages);
-        fprintf(stderr, "%s %d %d\n", "error 1", virtAddr, numPages);
+        fprintf(stderr, "%s %d %d\n", "error 1", vpn, numPages);
         return -1;
     } else if (!pageTable[vpn].valid) {
         DEBUG('a', "Page table miss, virtual address  %d!\n", 
@@ -272,7 +277,7 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
     }
     entry = &pageTable[vpn];
 
-    pageFrame = entry->physicalPage;
+    pageFrame = pageTable[vpn].physicalPage;
 
     if (pageFrame >= NumPhysPages) { 
         DEBUG('a', "*** frame %d > %d!\n", pageFrame, NumPhysPages);
@@ -280,7 +285,7 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
         return -1;
     }
 
-    physaddr = pageFrame * PageSize + offset;
+    physaddr = (pageFrame * PageSize) + offset;
     return physaddr;
 }
 

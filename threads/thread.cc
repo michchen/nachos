@@ -42,7 +42,7 @@ Thread::Thread(const char* threadName)
 #ifdef CHANGED
 #ifdef USER_PROGRAM
     space = NULL;
-    threadId = -1;
+    threadId = gspaceID;
     parent = currentThread;
     SpaceId sid;
     curNumFiles = 0;
@@ -102,7 +102,7 @@ Thread::Fork(VoidFunctionPtr func, int arg)
 	  name, (int) func, arg);
     
     StackAllocate(func, arg);
-
+    
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     scheduler->ReadyToRun(this);	// ReadyToRun assumes that interrupts 
 					// are disabled!

@@ -18,6 +18,8 @@ Interrupt *interrupt;			// interrupt status
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
+ProcessMonitor *processMonitor;
+unsigned int gspaceID;
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -27,7 +29,7 @@ SynchDisk   *synchDisk;
 #endif
 
 #ifdef THREADS
-ProcessMonitor *processMonitor;
+
 #endif
 
 #ifdef CHANGED
@@ -88,6 +90,7 @@ Initialize(int argc, char **argv)
     int argCount;
     char *debugArgs = (char *)""; 
     bool randomYield = false;
+    gspaceID = -1;
 
 #ifdef USER_PROGRAM
     bool debugUserProg = false;	// single step user program

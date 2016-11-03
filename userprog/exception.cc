@@ -113,7 +113,7 @@ ExceptionHandler(ExceptionType which)
 
     int type = machine->ReadRegister(2);
 
-    fprintf(stderr, "%s %d\n", "Here is the type", type);
+    fprintf(stderr, "%s %d %d\n", "Here is the type", type, which);
 
     int totalThreads;
     //fprintf(stderr, "%s %d\n", "Here is the type", type);
@@ -169,11 +169,7 @@ ExceptionHandler(ExceptionType which)
         break;
     }
 }
-void runMachine(){
-  currentThread->RestoreUserState();
-  currentThread->space->RestoreState();
-  machine->Run();
-}
+
 void incrementPC()
 {
   int tmp;
@@ -194,18 +190,39 @@ void sysCallExit(){
   DEBUG('a', "Exit, initiated by user program.\n");
   int result = machine->ReadRegister(4);
   int threadID = currentThread->getThreadId();
-
-  // currentThread->exitState = result; 
-
-  machine->WriteRegister(2, result);
-
+  processMonitor->lock();
+  if(processMonitor->setExitStatus(threadID,result)){
+    processMonitor->wakeParent(threadID);
+    processMonitor->unlock();
+  }
+  else{
+    processMonitor->unlock();
+    DEBUG('a',"Thread does not exist");
+    ASSERT(false);
+  }
   currentThread->Finish();
-
-
 }
 
 void sysCallJoin(){
   DEBUG('a', "Joining, initiated by user program.\n");
+  printf("%s\n","Joining Called" );
+  int result = machine->ReadRegister(4);
+  int exitStatus; 
+  int threadID = currentThread->getThreadId();
+  processMonitor->lock();
+  if(processMonitor->containsThread(threadID)){
+    processMonitor->sleepParent(threadID);
+    exitStatus = processMonitor->getExitStatus(threadID); 
+  }
+  processMonitor->unlock();
+  if(exitStatus == -1){
+    DEBUG('a', "exitStatus is -1");
+  }
+  else{
+    machine->WriteRegister(2,exitStatus);
+  }
+
+  incrementPC();
 }
 
 void sysCallCreate(){
@@ -289,7 +306,6 @@ void sysCallOpen(){
     
 
     delete [] stringarg;               // No memory leaks.
-
     
 }
 
@@ -352,7 +368,7 @@ void sysCallWrite(){
   }
   stringarg[127]='\0'; 
 
-  fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
+ // fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
 
   if (id == 0) {
@@ -388,27 +404,31 @@ void sysCallClose(){
 
   incrementPC();
 }
-
+void runMachine(){
+  printf("%s\n","Child Called" );
+  currentThread->RestoreUserState();
+  //currentThread->space->RestoreState();  
+  machine->Run();
+}
 void sysCallFork(){
   DEBUG('a', "Fork, initiated by user program.\n");
+  printf("%s\n","Forking Called" );
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
 
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
 
   //Todo: What to do with the space id
-  int arg = machine->ReadRegister(4);
-
+  //int arg = machine->ReadRegister(4);
   processMonitor->lock();
-  int spaceId = processMonitor->addThread(forkedThread);
+  int spaceId = processMonitor->addThread(forkedThread, currentThread);
   processMonitor->unlock();
 
   if(spaceId ==-1){
     DEBUG('a',"CREATION FAILURE");
     return;
   }
-
-
+  incrementPC();
   currentThread->SaveUserState();
 
   machine->WriteRegister(2,0);
@@ -416,12 +436,13 @@ void sysCallFork(){
   forkedThread->SaveUserState();
 
   forkedThread->Fork((VoidFunctionPtr) runMachine,0);
+  printf("%s\n","Parent sleeping" );
+  processMonitor->sleepParent(spaceId);
 
-  currentThread->RestoreUserState();
   //Return to parent process
-  machine->WriteRegister(2,1);
+  printf("%s\n","Parent returning" );
+  machine->WriteRegister(2,spaceId);
 
-  incrementPC();
 
 }
 

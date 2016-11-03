@@ -33,6 +33,7 @@ extern Interrupt *interrupt;			// interrupt status
 extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 extern ProcessMonitor *processMonitor;
+extern unsigned int gspaceID;
 #ifdef THREADS 
 
 #endif
