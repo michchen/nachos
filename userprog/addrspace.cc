@@ -48,7 +48,7 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
     unsigned int tsize = parentData->size;
     int bitmapAddr;
     pageTable = new(std::nothrow) TranslationEntry[tnumPages];
-    fprintf(stderr, "%s %d %d\n", "here is the number of pages", tnumPages,tsize);
+   // fprintf(stderr, "%s %d %d\n", "here is the number of pages", tnumPages,tsize);
     for (unsigned int i = 0; i < tnumPages; i++) {
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();

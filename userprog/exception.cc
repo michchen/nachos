@@ -406,14 +406,15 @@ void sysCallClose(){
   incrementPC();
 }
 void runMachine(){
-  printf("%s\n","Child Called" );
+  DEBUG('e', "Child, initiated by user program.\n");
   currentThread->RestoreUserState();
   currentThread->space->RestoreState();  
   machine->Run();
 }
+
 void sysCallFork(){
+  forkExec->Acquire();
   DEBUG('e', "Fork, initiated by user program.\n");
-  printf("%s\n","Forking Called" );
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
   for (int i = 0; i < MaxOpenFiles; i++)
@@ -437,13 +438,13 @@ void sysCallFork(){
   forkedThread->SaveUserState();
 
   forkedThread->Fork((VoidFunctionPtr) runMachine,0);
-  printf("%s\n","Parent sleeping" );
+
   processMonitor->sleepParent(spaceId);
 
   //Return to parent process
-  printf("%s %d\n","Parent returning with spaceId ",spaceId );
-  machine->WriteRegister(2,spaceId);
 
+  machine->WriteRegister(2,spaceId);
+  forkExec->Release();
 }
 
 //Extra info needed for the system!
@@ -453,6 +454,7 @@ void sysCallFork(){
 //Resources 
 
 void sysCallExec(){
+  forkExec->Acquire();
   DEBUG('e', "Execute, initiated by user program.\n");
 
   char *fileName;
@@ -529,5 +531,6 @@ void sysCallExec(){
     fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
   }
+  forkExec->Release();
 }
 #endif
