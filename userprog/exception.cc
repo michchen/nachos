@@ -26,7 +26,6 @@
 #include "syscall.h"
 #include <string.h>
 
-
 void sysCallExec();
 void sysCallHalt();
 void sysCallExit();
@@ -37,6 +36,7 @@ void sysCallOpen();
 void sysCallClose();
 void sysCallRead();
 void sysCallWrite();
+void sysCallDup();
 void incrementPC();
 
 
@@ -152,6 +152,8 @@ ExceptionHandler(ExceptionType which)
           case SC_Fork:
             sysCallFork();
             break;
+          case SC_Dup:
+            sysCallDup();
           default:
       	    printf("Undefined SYSCALL %d\n", type);
       	    ASSERT(false);
@@ -182,6 +184,31 @@ void incrementPC()
   machine->WriteRegister(NextPCReg, tmp);
 }
 
+void sysCallDup(){
+  DEBUG('e', "Dup, initiated by user program.\n");
+  OpenFileId fileId = machine->ReadRegister(4);
+  OpenFile **files = currentThread->openFiles;
+  OpenFile *current = files[fileId];
+
+  int open_spot;
+  int i;
+  for(i = 2 ; i < MaxOpenFiles; i++){
+    if(files[i] == NULL){
+      files[i] = current;
+      open_spot = i;
+      break;
+    }
+  }
+  if(i >= MaxOpenFiles){
+    DEBUG('e', "Could not duplicate file\n");
+    machine->WriteRegister(2,-1);
+  }
+  else{
+    machine->WriteRegister(2,open_spot);
+  }
+  incrementPC();
+}
+
 void sysCallHalt(){
   DEBUG('e', "Shutdown, initiated by user program.\n");
   interrupt->Halt();
@@ -195,26 +222,29 @@ void sysCallExit(){
   int result = machine->ReadRegister(4);
   processMonitor->lock();
   if(processMonitor->setExitStatus(threadID,result) != -1){
+    DEBUG('e', "Exit threadID waking parent of %d\n", threadID);
     processMonitor->wakeParent(threadID);
-    processMonitor->unlock();
   }
   else{
     DEBUG('e',"Thread does not exist");
   }
-
+  DEBUG('e', "Exit Done %d\n", threadID);
+  processMonitor->unlock();
   currentThread->Finish();
 }
 
 void sysCallJoin(){
   DEBUG('e', "Joining, initiated by user program.\n");
   int result = machine->ReadRegister(4);
-  DEBUG('e', "Joining threadID %d\n", result);
+  DEBUG('e', "Thread %d is Joining threadID %d\n",currentThread->getThreadId(), result);
   int exitStatus; 
   processMonitor->lock();
   if(processMonitor->containsThread(result)){
+    processMonitor->lockThreadBlock(result);
     processMonitor->wakeParent(result);
-    DEBUG('e', "Parent woken %d\n", result);
     exitStatus = processMonitor->getExitStatus(result); 
+    processMonitor->unlockThreadBlock(result);
+    DEBUG('e', "Parent woken %d\n", result);
   }
   processMonitor->unlock();
   if(exitStatus == -1){
@@ -222,7 +252,10 @@ void sysCallJoin(){
   }
   else{
     DEBUG('e',"%s %d \n","Exit status is: ",exitStatus);
+    processMonitor->lock();
+    processMonitor->cleanUpDeadThreads(result);
     processMonitor->removeThread(result);
+    processMonitor->unlock();
     machine->WriteRegister(2,exitStatus);
   }
 
@@ -442,9 +475,9 @@ void sysCallFork(){
   forkedThread->SaveUserState();
   forkExec->Release();
   forkedThread->Fork((VoidFunctionPtr) runMachine,0);
-  //printf("SpaceID in exception %d\n", spaceId);
+  printf("Thread %d SpaceID in exception %d\n", currentThread->getThreadId(),spaceId);
   processMonitor->sleepParent(spaceId);
-  //printf("SpaceID in exception after waking %d\n", spaceId);
+  printf("SpaceID in exception after waking %d\n", spaceId);
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
@@ -498,26 +531,26 @@ void sysCallExec(){
   for ( i = 0; i < 127; i++) {
     argv[i] = new(std::nothrow) char[128];
     curAddr = currentThread->space->ReadMemory(argvStart, 4);
-    fprintf(stderr, "%s %d\n","here is the curaddr", curAddr );
+  //  fprintf(stderr, "%s %d\n","here is the curaddr", curAddr );
     if (curAddr == 0) {
       break;
     }
     for (int j=0; j<127; j++) {
       //fprintf(stderr, "%s %c\n", "let's try before the loop", machine->mainMemory[currentThread->space->AddrTranslation(curAddr)] );
       if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(curAddr)]) == '\0') {
-        fprintf(stderr, "%s\n", "breaking out");
+    //    fprintf(stderr, "%s\n", "breaking out");
         break;
       }
       curAddr++;
     }
     argvStart+=4;
     argc++;
-    fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
+   // fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
   }
 
-  fprintf(stderr, "%s %d\n", "here is the num of args", argc);
+ // fprintf(stderr, "%s %d\n", "here is the num of args", argc);
   //Initialize its registers
-  fprintf(stderr, "%s %s\n", "about to do the open", fileName);
+  //fprintf(stderr, "%s %s\n", "about to do the open", fileName);
   OpenFile *exec = fileSystem->Open(fileName);
 
   //Invoke it through machine running.
@@ -527,9 +560,9 @@ void sysCallExec(){
 
     int argvAddr[argc+1];
 
-    fprintf(stderr, "%s\n", "Trying to ExecFunction");
+    //fprintf(stderr, "%s\n", "Trying to ExecFunction");
     currentThread->space->ExecFunc(exec);
-    fprintf(stderr, "%s\n", "Done to ExecFunction");
+    //fprintf(stderr, "%s\n", "Done to ExecFunction");
     delete exec;    //delete the executable
 
     currentThread->space->InitRegisters();   // set the initial register values
@@ -547,12 +580,12 @@ void sysCallExec(){
     argvAddr[0] = sp;
 
 
-    fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
-    fprintf(stderr, "And now the filename %s\n", fileName);
+   // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
+   // fprintf(stderr, "And now the filename %s\n", fileName);
     int initialVal = 0;
     if (!strcmp(argv[0], fileName)) {
       initialVal = 1;
-      fprintf(stderr, "%s\n", "we've found a filename match!");
+     // fprintf(stderr, "%s\n", "we've found a filename match!");
     }
     for (i=initialVal; i<argc; i++) {
       if (argv[i] != fileName) {
@@ -570,7 +603,7 @@ void sysCallExec(){
         // Jose looks to do this once?
       }
 
-      fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+    //  fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
     }
 
     sp = sp & ~3;
@@ -586,12 +619,12 @@ void sysCallExec(){
     }
     DEBUG('a',"About to Write\n");
     machine->WriteRegister(4, argc);
-    printf("%d\n",argc );
-    fprintf(stderr, "%s\n", "did we write one");
+   // printf("%d\n",argc );
+    //fprintf(stderr, "%s\n", "did we write one");
     machine->WriteRegister(5, sp);
-    fprintf(stderr, "%s\n", "what about this one");
+   // fprintf(stderr, "%s\n", "what about this one");
     machine->WriteRegister(StackReg, sp-8);
-    fprintf(stderr, "%s\n", "last one");
+   // fprintf(stderr, "%s\n", "last one");
 
     // machine->Run();
 
@@ -625,7 +658,7 @@ void sysCallExec(){
   }
   else{
     DEBUG('e', "%s\n", "Error Opening File");
-    fprintf(stderr, "%s\n", "oh my god");
+    //fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
   }
   forkExec->Release();

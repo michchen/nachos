@@ -21,6 +21,7 @@ Timer *timer;				// the hardware timer device,
 ProcessMonitor *processMonitor;
 unsigned int gspaceID;
 Lock *forkExec;
+Semaphore *rootSema;
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -151,7 +152,7 @@ Initialize(int argc, char **argv)
 
     processMonitor = new(std::nothrow) ProcessMonitor();
     forkExec = new(std::nothrow)Lock("Fork/Exec Lock!");
-
+    rootSema = new(std::nothrow)Semaphore("Root Semaphore",0);
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 

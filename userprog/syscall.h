@@ -28,6 +28,7 @@
 #define SC_Write	7
 #define SC_Close	8
 #define SC_Fork		9
+#define SC_Dup		10
 
 #ifndef IN_ASM
 
@@ -83,6 +84,7 @@ SpaceId Fork();
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;	
 
+OpenFileId Dup(OpenFileId fd);
 /* when an address space starts up, it has two open files, representing 
  * keyboard input and display output (in UNIX terms, stdin and stdout).
  * Read and Write can be used directly on these, without first opening
