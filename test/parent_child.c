@@ -30,7 +30,7 @@ main()
   /* not reached */
   } else 
     prints("Kid about to exec\n", ConsoleOutput);
-    Exec("kid");
+    Exec("test/kid");
 }
 
 /* Print a null-terminated string "s" on open file descriptor "file". */

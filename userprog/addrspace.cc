@@ -46,6 +46,8 @@ SwapHeader (NoffHeader *noffH)
 AddrSpace::AddrSpace(AddrSpace *parentData){
     unsigned int tnumPages = parentData->getNumPages();
     unsigned int tsize = parentData->size;
+    numPages = tnumPages;
+    size = tsize;
     int bitmapAddr;
     pageTable = new(std::nothrow) TranslationEntry[tnumPages];
    // fprintf(stderr, "%s %d %d\n", "here is the number of pages", tnumPages,tsize);

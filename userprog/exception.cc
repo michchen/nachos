@@ -189,16 +189,16 @@ void sysCallHalt(){
 void sysCallExit(){
   DEBUG('e', "Exit, initiated by user program.\n");
   int threadID = currentThread->getThreadId();
-  ASSERT(threadID != -1);
+  DEBUG('e', "Exit threadID %d\n", threadID);
+ // ASSERT(threadID != -1);
   int result = machine->ReadRegister(4);
   processMonitor->lock();
-  if(processMonitor->setExitStatus(threadID,result)){
+  if(processMonitor->setExitStatus(threadID,result) != -1){
     processMonitor->wakeParent(threadID);
     processMonitor->unlock();
   }
   else{
     DEBUG('e',"Thread does not exist");
-    ASSERT(false);
   }
 
   currentThread->Finish();
@@ -207,6 +207,7 @@ void sysCallExit(){
 void sysCallJoin(){
   DEBUG('e', "Joining, initiated by user program.\n");
   int result = machine->ReadRegister(4);
+  DEBUG('e', "Joining threadID %d\n", result);
   int exitStatus; 
   processMonitor->lock();
   if(processMonitor->containsThread(result)){
@@ -436,7 +437,7 @@ void sysCallFork(){
   machine->WriteRegister(2,0);
 
   forkedThread->SaveUserState();
-
+  forkExec->Release();
   forkedThread->Fork((VoidFunctionPtr) runMachine,0);
 
   processMonitor->sleepParent(spaceId);
@@ -444,7 +445,6 @@ void sysCallFork(){
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
-  forkExec->Release();
 }
 
 //Extra info needed for the system!
@@ -456,7 +456,6 @@ void sysCallFork(){
 void sysCallExec(){
   forkExec->Acquire();
   DEBUG('e', "Execute, initiated by user program.\n");
-
   char *fileName;
   int argStart = machine->ReadRegister(4);
   //AddrSpace *space;

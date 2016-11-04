@@ -8,7 +8,7 @@ ProcessMonitor::ProcessMonitor(){
 	totalThreads = 0;
 }
 int ProcessMonitor::setExitStatus(int threadID, int exitStatus){
-	if(activeThreads[threadID-1] != NULL){
+	if(threadID != -1 && activeThreads[threadID-1] != NULL){
 		activeThreads[threadID-1]->exitStatus = exitStatus;
 		activeThreads[threadID-1]->done = true;
 		return 1;
@@ -19,7 +19,7 @@ int ProcessMonitor::setExitStatus(int threadID, int exitStatus){
 	}
 }
 int ProcessMonitor::getExitStatus(int threadID){
-	if(activeThreads[threadID-1] != NULL){
+	if(threadID != -1 && activeThreads[threadID-1] != NULL){
 		return activeThreads[threadID-1]->exitStatus;
 	}
 	else{
@@ -68,7 +68,7 @@ void ProcessMonitor::removeThread(int threadID){
 		activeThreads[threadID-1] = NULL;
 	}
 	else{
-		DEBUG('a', "Thread is null. Unable to delete");
+		DEBUG('a', "This is the root thread. Unable to delete");
 	}
 }
 
@@ -80,13 +80,13 @@ bool ProcessMonitor::containsThread(int threadID){
 	return false;
 }
 void ProcessMonitor::wakeParent(int threadID){
-	ASSERT(threadID > 0 && threadID < MAX_THREAD_COUNT);
+	ASSERT(threadID >= -1 && threadID < MAX_THREAD_COUNT);
 	if(activeThreads[threadID-1] != NULL){
 		activeThreads[threadID-1]->semaphore->V();
 	}
 }
 void ProcessMonitor::sleepParent(int threadID){
-	ASSERT(threadID > 0 && threadID < MAX_THREAD_COUNT);
+	ASSERT(threadID >= -1 && threadID < MAX_THREAD_COUNT);
 	if(activeThreads[threadID-1] != NULL){
 		activeThreads[threadID-1]->semaphore->P();
 	}
