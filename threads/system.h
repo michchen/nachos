@@ -35,9 +35,8 @@ extern Timer *timer;				// the hardware alarm clock
 extern ProcessMonitor *processMonitor;
 extern unsigned int gspaceID;
 extern Lock *forkExec;
-#ifdef THREADS 
+extern Semaphore *rootSema;
 
-#endif
 #ifdef USER_PROGRAM
 #ifdef CHANGED
 #include "machine.h"

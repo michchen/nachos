@@ -121,6 +121,9 @@ Fork:
 	syscall
 	j	$31
 	.end Fork
+
+	.globl Dup
+	.ent	Dup
 Dup:
 	addiu $2,$0,SC_Dup
 	syscall
