@@ -14,18 +14,17 @@ int ProcessMonitor::setExitStatus(int threadID, int exitStatus){
 		return 1;
 	}
 	else{
-		DEBUG('e', "Thread Does not exist!");
+		DEBUG('a', "Thread Does not exist!");
 		return -1;
 	}
 }
-
 int ProcessMonitor::getExitStatus(int threadID){
 	//printf("ThreadID in getExitStatus %d\n", threadID);
 	if(threadID != -1 && activeThreads[threadID-1] != NULL){
 		return activeThreads[threadID-1]->exitStatus;
 	}
 	else{
-		DEBUG('e', "Thread Does not exist!");
+		DEBUG('a', "Thread Does not exist!");
 		return -1;
 	}
 }
@@ -40,7 +39,7 @@ int ProcessMonitor::assignID(){
 		if(activeThreads[i] == NULL)
 			return i+1;
 	}
-	DEBUG('e', "Too many active threads unable to assign id");
+	DEBUG('a', "Too many active threads unable to assign id");
 	return -1;
 }
 
@@ -54,7 +53,6 @@ int ProcessMonitor::addThread(Thread *thread,Thread *parent){
 	else{
 		thread->setThreadId(spaceID);
 		ThreadBlocks *newBlock = new ThreadBlocks;
-		newBlock->thread = thread;
 		newBlock->threadId = thread->getThreadId();
 		newBlock->parentId = parent->getThreadId();
 		newBlock->done = false;
@@ -72,7 +70,7 @@ void ProcessMonitor::removeThread(int threadID){
 		activeThreads[threadID-1] = NULL;
 	}
 	else{
-		DEBUG('e', "This is the root thread. Unable to delete");
+		DEBUG('a', "This is the root thread. Unable to delete");
 	}
 }
 
@@ -92,10 +90,18 @@ void ProcessMonitor::wakeParent(int threadID){
 }
 void ProcessMonitor::sleepParent(int threadID){
 	ASSERT(threadID >= -1 && threadID < MAX_THREAD_COUNT);
-	printf("sleepParent in containsThread %d\n", threadID);
 	if(activeThreads[threadID-1] != NULL){
 		activeThreads[threadID-1]->semaphore->P();
 	}
+}
+void ProcessMonitor::lock(){
+	DEBUG('a', "Locking Monitor Lock\n");
+	monitorLock->Acquire();
+}
+
+void ProcessMonitor::unlock(){
+	DEBUG('a', "Unlocking Monitor Lock\n");
+	monitorLock->Release();
 }
 void ProcessMonitor::lockThreadBlock(int threadID){
 	if(activeThreads[threadID-1] != NULL){
@@ -109,16 +115,6 @@ void ProcessMonitor::unlockThreadBlock(int threadID){
 	}
 
 }
-void ProcessMonitor::lock(){
-	DEBUG('e', "Locking Monitor Lock\n");
-	monitorLock->Acquire();
-}
-
-void ProcessMonitor::unlock(){
-	DEBUG('e', "Unlocking Monitor Lock\n");
-	monitorLock->Release();
-}
-
 void ProcessMonitor::cleanUpDeadThreads(int threadID){
 	for(int i = 0; i < MAX_THREAD_COUNT; i++){
 		ThreadBlocks *temp = activeThreads[i];

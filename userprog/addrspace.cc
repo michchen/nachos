@@ -375,8 +375,8 @@ AddrSpace::ReadMemory(int virtAddr, int size) {
     DEBUG('a', "Reading VA 0x%d, size %d\n", virtAddr, size);
     
     physicalAddress = AddrTranslation(virtAddr);
-    //fprintf(stderr, "%s %d\n", "here is the physical addr", physicalAddress);
-    //fprintf(stderr, "%s %d\n", "main memory", *(unsigned int *) &machine->mainMemory[physicalAddress]);
+    fprintf(stderr, "%s %d\n", "here is the physical addr", physicalAddress);
+    fprintf(stderr, "%s %d\n", "main memory", *(unsigned int *) &machine->mainMemory[physicalAddress]);
     switch (size) {
       case 1:
         data = machine->mainMemory[physicalAddress];

@@ -7,7 +7,7 @@
 #define MAX_THREAD_COUNT 100
 
 struct ThreadBlocks{
-	Thread *thread;
+	//Thread *thread;
 	int threadId;
 	int parentId;
 	int exitStatus;
@@ -15,9 +15,7 @@ struct ThreadBlocks{
 	Lock *lock;
 	Semaphore *semaphore;
 };
-struct OpenFileBlocks{
-	OpenFileId fileID;
-};
+
 class ProcessMonitor{
 	public:
 		ProcessMonitor();
@@ -35,7 +33,7 @@ class ProcessMonitor{
 		void wakeParent(int threadID);
 		void sleepParent(int threadID);
 		int getExitStatus(int threadID);
-		Thread *getThread(int threadID){ return activeThreads[threadID]->thread;};
+		//Thread *getThread(int threadID){ return activeThreads[threadID]->thread;};
 		bool isDeadThread(int threadID){ return activeThreads[threadID]->done;};
 		void cleanUpDeadThreads(int threadID);
 		Lock *monitorLock;
@@ -43,7 +41,7 @@ class ProcessMonitor{
 
 	private:
 		 ThreadBlocks **activeThreads;
-		 OpenFileBlocks **OpenFiles;
+		 //OpenFileBlocks **OpenFiles;
 		 int totalThreads;
 		 List *waitingThreads;
 };

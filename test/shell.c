@@ -17,29 +17,29 @@ main()
     while( 1 )
     {
       /*Write a greeting message*/
-    	Write(prompt, 3, output);
+      Write(prompt, 3, output);
 
       /*the length of the command input*/
-    	i = 0;
-    	/*THIS IS THE KEY BOARD LISTENER FOR A COMMAND TO BE INPUTED WITH ENTER*/
-    	do {
-    	    Read(&buffer[i], 1, input); 
+      i = 0;
+      /*THIS IS THE KEY BOARD LISTENER FOR A COMMAND TO BE INPUTED WITH ENTER*/
+      do {
+          Read(&buffer[i], 1, input); 
 
-    	} while(buffer[i++] != '\n' );
+      } while(buffer[i++] != '\n' );
 
       /*add null terminating string*/
-    	buffer[--i] = '\0';
+      buffer[--i] = '\0';
 
-    	prints(buffer, ConsoleOutput);
-    	prints("\n", ConsoleOutput);
+      prints(buffer, ConsoleOutput);
+      prints("\n", ConsoleOutput);
 
-    	args[0] = (char *)0;
+      args[0] = (char *)0;
 
-    	if( i > 0 ) {
-    	  newProc = Fork();
+      if( i > 0 ) {
+        newProc = Fork();
         if (newProc == 0) {
-        	prints("Trying to do kid stuff\n");
-        	error = Exec(buffer, args);
+          prints("Trying to do kid stuff\n");
+          error = Exec(buffer, args);
           if(error == -1){
             prints("There is no such scripted or function or class or anything called -> ",ConsoleOutput);
             prints(buffer,ConsoleOutput);
@@ -47,11 +47,11 @@ main()
             Exit(-1);
           }
         }
-    	  else {
+        else {
           prints("The Parent is Here\n");
           Join(newProc);
         }
-    	}
+      }
     }
 }
 

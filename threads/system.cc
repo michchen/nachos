@@ -195,7 +195,7 @@ Cleanup()
     delete postOffice;
 #endif
 #ifdef THREADS
-    //delete processMonitor;
+    delete processMonitor;
 #endif
 #ifdef CHANGED
 #ifdef USER_PROGRAM

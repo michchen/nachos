@@ -1,18 +1,18 @@
 // exception.cc 
-//	Entry point into the Nachos kernel from user programs.
-//	There are two kinds of things that can cause control to
-//	transfer back to here from user code:
+//  Entry point into the Nachos kernel from user programs.
+//  There are two kinds of things that can cause control to
+//  transfer back to here from user code:
 //
-//	syscall -- The user code explicitly requests to call a procedure
-//	in the Nachos kernel.  Right now, the only function we support is
-//	"Halt".
+//  syscall -- The user code explicitly requests to call a procedure
+//  in the Nachos kernel.  Right now, the only function we support is
+//  "Halt".
 //
-//	exceptions -- The user code does something that the CPU can't handle.
-//	For instance, accessing memory that doesn't exist, arithmetic errors,
-//	etc.  
+//  exceptions -- The user code does something that the CPU can't handle.
+//  For instance, accessing memory that doesn't exist, arithmetic errors,
+//  etc.  
 //
-//	Interrupts (which can also cause control to transfer from user
-//	code into the Nachos kernel) are handled elsewhere.
+//  Interrupts (which can also cause control to transfer from user
+//  code into the Nachos kernel) are handled elsewhere.
 //
 // For now, this only handles the Halt() system call.
 // Everything else core dumps.
@@ -86,25 +86,25 @@ HandleTLBFault(int vaddr)
 
 //----------------------------------------------------------------------
 // ExceptionHandler
-// 	Entry point into the Nachos kernel.  Called when a user program
-//	is executing, and either does a syscall, or generates an addressing
-//	or arithmetic exception.
+//  Entry point into the Nachos kernel.  Called when a user program
+//  is executing, and either does a syscall, or generates an addressing
+//  or arithmetic exception.
 //
-// 	For system calls, the following is the calling convention:
+//  For system calls, the following is the calling convention:
 //
-// 	system call code -- r2
-//		arg1 -- r4
-//		arg2 -- r5
-//		arg3 -- r6
-//		arg4 -- r7
+//  system call code -- r2
+//    arg1 -- r4
+//    arg2 -- r5
+//    arg3 -- r6
+//    arg4 -- r7
 //
-//	The result of the system call, if any, must be put back into r2. 
+//  The result of the system call, if any, must be put back into r2. 
 //
 // And don't forget to increment the pc before returning. (Or else you'll
 // loop making the same system call forever!
 //
-//	"which" is the kind of exception.  The list of possible exceptions 
-//	are in machine.h.
+//  "which" is the kind of exception.  The list of possible exceptions 
+//  are in machine.h.
 //----------------------------------------------------------------------
 
 #ifdef CHANGED
@@ -121,8 +121,8 @@ ExceptionHandler(ExceptionType which)
 
     switch (which) {
       case SyscallException:
-      	switch (type) {
-      	  case SC_Halt:
+        switch (type) {
+          case SC_Halt:
             sysCallHalt();
             break;
           case SC_Exit:
@@ -155,15 +155,15 @@ ExceptionHandler(ExceptionType which)
           case SC_Dup:
             sysCallDup();
           default:
-      	    printf("Undefined SYSCALL %d\n", type);
-      	    ASSERT(false);
+            printf("Undefined SYSCALL %d\n", type);
+            ASSERT(false);
             break;
         }
       break;
       #ifdef USE_TLB
             case PageFaultException:
-      	HandleTLBFault(machine->ReadRegister(BadVAddrReg));
-      	break;
+        HandleTLBFault(machine->ReadRegister(BadVAddrReg));
+        break;
       #endif
 
       default: 
