@@ -114,7 +114,7 @@ ExceptionHandler(ExceptionType which)
 
     int type = machine->ReadRegister(2);
 
-    DEBUG('e', "%s %d %d\n", "Here is the type", type, which);
+    //DEBUG('e', "%s %d %d\n", "Here is the type", type, which);
 
     int totalThreads;
     //fprintf(stderr, "%s %d\n", "Here is the type", type);
@@ -213,6 +213,7 @@ void sysCallJoin(){
   processMonitor->lock();
   if(processMonitor->containsThread(result)){
     processMonitor->wakeParent(result);
+    DEBUG('e', "Parent woken %d\n", result);
     exitStatus = processMonitor->getExitStatus(result); 
   }
   processMonitor->unlock();
@@ -313,7 +314,7 @@ void sysCallOpen(){
 }
 
 void sysCallRead(){
-  DEBUG('e', "Read, initiated by user program.\n");
+  //DEBUG('e', "Read, initiated by user program.\n");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -357,7 +358,7 @@ void sysCallRead(){
 }
 
 void sysCallWrite(){
-  DEBUG('e', "Write, initiated by user program.\n");
+ // DEBUG('e', "Write, initiated by user program.\n");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -436,14 +437,14 @@ void sysCallFork(){
   incrementPC();
   currentThread->SaveUserState();
 
-  // machine->WriteRegister(2,0);
+  machine->WriteRegister(2,0);
 
   forkedThread->SaveUserState();
   forkExec->Release();
   forkedThread->Fork((VoidFunctionPtr) runMachine,0);
-
+  printf("SpaceID in exception %d\n", spaceId);
   processMonitor->sleepParent(spaceId);
-
+  printf("SpaceID in exception after waking %d\n", spaceId);
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
