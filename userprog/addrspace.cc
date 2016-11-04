@@ -334,7 +334,7 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 // and the stack segment
     //bzero(machine->mainMemory, size);
     for (int j = 0; j < numPages; j++ ) {
-        bzero(&(machine->mainMemory[AddrTranslation(pageTable[i].virtualPage)]), PageSize);
+        bzero(&(machine->mainMemory[AddrTranslation(pageTable[j].virtualPage)]), PageSize);
     }
 
     int virtaddr;
