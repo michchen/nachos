@@ -25,7 +25,7 @@ main()
     	do {
     	    Read(&buffer[i], 1, input); 
 
-    	} while( buffer[i++] != '\n' );
+    	} while(buffer[i++] != '\n' );
 
       /*add null terminating string*/
     	buffer[--i] = '\0';
@@ -37,17 +37,18 @@ main()
 
     	if( i > 0 ) {
     	  newProc = Fork();
-              if (newProc == 0) {
-              	prints("Trying to do kid stuff\n");
-              	error = Exec(buffer, args);
-                if(error == -1){
-                  prints("There is no such scripted or function or class or anything called ",ConsoleOutput);
-                  prints(buffer,ConsoleOutput);
-                  prints(" try again you moron\n", ConsoleOutput);
-                }
-              }
+        if (newProc == 0) {
+        	prints("Trying to do kid stuff\n");
+        	error = Exec(buffer, args);
+          if(error == -1){
+            prints("There is no such scripted or function or class or anything called -> ",ConsoleOutput);
+            prints(buffer,ConsoleOutput);
+            prints("!\n",ConsoleOutput);
+            Exit(-1);
+          }
+        }
     	  else {
-          prints("The Parent is Here");
+          prints("The Parent is Here\n");
           Join(newProc);
         }
     	}
