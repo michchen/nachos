@@ -442,9 +442,9 @@ void sysCallFork(){
   forkedThread->SaveUserState();
   forkExec->Release();
   forkedThread->Fork((VoidFunctionPtr) runMachine,0);
-  printf("SpaceID in exception %d\n", spaceId);
+  //printf("SpaceID in exception %d\n", spaceId);
   processMonitor->sleepParent(spaceId);
-  printf("SpaceID in exception after waking %d\n", spaceId);
+  //printf("SpaceID in exception after waking %d\n", spaceId);
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
@@ -466,7 +466,7 @@ void sysCallExec(){
   int i;
   char** argv;
 
-  fprintf(stderr, "%s %d\n", "this is the initial arg", argvStart);
+ // fprintf(stderr, "%s %d\n", "this is the initial arg", argvStart);
 
   //fprintf(stderr, "%s %d\n", "doing some stuff", argc);
 

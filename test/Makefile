@@ -136,3 +136,21 @@ argkid.o: argkid.c
 argkid: argkid.o start.o
 	$(LD) $(LDFLAGS) start.o argkid.o -o argkid.coff
 	../bin/coff2noff argkid.coff argkid	
+
+deepfork.o: deepfork.c
+	$(CC) $(CFLAGS) -c deepfork.c
+deepfork: deepfork.o start.o
+	$(LD) $(LDFLAGS) start.o deepfork.o -o deepfork.coff
+	../bin/coff2noff deepfork.coff deepfork	
+
+deepkid1.o: deepkid1.c
+	$(CC) $(CFLAGS) -c deepkid1.c
+deepkid1: deepkid1.o start.o
+	$(LD) $(LDFLAGS) start.o deepkid1.o -o deepkid1.coff
+	../bin/coff2noff deepkid1.coff deepkid1	
+
+deepkid2.o: deepkid2.c
+	$(CC) $(CFLAGS) -c deepkid2.c
+deepkid2: deepkid2.o start.o
+	$(LD) $(LDFLAGS) start.o deepkid2.o -o deepkid2.coff
+	../bin/coff2noff deepkid2.coff deepkid2	
