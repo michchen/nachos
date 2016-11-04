@@ -24,6 +24,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include <string.h>
 
 
 void sysCallExec();
@@ -435,46 +436,72 @@ void sysCallExec(){
   DEBUG('a', "Execute, initiated by user program.\n");
 
   char *fileName;
-  //int argStart = machine->ReadRegister(4);
-  int argc = machine->ReadRegister(4);
+  int argStart = machine->ReadRegister(4);
+  int argvStart = machine->ReadRegister(5);
   fileName = new(std::nothrow) char[128];
   int i;
   char** argv;
 
-  fprintf(stderr, "%s %d\n", "doing some stuff", argc);
+  fprintf(stderr, "%s %d\n", "this is the initial arg", argvStart);
 
-  if (argc < 0) {
-    DEBUG('a', "Argc is negative, switching it to 0\n");
-    argc = 0;
-  }
+  //fprintf(stderr, "%s %d\n", "doing some stuff", argc);
 
-
-  if (argc > 0) {
-    argv = new(std::nothrow) char*[argc];
-    int argvData = machine->ReadRegister(5);
-    for ( i = 0; i < argc; i++) {
-      argv[i] = new(std::nothrow) char[128];
-      for (int j=0; j<127; j++) {
-        if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(argvData)]) == '\0') break;
-        argvData++;
-      }
-
-    }
-  }
-
-  // ASSERT(currentThread->space != NULL);
-  // for (int i=0; i<127; i++) {
-  //   if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
-  //   argStart++;
+  // if (argc < 0) {
+  //   DEBUG('a', "Argc is negative, switching it to 0\n");
+  //   argc = 0;
   // }
 
+
+  ASSERT(currentThread->space != NULL);
+  for (i=0; i<127; i++) {
+    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
+    argStart++;
+  }
+
+
+  // char *start = new(std::nothrow) char[128];
+  // for (i = 0; i < 127; i++){
+  //   if ((start[i] = machine->mainMemory[currentThread->space->AddrTranslation(argvStart)]) == '\0') break;
+  //   //fprintf(stderr, "%s %c\n","attempting to read", start[i] );
+  // }
+
+  int curAddr;
+  //fprintf(stderr, "%s %s\n","here is the start", start );
+
+  argv = new(std::nothrow) char*[128];
+  int argc=0;
+  //fprintf(stderr, "%s %c\n", "Do i read in any data from register 5?", machine->mainMemory[currentThread->space->AddrTranslation(argvData)]);
+  for ( i = 0; i < 127; i++) {
+    argv[i] = new(std::nothrow) char[128];
+    curAddr = currentThread->space->ReadMemory(argvStart, 4);
+    fprintf(stderr, "%s %d\n","here is the curaddr", curAddr );
+    if (curAddr == 0) {
+      break;
+    }
+    for (int j=0; j<127; j++) {
+      //fprintf(stderr, "%s %c\n", "let's try before the loop", machine->mainMemory[currentThread->space->AddrTranslation(curAddr)] );
+      if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(curAddr)]) == '\0') {
+        fprintf(stderr, "%s\n", "breaking out");
+        break;
+      }
+      curAddr++;
+    }
+    argvStart+=4;
+    argc++;
+    fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
+  }
+
+  fprintf(stderr, "%s %d\n", "here is the num of args", argc);
   //Initialize its registers
-  fprintf(stderr, "%s %s\n", "about to do the open", argv[0]);
-  OpenFile *exec = fileSystem->Open(argv[0]);
+  fprintf(stderr, "%s %s\n", "about to do the open", fileName);
+  OpenFile *exec = fileSystem->Open(fileName);
 
   //Invoke it through machine running.
   incrementPC();
+
   if(exec != NULL){
+
+    int argvAddr[argc+1];
 
     fprintf(stderr, "%s\n", "yes?");
     currentThread->space->ExecFunc(exec);
@@ -483,6 +510,52 @@ void sysCallExec(){
 
     currentThread->space->InitRegisters();   // set the initial register values
     currentThread->space->RestoreState();    // load page table register
+
+    int sp = machine->ReadRegister(StackReg);
+
+    int len = strlen(fileName) + 1;
+
+    sp -= len;
+
+    for (i = 0; i < len; i++) {
+      machine->mainMemory[currentThread->space->AddrTranslation(sp+i)] = fileName[i];
+    }
+    argvAddr[0] = sp;
+
+
+    int initialVal = 0;
+    if (argv[0] == fileName) {
+      initialVal = 1;
+    }
+    for (i=initialVal; i<argc; i++) {
+      if (argv[i] != fileName) {
+        len = strlen(argv[i]) + 1;
+        sp -= len;
+        for (int j = 0; j < len; j++){
+          machine->mainMemory[currentThread->space->AddrTranslation(sp+j)] = argv[i][j];
+        }
+        if (initialVal == 0)
+          argvAddr[i+1] = sp;
+        else
+          argvAddr[i] = sp;
+        sp = sp & ~3;
+      }
+    }
+
+    if (initialVal == 0) {
+      argc++;
+    }
+
+    sp -= sizeof(int) *2;
+
+    for(i = 0; i<argc; i++) {
+      *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
+    }
+
+    machine->WriteRegister(4, argc);
+    machine->WriteRegister(5, sp);
+
+    machine->WriteRegister(StackReg, sp-8);
 
 
     // //Create a new Thread

@@ -36,6 +36,8 @@ class AddrSpace {
     
     TranslationEntry* getPageTable(){return pageTable;};
     int getNumPages(){return numPages;};
+
+    int ReadMemory(int virtAddr, int size);
     
 
   private:

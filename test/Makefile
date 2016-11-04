@@ -34,7 +34,7 @@ CPP = /usr/bin/cpp -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR) -DCHANGED -nostartfiles
 
-all: halt shell matmult sort save hellocons fromcons hellofile fileio testexec
+all: halt shell matmult sort save hellocons fromcons hellofile fileio testexec arghalt
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -100,4 +100,10 @@ testexec.o: testexec.c
 testexec: testexec.o start.o
 	$(LD) $(LDFLAGS) start.o testexec.o -o testexec.coff
 	../bin/coff2noff testexec.coff testexec
+
+arghalt.o: arghalt.c
+	$(CC) $(CFLAGS) -c arghalt.c
+arghalt: arghalt.o start.o
+	$(LD) $(LDFLAGS) start.o arghalt.o -o arghalt.coff
+	../bin/coff2noff arghalt.coff arghalt
 

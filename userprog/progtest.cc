@@ -45,46 +45,46 @@ StartProcess(char *filename)
     space->InitRegisters();		// set the initial register values
     space->RestoreState();		// load page table register
 
-    int sp = machine->ReadRegister(StackReg);
+//     int sp = machine->ReadRegister(StackReg);
 
-// Push argv[0] (i.e filename) onto the stack.  Save its address for the 
-// array of pointers.
+// // Push argv[0] (i.e filename) onto the stack.  Save its address for the 
+// // array of pointers.
 
-    int len =  strlen(filename) + 1;   // Length including NULL terminator 
-    sp -= len; 
-    for (int i = 0; i < len; i++) 
-        machine->mainMemory[sp + i] = filename[i]; 
-    argvAddr[0] = sp;
+//     int len =  strlen(filename) + 1;   // Length including NULL terminator 
+//     sp -= len; 
+//     for (int i = 0; i < len; i++) 
+//         machine->mainMemory[sp + i] = filename[i]; 
+//     argvAddr[0] = sp;
 
-// Push "Hello World\n"  onto the stack.  Save its address for the 
-// array of pointers.
+// // Push "Hello World\n"  onto the stack.  Save its address for the 
+// // array of pointers.
 
-    len = strlen("Hello World\n") + 1; 
-    sp -= len; 
-    for (int i = 0; i < len; i++) 
-        machine->mainMemory[sp + i] = "Hello World\n"[i]; 
-    argvAddr[1] = sp;
+//     len = strlen("Hello World\n") + 1; 
+//     sp -= len; 
+//     for (int i = 0; i < len; i++) 
+//         machine->mainMemory[sp + i] = "Hello World\n"[i]; 
+//     argvAddr[1] = sp;
 
-    sp = sp  & ~3;        // Align stack on 4 byte boundrary for integer values. 
+//     sp = sp  & ~3;        // Align stack on 4 byte boundrary for integer values. 
   
-// Allocate and fill in the argv array.  Note that the pointers should 
-// be in the simulated machine's endian format.
+// // Allocate and fill in the argv array.  Note that the pointers should 
+// // be in the simulated machine's endian format.
 
-    sp -= sizeof(int) * 2;
+//     sp -= sizeof(int) * 2;
 
-    for (int i = 0; i < 2; i++) 
-        *(unsigned int *) &machine->mainMemory[sp + i*4] 
-                = WordToMachine((unsigned int) argvAddr[i]); 
-// Put argc into R4 and the argv pointer in R5
+//     for (int i = 0; i < 2; i++) 
+//         *(unsigned int *) &machine->mainMemory[sp + i*4] 
+//                 = WordToMachine((unsigned int) argvAddr[i]); 
+// // Put argc into R4 and the argv pointer in R5
 
-    machine->WriteRegister(4, 2); 
-    machine->WriteRegister(5, sp);
+//     machine->WriteRegister(4, 2); 
+//     machine->WriteRegister(5, sp);
 
-// Update the stack pointer so the process starts below the argc/argv stuff.
+// // Update the stack pointer so the process starts below the argc/argv stuff.
 
-    fprintf(stderr, "%s %d\n", "here is what I've written", sp);
+//     fprintf(stderr, "%s %d\n", "here is what I've written", sp);
 
-    machine->WriteRegister(StackReg, sp - 8); 
+//     machine->WriteRegister(StackReg, sp - 8); 
 
     printf("%s\n", "here we go");
     machine->Run();			// jump to the user progam
