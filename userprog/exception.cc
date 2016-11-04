@@ -527,9 +527,9 @@ void sysCallExec(){
 
     int argvAddr[argc+1];
 
-    fprintf(stderr, "%s\n", "yes?");
+    fprintf(stderr, "%s\n", "Trying to ExecFunction");
     currentThread->space->ExecFunc(exec);
-
+    fprintf(stderr, "%s\n", "Done to ExecFunction");
     delete exec;    //delete the executable
 
     currentThread->space->InitRegisters();   // set the initial register values
@@ -575,7 +575,7 @@ void sysCallExec(){
     for(i = 0; i<argc; i++) {
       *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
     }
-
+    DEBUG('a',"About to Write\n");
     machine->WriteRegister(4, argc);
     machine->WriteRegister(5, sp);
 

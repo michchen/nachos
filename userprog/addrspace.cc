@@ -334,17 +334,18 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 // and the stack segment
     //bzero(machine->mainMemory, size);
     for (int j = 0; j < numPages; j++ ) {
-        bzero(&(machine->mainMemory[AddrTranslation(pageTable[i].virtualPage)]), PageSize);
+        bzero(&(machine->mainMemory[AddrTranslation(pageTable[j].virtualPage)]), PageSize);
     }
-
+    DEBUG('a',"Finished Zeroing\n");
     int virtaddr;
     int addrtrans;
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+        DEBUG('a', "AT CODE Initializing code segment, at 0x%x, size %d\n", 
             noffH.code.virtualAddr, noffH.code.size);
         virtaddr = noffH.code.virtualAddr;
         while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
+
             addrtrans = AddrTranslation(virtaddr);
             executable->ReadAt(&(machine->mainMemory[addrtrans]),
                  1, noffH.code.inFileAddr + (virtaddr - noffH.code.virtualAddr));
@@ -352,7 +353,7 @@ AddrSpace::ExecFunc(OpenFile *executable) {
         }
     }
     if (noffH.initData.size > 0) {
-        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+        DEBUG('a', "AT DATA Initializing data segment, at 0x%x, size %d\n", 
             noffH.initData.virtualAddr, noffH.initData.size);
         virtaddr = noffH.code.virtualAddr;
         while (virtaddr < (noffH.initData.size + noffH.initData.virtualAddr)) {
