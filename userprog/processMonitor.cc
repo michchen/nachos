@@ -19,7 +19,7 @@ int ProcessMonitor::setExitStatus(int threadID, int exitStatus){
 	}
 }
 int ProcessMonitor::getExitStatus(int threadID){
-	printf("ThreadID in getExitStatus %d\n", threadID);
+	//printf("ThreadID in getExitStatus %d\n", threadID);
 	if(threadID != -1 && activeThreads[threadID-1] != NULL){
 		return activeThreads[threadID-1]->exitStatus;
 	}
@@ -45,7 +45,7 @@ int ProcessMonitor::assignID(){
 
 int ProcessMonitor::addThread(Thread *thread,Thread *parent){
 	int spaceID = ProcessMonitor::assignID();
-	printf("SpaceID in addThread %d\n", spaceID);
+	//printf("SpaceID in addThread %d\n", spaceID);
 	if(spaceID == -1){
 		waitingThreads->Append(thread);
 		return -1;
@@ -75,7 +75,7 @@ void ProcessMonitor::removeThread(int threadID){
 }
 
 bool ProcessMonitor::containsThread(int threadID){
-	printf("ThreadID in containsThread %d\n", threadID);
+	//printf("ThreadID in containsThread %d\n", threadID);
 	if(threadID > MAX_THREAD_COUNT || threadID < 0)
 		return false;
 	if(activeThreads[threadID-1] != NULL)
