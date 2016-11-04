@@ -152,6 +152,8 @@ ExceptionHandler(ExceptionType which)
           case SC_Fork:
             sysCallFork();
             break;
+          case SC_Dup:
+            sysCallDup();
           default:
       	    printf("Undefined SYSCALL %d\n", type);
       	    ASSERT(false);
@@ -180,6 +182,11 @@ void incrementPC()
   machine->WriteRegister(PCReg, tmp);
   tmp += 4;
   machine->WriteRegister(NextPCReg, tmp);
+}
+
+void sysCallDup(){
+  DEBUG('e', "Dup, initiated by user program.\n");
+  interrupt->Halt();
 }
 
 void sysCallHalt(){
