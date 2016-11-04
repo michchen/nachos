@@ -39,6 +39,7 @@ class AddrSpace {
 
     int ReadMemory(int virtAddr, int size);
     
+    unsigned int size;
 
   private:
 #ifndef USE_TLB

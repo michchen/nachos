@@ -40,6 +40,7 @@
 #include "copyright.h"
 #include "utility.h"
 
+
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
@@ -139,10 +140,10 @@ class Thread {
 // one for its state while executing user code, one for its state 
 // while executing kernel code.
     int userRegisters[NumTotalRegs];	// user-level CPU register state
-    OpenFile* openFiles[MaxOpenFiles];
     int curNumFiles;
 
   public:
+    OpenFile* openFiles[MaxOpenFiles];
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
     int AddFile(OpenFile* file);

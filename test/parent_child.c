@@ -1,6 +1,6 @@
-/* newfork.c
+/* parent_child.c
  *
- * Simple parent/child system without an Exec()
+ * Simple parent/child system with an Exec()
  *
  */
 
@@ -15,7 +15,7 @@ main()
 
   prints("PARENT exists\n", ConsoleOutput);
   kid = Fork();
- if (kid != 0) {
+  if (kid != 0) {
     prints("PARENT after fork; kid pid is ", ConsoleOutput);
     printd((int)kid, ConsoleOutput);
     prints("\n", ConsoleOutput);
@@ -28,11 +28,9 @@ main()
 
     Halt();
   /* not reached */
-  } else {
-    prints("KID running, about to Exit()\n", ConsoleOutput);
-    /* You may want to put some real code here */
-    Exit(17);
-  }
+  } else 
+    prints("Kid about to exec\n", ConsoleOutput);
+    Exec("test/kid");
 }
 
 /* Print a null-terminated string "s" on open file descriptor "file". */

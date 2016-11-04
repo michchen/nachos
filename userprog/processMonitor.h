@@ -1,10 +1,10 @@
 #ifndef PROCESS_MONITOR_H
 #define PROCESS_MONITOR_H
-#ifdef CHANGED
 
 #include "synch.h"
 
-#define MAX_THREAD_COUNT 100;
+#define MAX_THREAD_COUNT 100
+
 struct ThreadBlocks{
 	int threadId;
 	int parentId;
@@ -17,21 +17,24 @@ class ProcessMonitor{
 	public:
 		ProcessMonitor();
 		~ProcessMonitor();
-		int addThread(Thread *thread);
+		int addThread(Thread *thread,Thread *parent);
 		void lock();
 		void unlock();
-		void removeThread(Thread *thread);
+		void removeThread(int threadID);
 		int getTotalThreads(){return totalThreads;};
-		void setExitStatus(int threadID, int exitStatus);
+		int setExitStatus(int threadID, int exitStatus);
+		int assignID();
+		bool containsThread(int threadID);
+		void wakeParent(int threadID);
+		void sleepParent(int threadID);
+		int getExitStatus(int threadID);
 		Lock *monitorLock;
 		Semaphore *monitorSemaphore;
 
 	private:
-		static int assignID();
-		static ThreadBlocks **activeThreads;
-		static int totalThreads;
-		static List *waitingThreads;
+		 ThreadBlocks **activeThreads;
+		 int totalThreads;
+		 List *waitingThreads;
 };
 
 #endif //PROCESS_MONITOR_H
-#endif

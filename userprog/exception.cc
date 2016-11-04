@@ -114,7 +114,7 @@ ExceptionHandler(ExceptionType which)
 
     int type = machine->ReadRegister(2);
 
-    fprintf(stderr, "%s %d\n", "Here is the type", type);
+    DEBUG('e', "%s %d %d\n", "Here is the type", type, which);
 
     int totalThreads;
     //fprintf(stderr, "%s %d\n", "Here is the type", type);
@@ -170,11 +170,7 @@ ExceptionHandler(ExceptionType which)
         break;
     }
 }
-void runMachine(){
-  currentThread->RestoreUserState();
-  currentThread->space->RestoreState();
-  machine->Run();
-}
+
 void incrementPC()
 {
   int tmp;
@@ -187,30 +183,53 @@ void incrementPC()
 }
 
 void sysCallHalt(){
-  DEBUG('a', "Shutdown, initiated by user program.\n");
+  DEBUG('e', "Shutdown, initiated by user program.\n");
   interrupt->Halt();
 }
 
 void sysCallExit(){
-  DEBUG('a', "Exit, initiated by user program.\n");
-  int result = machine->ReadRegister(4);
+  DEBUG('e', "Exit, initiated by user program.\n");
   int threadID = currentThread->getThreadId();
-
-  // currentThread->exitState = result; 
-
-  machine->WriteRegister(2, result);
+  DEBUG('e', "Exit threadID %d\n", threadID);
+ // ASSERT(threadID != -1);
+  int result = machine->ReadRegister(4);
+  processMonitor->lock();
+  if(processMonitor->setExitStatus(threadID,result) != -1){
+    processMonitor->wakeParent(threadID);
+    processMonitor->unlock();
+  }
+  else{
+    DEBUG('e',"Thread does not exist");
+  }
 
   currentThread->Finish();
-
-
 }
 
 void sysCallJoin(){
-  DEBUG('a', "Joining, initiated by user program.\n");
+  DEBUG('e', "Joining, initiated by user program.\n");
+  int result = machine->ReadRegister(4);
+  DEBUG('e', "Joining threadID %d\n", result);
+  int exitStatus; 
+  processMonitor->lock();
+  if(processMonitor->containsThread(result)){
+    processMonitor->wakeParent(result);
+    exitStatus = processMonitor->getExitStatus(result); 
+  }
+  processMonitor->unlock();
+  if(exitStatus == -1){
+    DEBUG('e', "exitStatus is -1");
+  }
+  else{
+    DEBUG('e',"%s %d \n","Exit status is: ",exitStatus);
+    processMonitor->removeThread(result);
+    machine->WriteRegister(2,exitStatus);
+  }
+
+  incrementPC();
 }
 
 void sysCallCreate(){
-  DEBUG('a', "Create, initiated by user program.\n");
+  DEBUG('e', "Create, initiated by user program.\n");
    // Grab kernel memory sufficient to hold argument string. Note that
    // this imposes a restriction on the length of the string.
   int whence;
@@ -237,7 +256,7 @@ void sysCallCreate(){
     bool result = fileSystem->Create(stringarg,1);
 
     if(result == false) {
-      DEBUG('a', "%s\n", "issue creating the file");
+      DEBUG('e',"issue creating the file");
     }
     delete [] stringarg;               // No memory leaks.
     
@@ -246,7 +265,7 @@ void sysCallCreate(){
 }
 
 void sysCallOpen(){
-  DEBUG('a', "Open, initiated by user program.\n");
+  DEBUG('e', "Open, initiated by user program.\n");
   int whence;
   char *stringarg;
   stringarg = new(std::nothrow) char[128];
@@ -273,13 +292,13 @@ void sysCallOpen(){
     OpenFile *file = fileSystem->Open(stringarg);
 
     if(file == NULL) {
-      DEBUG('a', "%s\n", "no file found");
+      DEBUG('e', "%s\n", "no file found");
       fd = -1;
     }
     else {
       fd = currentThread->AddFile(file);
       if (fd == -1){
-        DEBUG('a', "%s\n", "Failed to add file to openfile array");
+        DEBUG('e', "%s\n", "Failed to add file to openfile array");
       }
     }
 
@@ -290,12 +309,11 @@ void sysCallOpen(){
     
 
     delete [] stringarg;               // No memory leaks.
-
     
 }
 
 void sysCallRead(){
-  DEBUG('a', "Read, initiated by user program.\n");
+  DEBUG('e', "Read, initiated by user program.\n");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -304,12 +322,12 @@ void sysCallRead(){
   int result = -1;
 
   if (id == 1) {
-    DEBUG('a', "%s\n", "Can't read from stdout");
+    DEBUG('e', "%s\n", "Can't read from stdout");
   }
   else if (id == 0) {
       result = synchcon->Read(stringarg, size);
       if (result == 0) {
-        DEBUG('a', "%s\n", "read failed");
+        DEBUG('e', "%s\n", "read failed");
         result = -1;
       }
       for(int i = 0; i<size; i++) {
@@ -329,7 +347,7 @@ void sysCallRead(){
   }
 
   if (result == -1) {
-    DEBUG('a', "%s\n", "Error reading");
+    DEBUG('e', "%s\n", "Error reading");
   }
 
   machine->WriteRegister(2, result);
@@ -339,7 +357,7 @@ void sysCallRead(){
 }
 
 void sysCallWrite(){
-  DEBUG('a', "Write, initiated by user program.\n");
+  DEBUG('e', "Write, initiated by user program.\n");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -353,11 +371,11 @@ void sysCallWrite(){
   }
   stringarg[127]='\0'; 
 
-  fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
+ // fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
 
   if (id == 0) {
-    DEBUG('a', "%s\n", "Can't write to stdin");
+    DEBUG('e', "%s\n", "Can't write to stdin");
   }
   else if (id == 1) {
     for (int j = 0; j<size; j++) {
@@ -374,14 +392,14 @@ void sysCallWrite(){
 }
 
 void sysCallClose(){
-  DEBUG('a', "Close, initiated by user program.\n");
+  DEBUG('e', "Close, initiated by user program.\n");
   int fd;
 
   fd = machine->ReadRegister(4);
 
   OpenFile* result = currentThread->RemoveFile(fd);
   if(result == NULL) {
-    DEBUG('a', "%s\n", "error closing a file");
+    DEBUG('e', "%s\n", "error closing a file");
   }
   else {
     delete result;    
@@ -389,41 +407,46 @@ void sysCallClose(){
 
   incrementPC();
 }
+void runMachine(){
+  DEBUG('e', "Child, initiated by user program.\n");
+  currentThread->RestoreUserState();
+  currentThread->space->RestoreState();  
+  machine->Run();
+}
 
 void sysCallFork(){
-  // DEBUG('a', "Fork, initiated by user program.\n");
-  // Thread *forkedThread = new Thread("Forked Thread");
-  // //To do copy the parents address space and open files.
 
-  // forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
+  forkExec->Acquire();
+  DEBUG('e', "Fork, initiated by user program.\n");
+  Thread *forkedThread = new Thread("Forked Thread");
+  //To do copy the parents address space and open files.
+  for (int i = 0; i < MaxOpenFiles; i++)
+    forkedThread->openFiles[i] = currentThread->openFiles[i];
+  forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
+  //Todo: What to do with the space id
+  //int arg = machine->ReadRegister(4);
+  processMonitor->lock();
+  int spaceId = processMonitor->addThread(forkedThread, currentThread);
+  processMonitor->unlock();
 
-  // //Todo: What to do with the space id
-  // int arg = machine->ReadRegister(4);
-
-  // processMonitor->lock();
-  // int spaceId = processMonitor->addThread(forkedThread);
-  // processMonitor->unlock();
-
-  // if(spaceId ==-1){
-  //   DEBUG('a',"CREATION FAILURE");
-  //   return;
-  // }
-
-
-  // currentThread->SaveUserState();
+  if(spaceId ==-1){
+    DEBUG('e',"CREATION FAILURE");
+    return;
+  }
+  incrementPC();
+  currentThread->SaveUserState();
 
   // machine->WriteRegister(2,0);
 
-  // forkedThread->SaveUserState();
+  forkedThread->SaveUserState();
+  forkExec->Release();
+  forkedThread->Fork((VoidFunctionPtr) runMachine,0);
 
-  // forkedThread->Fork((VoidFunctionPtr) runMachine,0);
+  processMonitor->sleepParent(spaceId);
 
-  // currentThread->RestoreUserState();
-  // //Return to parent process
-  // machine->WriteRegister(2,1);
+  //Return to parent process
 
-  // incrementPC();
-
+  machine->WriteRegister(2,spaceId);
 }
 
 //Extra info needed for the system!
@@ -433,8 +456,8 @@ void sysCallFork(){
 //Resources 
 
 void sysCallExec(){
-  DEBUG('a', "Execute, initiated by user program.\n");
-
+  forkExec->Acquire();
+  DEBUG('e', "Execute, initiated by user program.\n");
   char *fileName;
   int argStart = machine->ReadRegister(4);
   int argvStart = machine->ReadRegister(5);
@@ -579,16 +602,17 @@ void sysCallExec(){
 
     // //Should not have reached here so return failure.
     // currentThread->RestoreUserState();
-    // DEBUG('a', "%s\n", "Forking has failed somehow");
+    // DEBUG('e', "%s\n", "Forking has failed somehow");
     // machine->WriteRegister(2,-1);
 
 
 
   }
   else{
-    DEBUG('a', "%s\n", "Error Opening File");
+    DEBUG('e', "%s\n", "Error Opening File");
     fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
   }
+  forkExec->Release();
 }
 #endif
