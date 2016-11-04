@@ -34,7 +34,7 @@ CPP = /usr/bin/cpp -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR) -DCHANGED -nostartfiles
 
-all: halt shell matmult sort save hellocons fromcons hellofile fileio testexec arghalt newfork kid parent_child
+all: halt shell matmult sort save hellocons fromcons hellofile fileio testexec arghalt newfork kid parent_child argtest argkid
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -125,3 +125,14 @@ kid: kid.o start.o
 	$(LD) $(LDFLAGS) start.o kid.o -o kid.coff
 	../bin/coff2noff kid.coff kid	
 
+argtest.o: argtest.c
+	$(CC) $(CFLAGS) -c argtest.c
+argtest: argtest.o start.o
+	$(LD) $(LDFLAGS) start.o argtest.o -o argtest.coff
+	../bin/coff2noff argtest.coff argtest	
+
+argkid.o: argkid.c
+	$(CC) $(CFLAGS) -c argkid.c
+argkid: argkid.o start.o
+	$(LD) $(LDFLAGS) start.o argkid.o -o argkid.coff
+	../bin/coff2noff argkid.coff argkid	
