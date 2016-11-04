@@ -91,9 +91,7 @@ Initialize(int argc, char **argv)
     char *debugArgs = (char *)""; 
     bool randomYield = false;
     gspaceID = -1;
-    RandomInit(atoi(*(argv + 1)));  // initialize pseudo-random
-                    // number generator
-    randomYield = true;     
+
 
 #ifdef USER_PROGRAM
     bool debugUserProg = false;	// single step user program

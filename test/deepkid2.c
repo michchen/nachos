@@ -10,9 +10,10 @@ int
 main()
 {
   int i, tmp;
-  
+  print("KID2 EXECUTING\n");
   for (i=0; i<10000; i++) tmp++;
   /* loop to delay kid initially */
+  print("KID2 EXITING\n");  
   Exit(2);
   /* Should not get past here */
   print("ERROR: KID2 after Exit()\n");
