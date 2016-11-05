@@ -147,7 +147,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (int j = 0; j < numPages; j++ ) {
         bzero(&(machine->mainMemory[AddrTranslation(pageTable[j].virtualPage)]), PageSize);
     }
-
+    bzero(machine->mainMemory,size);
     int virtaddr;
     int addrtrans;
 // then, copy in the code and data segments into memory
@@ -299,7 +299,7 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     for (int i = 0; i < numPages; i++) {
         pagemap->Clear(pageTable[i].physicalPage);
     }
-
+    //delete [] pageTable;
     NoffHeader noffH;
     unsigned int size;
 #ifndef USE_TLB
