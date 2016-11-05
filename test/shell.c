@@ -82,23 +82,24 @@ main()
 
       } while(buffer[i++] != '\n' );
 
+      args[curarg] = (char *)0;
+
       /*add null terminating string*/
       buffer[--i] = '\0';
 
-      prints(buffer, ConsoleOutput);
-      prints("\n", ConsoleOutput);
-
       for(i=1; i<6; i++) {
-      	prints(args[i], ConsoleOutput);
-      	prints("\n", ConsoleOutput);
       	argsNoFilename[i-1] = args[i];
-      	prints(argsNoFilename[i]);
+      	prints(argsNoFilename[i-1], ConsoleOutput);
+        prints("\n", ConsoleOutput);
       }
+
+      prints("do we reach here", ConsoleOutput);
 
       if( i > 0 ) {
         newProc = Fork();
+        prints("did we fork", ConsoleOutput);
         if (newProc == 0) {
-          prints("Trying to do kid stuff\n");
+          prints("Trying to do kid stuff\n", ConsoleOutput);
           error = Exec(args[0], argsNoFilename);
           if(error == -1){
             prints("There is no such scripted or function or class or anything called -> ",ConsoleOutput);
@@ -108,7 +109,7 @@ main()
           }
         }
         else {
-          prints("The Parent is Here\n");
+          prints("The Parent is Here\n", ConsoleOutput);
           Join(newProc);
         }
       }
