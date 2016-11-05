@@ -99,6 +99,10 @@ AddrSpace::AddrSpace(OpenFile *executable)
 #endif
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    if((noffH.noffMagic == 0x52435323 )){
+        printf("Scripting detected!\n");
+        ASSERT(false);
+    }
     if ((noffH.noffMagic != NOFFMAGIC) && 
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
     	SwapHeader(&noffH);
@@ -303,6 +307,10 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 #endif
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    if((noffH.noffMagic == 0x52435323)){
+        printf("REady for scripting");
+        ASSERT(false);
+    }
     if ((noffH.noffMagic != NOFFMAGIC) && 
         (WordToHost(noffH.noffMagic) == NOFFMAGIC))
         SwapHeader(&noffH);

@@ -224,17 +224,16 @@ void sysCallExit(){
   int result = machine->ReadRegister(4);
   //processMonitor->lock();
  // processMonitor->wakeParent(threadID);
+  currentThread->space->ClearMem();
   if(processMonitor->setExitStatus(threadID,result) != -1){
     DEBUG('e', "Exit threadID waking parent of %d\n", threadID);
     processMonitor->wakeParent(threadID);
     DEBUG('e', "Exit Done %d\n", threadID);
-    currentThread->space->ClearMem();
-    currentThread->Finish();
-  
   }
   else{
     DEBUG('e',"Thread does not exist\n");
   }
+  currentThread->Finish();
   incrementPC();
   //processMonitor->unlock();
 }
