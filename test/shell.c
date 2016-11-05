@@ -6,7 +6,7 @@ main()
     SpaceId newProc;
     OpenFileId input = ConsoleInput;
     OpenFileId output = ConsoleOutput;
-<<<<<<< HEAD
+    /*
     char prompt[2], ch, buffer[60];
     int i;
     char *args[128];
@@ -16,7 +16,6 @@ main()
     prompt[0] = '-';
     prompt[1] = '-';
 
-    /* char * array is the way to go */
 
     while( 1 )
     {
@@ -26,7 +25,7 @@ main()
 	curArg = 0;
 
 	args[0] = ' ';
-	
+
 	do {
 		do {
 			i++;
@@ -38,7 +37,7 @@ main()
 	    args[curArg] = ' ';
 	    prints(args[curArg]);
 	} while( buffer[i] != '\n' );
-=======
+  */
     char prompt[3], ch, buffer[60];
     int i,error;
     char *args[1]; 
@@ -57,8 +56,6 @@ main()
     	/*THIS IS THE KEY BOARD LISTENER FOR A COMMAND TO BE INPUTED WITH ENTER*/
     	do {
     	    Read(&buffer[i], 1, input); 
->>>>>>> 7bf7c0852811826f7ba54d527730ff452d9d937c
-
     	} while(buffer[i++] != '\n' );
 
       /*add null terminating string*/
@@ -67,11 +64,10 @@ main()
     	prints(buffer, ConsoleOutput);
     	prints("\n", ConsoleOutput);
 
-<<<<<<< HEAD
 	/*args[0] = (char *)0; */
-=======
+
     	args[0] = (char *)0;
->>>>>>> 7bf7c0852811826f7ba54d527730ff452d9d937c
+
 
     	if( i > 0 ) {
     	  newProc = Fork();

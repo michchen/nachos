@@ -568,6 +568,7 @@ void sysCallExec(){
     currentThread->space->InitRegisters();   // set the initial register values
     currentThread->space->RestoreState();    // load page table register
 
+    DEBUG('a', "Registers have been inited and restored\n");
     int sp = machine->ReadRegister(StackReg);
 
     int len = strlen(fileName) + 1;
@@ -579,6 +580,7 @@ void sysCallExec(){
     }
     argvAddr[0] = sp;
 
+    DEBUG('a', "filename loaded\n");
 
    // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
    // fprintf(stderr, "And now the filename %s\n", fileName);
