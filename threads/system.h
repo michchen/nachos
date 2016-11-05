@@ -34,7 +34,8 @@ extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 extern ProcessMonitor *processMonitor;
 extern unsigned int gspaceID;
-extern Lock *forkExec;
+extern Semaphore *forkExec;
+extern Semaphore *writeRead;
 extern Semaphore *rootSema;
 
 #ifdef USER_PROGRAM

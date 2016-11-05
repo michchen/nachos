@@ -42,7 +42,7 @@ Thread::Thread(const char* threadName)
 #ifdef CHANGED
 #ifdef USER_PROGRAM
     space = NULL;
-    threadId = gspaceID;
+    threadId = 0;
     parent = currentThread;
     SpaceId sid;
     curNumFiles = 0;
@@ -68,7 +68,7 @@ Thread::Thread(const char* threadName)
 
 Thread::~Thread()
 {
-    DEBUG('t', "Deleting thread \"%s\"\n", name);
+    DEBUG('e', "Deleting thread \"%s\"\n", name);
 
     ASSERT(this != currentThread);
     if (stack != NULL)

@@ -8,23 +8,25 @@ ProcessMonitor::ProcessMonitor(){
 	totalThreads = 0;
 }
 int ProcessMonitor::setExitStatus(int threadID, int exitStatus){
-	if(threadID != -1 && activeThreads[threadID-1] != NULL){
-		activeThreads[threadID-1]->exitStatus = exitStatus;
-		activeThreads[threadID-1]->done = true;
+	DEBUG('e',"ThreadID in setExitStatus in Thread %d and exitStatus is %d\n", threadID, exitStatus);
+	if(threadID != -1 && activeThreads[threadID] != NULL){
+		activeThreads[threadID]->exitStatus = exitStatus;
+		activeThreads[threadID]->done = true;
+		DEBUG('e', "Thread exists and setting to exit!\n");
 		return 1;
 	}
 	else{
-		DEBUG('a', "Thread Does not exist!");
+		DEBUG('e', "Thread Does not exist! (setExitStatus)\n");
 		return -1;
 	}
 }
 int ProcessMonitor::getExitStatus(int threadID){
-	//printf("ThreadID in getExitStatus %d\n", threadID);
-	if(threadID != -1 && activeThreads[threadID-1] != NULL){
-		return activeThreads[threadID-1]->exitStatus;
+	DEBUG('e',"ThreadID in getExitStatus %d\n", threadID);
+	if(threadID != -1 && activeThreads[threadID] != NULL){
+		return activeThreads[threadID]->exitStatus;
 	}
 	else{
-		DEBUG('a', "Thread Does not exist!");
+		DEBUG('e', "Thread Does not exist! (getExitStatus)\n");
 		return -1;
 	}
 }
@@ -37,9 +39,9 @@ ProcessMonitor::~ProcessMonitor(){
 int ProcessMonitor::assignID(){
 	for(int i = 0; i < MAX_THREAD_COUNT; i++){
 		if(activeThreads[i] == NULL)
-			return i+1;
+			return i;
 	}
-	DEBUG('a', "Too many active threads unable to assign id");
+	DEBUG('e', "Too many active threads unable to assign id\n");
 	return -1;
 }
 
@@ -58,49 +60,61 @@ int ProcessMonitor::addThread(Thread *thread,Thread *parent){
 		newBlock->done = false;
 		newBlock->lock = new(std::nothrow) Lock("new thread fork lock");
 		newBlock->semaphore = new(std::nothrow) Semaphore("new semaphore fork lock",0);
-		activeThreads[spaceID-1] = newBlock;
+		activeThreads[spaceID] = newBlock;
 		totalThreads++;
 		return spaceID;
 	}
 }
 
 void ProcessMonitor::removeThread(int threadID){
-	if(threadID != -1){
+	if(threadID > -1){
 		totalThreads--;
-		activeThreads[threadID-1] = NULL;
+		activeThreads[threadID] = NULL;
 	}
 	else{
-		DEBUG('a', "This is the root thread. Unable to delete");
+		DEBUG('e', "This is the root thread. Unable to delete\n");
 	}
 }
 
 bool ProcessMonitor::containsThread(int threadID){
-	//printf("ThreadID in containsThread %d\n", threadID);
+	DEBUG('e',"ThreadID in containsThread %d\n", threadID);
 	if(threadID > MAX_THREAD_COUNT || threadID < 0)
 		return false;
-	if(activeThreads[threadID-1] != NULL)
+	if(activeThreads[threadID] != NULL)
 		return true;
 	return false;
 }
 void ProcessMonitor::wakeParent(int threadID){
-	ASSERT(threadID >= -1 && threadID < MAX_THREAD_COUNT);
-	if(activeThreads[threadID-1] != NULL){
-		activeThreads[threadID-1]->semaphore->V();
+	DEBUG('e',"waking Parent of thread %d\n", threadID);
+	ASSERT(threadID >= 0 && threadID < MAX_THREAD_COUNT);
+	if(activeThreads[threadID] != NULL){
+		if(activeThreads[threadID]->threadId != activeThreads[threadID]->parentId){
+			threadID = activeThreads[threadID]->parentId;
+			//activeThreads[threadID]->semaphore->V();
+		}
+		DEBUG('e',"wake thread -> %d\n", threadID);
+		activeThreads[threadID]->semaphore->V();
 	}
 }
 void ProcessMonitor::sleepParent(int threadID){
-	ASSERT(threadID >= -1 && threadID < MAX_THREAD_COUNT);
-	if(activeThreads[threadID-1] != NULL){
-		activeThreads[threadID-1]->semaphore->P();
+	DEBUG('e',"sleeping Parent of thread %d\n", threadID);
+	ASSERT(threadID >= 0 && threadID < MAX_THREAD_COUNT);
+	if(activeThreads[threadID] != NULL){
+		if(activeThreads[threadID]->threadId != activeThreads[threadID]->parentId){
+			threadID = activeThreads[threadID]->parentId;
+			//activeThreads[threadID]->semaphore->V();
+		}
+		DEBUG('e',"sleep thread -> %d\n", threadID);
+		activeThreads[threadID]->semaphore->P();
 	}
 }
 void ProcessMonitor::lock(){
-	DEBUG('a', "Locking Monitor Lock\n");
+	DEBUG('e', "Locking Monitor Lock\n");
 	monitorLock->Acquire();
 }
 
 void ProcessMonitor::unlock(){
-	DEBUG('a', "Unlocking Monitor Lock\n");
+	DEBUG('e', "Unlocking Monitor Lock\n");
 	monitorLock->Release();
 }
 void ProcessMonitor::lockThreadBlock(int threadID){
@@ -120,7 +134,7 @@ void ProcessMonitor::cleanUpDeadThreads(int threadID){
 		ThreadBlocks *temp = activeThreads[i];
 		if(temp != NULL && temp->parentId == threadID && temp->done){
 			DEBUG('e', "Removing Dead Threads\n");
-			removeThread(i+1);
+			removeThread(i);
 		}
 	}
 }
