@@ -38,9 +38,10 @@ main()
 	    prints(args[curArg]);
 	} while( buffer[i] != '\n' );
   */
-    char prompt[3], ch, buffer[300], arg1[60], arg2[60], arg3[60], arg4[60], arg5[60];
+    char prompt[3], ch, buffer[300], arg1[60], arg2[60], arg3[60], arg4[60], arg5[60], arg6[60];
     int i,error, curarg;
-    char *args[5]; 
+    char *args[6]; 
+    char *argsNoFilename[5];
     int j,curIndex, lastArg;
 
     prompt[0] = '-';
@@ -52,6 +53,7 @@ main()
     args[2] = arg3;
     args[3] = arg4;
     args[4] = arg5;
+    args[5] = arg6;
 
     /*While loop starts the console and lasts forever*/
     while( 1 )
@@ -73,6 +75,7 @@ main()
           		args[curarg][curIndex] = buffer[j];
           		curIndex++;
           	}
+          	args[curarg][curIndex] = '\0'; 
           	lastArg = i+1;
           	curarg++;
           } 
@@ -85,16 +88,18 @@ main()
       prints(buffer, ConsoleOutput);
       prints("\n", ConsoleOutput);
 
-      for(i=0; i<5; i++) {
+      for(i=1; i<6; i++) {
       	prints(args[i], ConsoleOutput);
       	prints("\n", ConsoleOutput);
+      	argsNoFilename[i-1] = args[i];
+      	prints(argsNoFilename[i]);
       }
 
       if( i > 0 ) {
         newProc = Fork();
         if (newProc == 0) {
           prints("Trying to do kid stuff\n");
-          error = Exec(args[0], args);
+          error = Exec(args[0], argsNoFilename);
           if(error == -1){
             prints("There is no such scripted or function or class or anything called -> ",ConsoleOutput);
             prints(args[0],ConsoleOutput);

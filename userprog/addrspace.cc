@@ -395,3 +395,10 @@ AddrSpace::ReadMemory(int virtAddr, int size) {
     
     return data;
 }
+
+void
+AddrSpace::ClearMem() {
+    for (int i = 0; i < numPages; i++) {
+        pagemap->Clear(pageTable[i].physicalPage);
+    }
+}
