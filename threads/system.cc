@@ -20,8 +20,9 @@ Timer *timer;				// the hardware timer device,
 					// for invoking context switches
 ProcessMonitor *processMonitor;
 unsigned int gspaceID;
-Lock *forkExec;
+Semaphore *forkExec;
 Semaphore *rootSema;
+Semaphore *writeRead;
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -151,12 +152,14 @@ Initialize(int argc, char **argv)
     threadToBeDestroyed = NULL;
 
     processMonitor = new(std::nothrow) ProcessMonitor();
-    forkExec = new(std::nothrow)Lock("Fork/Exec Lock!");
+    writeRead = new(std::nothrow) Semaphore("Write/Read Lock!",1);
+    forkExec = new(std::nothrow)Semaphore("Fork/Exec Lock!",1);
     rootSema = new(std::nothrow)Semaphore("Root Semaphore",0);
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 
-    currentThread = new(std::nothrow) Thread("main");		
+    currentThread = new(std::nothrow) Thread("main");	
+    processMonitor->addThread(currentThread,currentThread);	
     currentThread->setStatus(RUNNING);
 
     interrupt->Enable();
@@ -195,7 +198,7 @@ Cleanup()
     delete postOffice;
 #endif
 #ifdef THREADS
-    //delete processMonitor;
+    delete processMonitor;
 #endif
 #ifdef CHANGED
 #ifdef USER_PROGRAM

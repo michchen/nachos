@@ -116,10 +116,12 @@ void Lock::Acquire()
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
 	if(currentState == BUSY){
+		//fprintf(stderr, "%s %d\n","write Lock is Busy. Will sleep Thread ",currentThread->getThreadId());
 		lockqueue->Append((void *)currentThread);
 		currentThread->Sleep();
 	}
 	else{
+		//fprintf(stderr, "%s %d\n","write Lock is Free. Will give to Thread ",currentThread->getThreadId());
 		currentState = BUSY;
 		locker = currentThread;
 	}
@@ -133,9 +135,10 @@ void Lock::Release()
 	ASSERT(isHeldByCurrentThread());
 
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-
+	//fprintf(stderr, "%s\n","write Lock is realsing");
 	thread = (Thread *) lockqueue->Remove();
 	if(thread != NULL){
+	//	fprintf(stderr, "%s %d\n","write Lock is Released for thread  ",thread->getThreadId());
 		scheduler->ReadyToRun(thread);
 	}
 	currentState = FREE;

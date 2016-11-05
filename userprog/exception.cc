@@ -1,18 +1,18 @@
 // exception.cc 
-//	Entry point into the Nachos kernel from user programs.
-//	There are two kinds of things that can cause control to
-//	transfer back to here from user code:
+//  Entry point into the Nachos kernel from user programs.
+//  There are two kinds of things that can cause control to
+//  transfer back to here from user code:
 //
-//	syscall -- The user code explicitly requests to call a procedure
-//	in the Nachos kernel.  Right now, the only function we support is
-//	"Halt".
+//  syscall -- The user code explicitly requests to call a procedure
+//  in the Nachos kernel.  Right now, the only function we support is
+//  "Halt".
 //
-//	exceptions -- The user code does something that the CPU can't handle.
-//	For instance, accessing memory that doesn't exist, arithmetic errors,
-//	etc.  
+//  exceptions -- The user code does something that the CPU can't handle.
+//  For instance, accessing memory that doesn't exist, arithmetic errors,
+//  etc.  
 //
-//	Interrupts (which can also cause control to transfer from user
-//	code into the Nachos kernel) are handled elsewhere.
+//  Interrupts (which can also cause control to transfer from user
+//  code into the Nachos kernel) are handled elsewhere.
 //
 // For now, this only handles the Halt() system call.
 // Everything else core dumps.
@@ -86,25 +86,25 @@ HandleTLBFault(int vaddr)
 
 //----------------------------------------------------------------------
 // ExceptionHandler
-// 	Entry point into the Nachos kernel.  Called when a user program
-//	is executing, and either does a syscall, or generates an addressing
-//	or arithmetic exception.
+//  Entry point into the Nachos kernel.  Called when a user program
+//  is executing, and either does a syscall, or generates an addressing
+//  or arithmetic exception.
 //
-// 	For system calls, the following is the calling convention:
+//  For system calls, the following is the calling convention:
 //
-// 	system call code -- r2
-//		arg1 -- r4
-//		arg2 -- r5
-//		arg3 -- r6
-//		arg4 -- r7
+//  system call code -- r2
+//    arg1 -- r4
+//    arg2 -- r5
+//    arg3 -- r6
+//    arg4 -- r7
 //
-//	The result of the system call, if any, must be put back into r2. 
+//  The result of the system call, if any, must be put back into r2. 
 //
 // And don't forget to increment the pc before returning. (Or else you'll
 // loop making the same system call forever!
 //
-//	"which" is the kind of exception.  The list of possible exceptions 
-//	are in machine.h.
+//  "which" is the kind of exception.  The list of possible exceptions 
+//  are in machine.h.
 //----------------------------------------------------------------------
 
 #ifdef CHANGED
@@ -121,8 +121,8 @@ ExceptionHandler(ExceptionType which)
 
     switch (which) {
       case SyscallException:
-      	switch (type) {
-      	  case SC_Halt:
+        switch (type) {
+          case SC_Halt:
             sysCallHalt();
             break;
           case SC_Exit:
@@ -155,15 +155,15 @@ ExceptionHandler(ExceptionType which)
           case SC_Dup:
             sysCallDup();
           default:
-      	    printf("Undefined SYSCALL %d\n", type);
-      	    ASSERT(false);
+            printf("Undefined SYSCALL %d\n", type);
+            ASSERT(false);
             break;
         }
       break;
       #ifdef USE_TLB
             case PageFaultException:
-      	HandleTLBFault(machine->ReadRegister(BadVAddrReg));
-      	break;
+        HandleTLBFault(machine->ReadRegister(BadVAddrReg));
+        break;
       #endif
 
       default: 
@@ -220,17 +220,20 @@ void sysCallExit(){
   DEBUG('e', "Exit threadID %d\n", threadID);
  // ASSERT(threadID != -1);
   int result = machine->ReadRegister(4);
-  processMonitor->lock();
+  //processMonitor->lock();
+ // processMonitor->wakeParent(threadID);
   if(processMonitor->setExitStatus(threadID,result) != -1){
     DEBUG('e', "Exit threadID waking parent of %d\n", threadID);
     processMonitor->wakeParent(threadID);
+    DEBUG('e', "Exit Done %d\n", threadID);
+    currentThread->Finish();
+  
   }
   else{
-    DEBUG('e',"Thread does not exist");
+    DEBUG('e',"Thread does not exist\n");
   }
-  DEBUG('e', "Exit Done %d\n", threadID);
-  processMonitor->unlock();
-  currentThread->Finish();
+  incrementPC();
+  //processMonitor->unlock();
 }
 
 void sysCallJoin(){
@@ -238,24 +241,24 @@ void sysCallJoin(){
   int result = machine->ReadRegister(4);
   DEBUG('e', "Thread %d is Joining threadID %d\n",currentThread->getThreadId(), result);
   int exitStatus; 
-  processMonitor->lock();
+  //processMonitor->lock();
   if(processMonitor->containsThread(result)){
     processMonitor->lockThreadBlock(result);
-    processMonitor->wakeParent(result);
+    processMonitor->sleepParent(result);
     exitStatus = processMonitor->getExitStatus(result); 
     processMonitor->unlockThreadBlock(result);
     DEBUG('e', "Parent woken %d\n", result);
   }
-  processMonitor->unlock();
+  //processMonitor->unlock();
   if(exitStatus == -1){
-    DEBUG('e', "exitStatus is -1");
+    DEBUG('e', "exitStatus is -1\n");
   }
   else{
     DEBUG('e',"%s %d \n","Exit status is: ",exitStatus);
-    processMonitor->lock();
-    processMonitor->cleanUpDeadThreads(result);
+   // processMonitor->lock();
+  //  processMonitor->cleanUpDeadThreads(result);
     processMonitor->removeThread(result);
-    processMonitor->unlock();
+    //processMonitor->unlock();
     machine->WriteRegister(2,exitStatus);
   }
 
@@ -347,7 +350,8 @@ void sysCallOpen(){
 }
 
 void sysCallRead(){
-  //DEBUG('e', "Read, initiated by user program.\n");
+  DEBUG('e', "Read, initiated by user program.\n");
+  writeRead->P();
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -388,10 +392,14 @@ void sysCallRead(){
 
   incrementPC();
   delete [] stringarg; 
+  writeRead->V();
 }
 
 void sysCallWrite(){
- // DEBUG('e', "Write, initiated by user program.\n");
+  DEBUG('e', "Write, initiated by user program.\n");
+ //writeRead->Acquire();
+  writeRead->P();
+  //fprintf(stderr, "%s\n","write Lock acquired");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -405,8 +413,7 @@ void sysCallWrite(){
   }
   stringarg[127]='\0'; 
 
- // fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
-
+  //fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
   if (id == 0) {
     DEBUG('e', "%s\n", "Can't write to stdin");
@@ -415,6 +422,7 @@ void sysCallWrite(){
     for (int j = 0; j<size; j++) {
       synchcon->Write(stringarg[j], 1);
     }
+   // synchcon->WriteDone();
   }
   else {
     OpenFile* file = currentThread->GetFile(id);
@@ -423,6 +431,8 @@ void sysCallWrite(){
 
 
   incrementPC();
+  //fprintf(stderr, "%s\n","write Lock released");
+  writeRead->V();
 }
 
 void sysCallClose(){
@@ -441,16 +451,17 @@ void sysCallClose(){
 
   incrementPC();
 }
-void runMachine(){
-  DEBUG('e', "Child, initiated by user program.\n");
+void runMachine(int spaceId){
+  DEBUG('e', "Child, initiated by user program. with id %d\n",spaceId);
   currentThread->RestoreUserState();
   currentThread->space->RestoreState();  
+  rootSema->V();
   machine->Run();
 }
 
 void sysCallFork(){
 
-  forkExec->Acquire();
+  forkExec->P();
   DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
@@ -459,9 +470,9 @@ void sysCallFork(){
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
   //Todo: What to do with the space id
   //int arg = machine->ReadRegister(4);
-  processMonitor->lock();
+  //processMonitor->lock();
   int spaceId = processMonitor->addThread(forkedThread, currentThread);
-  processMonitor->unlock();
+  //processMonitor->unlock();
 
   if(spaceId ==-1){
     DEBUG('e',"CREATION FAILURE");
@@ -473,14 +484,15 @@ void sysCallFork(){
   machine->WriteRegister(2,0);
 
   forkedThread->SaveUserState();
-  forkExec->Release();
-  forkedThread->Fork((VoidFunctionPtr) runMachine,0);
-  printf("Thread %d SpaceID in exception %d\n", currentThread->getThreadId(),spaceId);
-  processMonitor->sleepParent(spaceId);
-  printf("SpaceID in exception after waking %d\n", spaceId);
+  forkedThread->Fork((VoidFunctionPtr) runMachine,spaceId);
+  //printf("Thread %d SpaceID in exception %d\n", currentThread->getThreadId(),spaceId);
+  //processMonitor->sleepParent(spaceId);
+  rootSema->P();
+ // printf("SpaceID in exception after waking %d\n", spaceId);
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
+  forkExec->V();
 }
 
 //Extra info needed for the system!
@@ -490,7 +502,8 @@ void sysCallFork(){
 //Resources 
 
 void sysCallExec(){
-  forkExec->Acquire();
+  forkExec->P();
+
   DEBUG('e', "Execute, initiated by user program.\n");
   char *fileName;
   int argStart = machine->ReadRegister(4);
@@ -663,6 +676,7 @@ void sysCallExec(){
     //fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
   }
-  forkExec->Release();
+
+  forkExec->V();
 }
 #endif
