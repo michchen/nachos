@@ -157,7 +157,7 @@ Thread::Finish ()
     (void) interrupt->SetLevel(IntOff);		
     ASSERT(this == currentThread);
     
-    DEBUG('t', "Finishing thread \"%s\"\n", getName());
+    DEBUG('e', "Finishing thread \"%s\"\n", getName());
     
     threadToBeDestroyed = currentThread;
     Sleep();					// invokes SWITCH

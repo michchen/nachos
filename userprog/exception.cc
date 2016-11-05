@@ -337,6 +337,9 @@ void sysCallOpen(){
       if (fd == -1){
         DEBUG('e', "%s\n", "Failed to add file to openfile array");
       }
+      else{
+        file->totalLive++;
+      }
     }
 
     machine->WriteRegister(2, fd);
@@ -442,15 +445,18 @@ void sysCallClose(){
   fd = machine->ReadRegister(4);
 
   OpenFile* result = currentThread->RemoveFile(fd);
-  if(result == NULL) {
+    if(result == NULL) {
     DEBUG('e', "%s\n", "error closing a file");
   }
   else {
-    delete result;    
+    result->totalLive--;
+    if(result->totalLive == 0)
+      delete result;    
+    DEBUG('t', "Deleting file descriptor %d with only %d of it left open\n", fd,result->totalLive);
   }
-
   incrementPC();
 }
+
 void runMachine(int spaceId){
   DEBUG('e', "Child, initiated by user program. with id %d\n",spaceId);
   currentThread->RestoreUserState();
@@ -465,8 +471,13 @@ void sysCallFork(){
   DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
-  for (int i = 0; i < MaxOpenFiles; i++)
-    forkedThread->openFiles[i] = currentThread->openFiles[i];
+  for (int i = 2; i < MaxOpenFiles; i++){
+    OpenFile *temp = currentThread->openFiles[i];
+    if(forkedThread->openFiles[i] != NULL){
+      temp->totalLive++;
+      forkedThread->openFiles[i] = temp;
+    }
+  }
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
   //Todo: What to do with the space id
   //int arg = machine->ReadRegister(4);
