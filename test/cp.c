@@ -9,11 +9,20 @@ main(int argc, char **argv)
   int origFile;
   int newFile;
   char ch;
+  int i;
 
   if (argc < 3) {
   	prints("Not enough args\n", ConsoleOutput);
   	Exit(-1);
   }
+
+  for (i=0; i<argc; i++) {
+    prints("Arg[",ConsoleOutput);
+    printd(i,ConsoleOutput);
+    prints("]=<",ConsoleOutput);
+    prints(argv[i],ConsoleOutput);
+    prints(">\n",ConsoleOutput);
+  } 
 
   origFile = Open(argv[1]);
   newFile = Open(argv[2]);
@@ -51,4 +60,23 @@ OpenFileId file;
   while (*p++ != '\0') count++;
   Write(s, count, file);  
 
+}
+
+printd(n,file)
+int n;
+OpenFileId file;
+
+{
+
+  int i;
+  char c;
+
+  if (n < 0) {
+    Write("-",1,file);
+    n = -n;
+  }
+  if ((i = n/10) != 0)
+    printd(i,file);
+  c = (char) (n % 10) + '0';
+  Write(&c,1,file);
 }

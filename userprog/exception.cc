@@ -37,8 +37,6 @@ void sysCallClose();
 void sysCallRead();
 void sysCallWrite();
 void sysCallDup();
-void sysCallCat();
-void sysCallCp();
 void incrementPC();
 
 
@@ -158,12 +156,6 @@ ExceptionHandler(ExceptionType which)
           case SC_Dup:
             sysCallDup();
             break;
-          case SC_Cat:
-            sysCallCat();
-            break;
-          case SC_Cp:
-            sysCallCp();
-            break;
           default:
             printf("Undefined SYSCALL %d\n", type);
             ASSERT(false);
@@ -217,102 +209,6 @@ void sysCallDup(){
     machine->WriteRegister(2,open_spot);
   }
   incrementPC();
-}
-
-void sysCallCat(){
-  DEBUG('e', "Cat, initiated by user program.\n");
-  int nameStart = machine->ReadRegister(4);
-
-  char *fileName = new(std::nothrow) char[128];
-  int fd;
-  char *buffer = new(std::nothrow) char[1];
-
-  for (int i=0; i<127; i++) {
-    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(nameStart)]) == '\0') break;
-    nameStart++;
-  }
-  fileName[127]='\0';
-
-  OpenFile *file = fileSystem->Open(fileName);
-
-  if(file == NULL) {
-    DEBUG('e', "%s\n", "no file found");
-    fd = -1;
-  }
-  else {
-    int result;
-    while(result != -1) {
-      result = file->Read(buffer, 1);
-      if (result != -1) {
-        char ch = buffer[0];
-        synchcon->Write(ch, 1);
-      }
-    }
-    
-  }
-
-  machine->WriteRegister(2, fd);
-
-  incrementPC();
-
-  delete fileName;
-  delete buffer;
-}
-
-void sysCallCp() {
-  DEBUG('e', "Cp, initiated by user program.\n");
-  int origStart = machine->ReadRegister(4);
-  int newStart = machine->ReadRegister(5);
-
-  char *origName = new(std::nothrow) char[128];
-  char *newName = new(std::nothrow) char[128];
-
-  int fd;
-  char *buffer = new(std::nothrow) char[1];
-
-  for (int i=0; i<127; i++) {
-    if ((origName[i]=machine->mainMemory[currentThread->space->AddrTranslation(origStart)]) == '\0') break;
-    origStart++;
-  }
-  origName[127]='\0'; 
-
-  for (int i=0; i<127; i++) {
-    if ((newName[i]=machine->mainMemory[currentThread->space->AddrTranslation(newStart)]) == '\0') break;
-    newStart++;
-  }
-  newName[127]='\0'; 
-
-  OpenFile *origFile = fileSystem->Open(origName);
-  OpenFile *newFile = fileSystem->Open(newName);
-
-  if (newFile == NULL) {
-    bool returnVal = fileSystem->Create(newName,1);
-    if (returnVal == true)
-      newFile = fileSystem->Open(newName);
-  }
-
-  if(origFile == NULL || newFile == NULL) {
-    DEBUG('e', "%s\n", "no file found");
-    fd = -1;
-  }
-  else {
-    int result;
-    while(result != -1) {
-      result = origFile->Read(buffer, 1);
-      if (result != -1) {
-        newFile->Write(buffer, 1);
-      }
-    }
-  }
-
-  machine->WriteRegister(2, fd);
-
-  incrementPC();
-
-  delete origName;
-  delete newName;
-  delete buffer;
-
 }
 
 void sysCallHalt(){

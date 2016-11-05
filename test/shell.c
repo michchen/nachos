@@ -89,17 +89,13 @@ main()
 
       for(i=1; i<6; i++) {
       	argsNoFilename[i-1] = args[i];
-      	prints(argsNoFilename[i-1], ConsoleOutput);
-        prints("\n", ConsoleOutput);
       }
 
       prints("do we reach here", ConsoleOutput);
 
       if( i > 0 ) {
         newProc = Fork();
-        prints("did we fork", ConsoleOutput);
         if (newProc == 0) {
-          prints("Trying to do kid stuff\n", ConsoleOutput);
           error = Exec(args[0], argsNoFilename);
           if(error == -1){
             prints("There is no such scripted or function or class or anything called -> ",ConsoleOutput);
