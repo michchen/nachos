@@ -29,6 +29,8 @@
 #define SC_Close	8
 #define SC_Fork		9
 #define SC_Dup		10
+#define SC_Cp		11
+#define SC_Cat 		12
 
 #ifndef IN_ASM
 
@@ -90,6 +92,9 @@ OpenFileId Dup(OpenFileId fd);
  * Read and Write can be used directly on these, without first opening
  * the console device.
  */
+int Cat(char *name);
+
+int Cp(char *origfile, char *newfile);
 
 #define ConsoleInput	0  
 #define ConsoleOutput	1  

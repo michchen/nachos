@@ -38,6 +38,8 @@ class AddrSpace {
     int getNumPages(){return numPages;};
 
     int ReadMemory(int virtAddr, int size);
+
+    void ClearMem();
     
     unsigned int size;
 

@@ -37,7 +37,10 @@ void sysCallClose();
 void sysCallRead();
 void sysCallWrite();
 void sysCallDup();
+void sysCallCat();
+void sysCallCp();
 void incrementPC();
+
 
 
 
@@ -154,6 +157,13 @@ ExceptionHandler(ExceptionType which)
             break;
           case SC_Dup:
             sysCallDup();
+            break;
+          case SC_Cat:
+            sysCallCat();
+            break;
+          case SC_Cp:
+            sysCallCp();
+            break;
           default:
             printf("Undefined SYSCALL %d\n", type);
             ASSERT(false);
@@ -209,6 +219,102 @@ void sysCallDup(){
   incrementPC();
 }
 
+void sysCallCat(){
+  DEBUG('e', "Cat, initiated by user program.\n");
+  int nameStart = machine->ReadRegister(4);
+
+  char *fileName = new(std::nothrow) char[128];
+  int fd;
+  char *buffer = new(std::nothrow) char[1];
+
+  for (int i=0; i<127; i++) {
+    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(nameStart)]) == '\0') break;
+    nameStart++;
+  }
+  fileName[127]='\0';
+
+  OpenFile *file = fileSystem->Open(fileName);
+
+  if(file == NULL) {
+    DEBUG('e', "%s\n", "no file found");
+    fd = -1;
+  }
+  else {
+    int result;
+    while(result != -1) {
+      result = file->Read(buffer, 1);
+      if (result != -1) {
+        char ch = buffer[0];
+        synchcon->Write(ch, 1);
+      }
+    }
+    
+  }
+
+  machine->WriteRegister(2, fd);
+
+  incrementPC();
+
+  delete fileName;
+  delete buffer;
+}
+
+void sysCallCp() {
+  DEBUG('e', "Cp, initiated by user program.\n");
+  int origStart = machine->ReadRegister(4);
+  int newStart = machine->ReadRegister(5);
+
+  char *origName = new(std::nothrow) char[128];
+  char *newName = new(std::nothrow) char[128];
+
+  int fd;
+  char *buffer = new(std::nothrow) char[1];
+
+  for (int i=0; i<127; i++) {
+    if ((origName[i]=machine->mainMemory[currentThread->space->AddrTranslation(origStart)]) == '\0') break;
+    origStart++;
+  }
+  origName[127]='\0'; 
+
+  for (int i=0; i<127; i++) {
+    if ((newName[i]=machine->mainMemory[currentThread->space->AddrTranslation(newStart)]) == '\0') break;
+    newStart++;
+  }
+  newName[127]='\0'; 
+
+  OpenFile *origFile = fileSystem->Open(origName);
+  OpenFile *newFile = fileSystem->Open(newName);
+
+  if (newFile == NULL) {
+    bool returnVal = fileSystem->Create(newName,1);
+    if (returnVal == true)
+      newFile = fileSystem->Open(newName);
+  }
+
+  if(origFile == NULL || newFile == NULL) {
+    DEBUG('e', "%s\n", "no file found");
+    fd = -1;
+  }
+  else {
+    int result;
+    while(result != -1) {
+      result = origFile->Read(buffer, 1);
+      if (result != -1) {
+        newFile->Write(buffer, 1);
+      }
+    }
+  }
+
+  machine->WriteRegister(2, fd);
+
+  incrementPC();
+
+  delete origName;
+  delete newName;
+  delete buffer;
+
+}
+
 void sysCallHalt(){
   DEBUG('e', "Shutdown, initiated by user program.\n");
   interrupt->Halt();
@@ -226,6 +332,7 @@ void sysCallExit(){
     DEBUG('e', "Exit threadID waking parent of %d\n", threadID);
     processMonitor->wakeParent(threadID);
     DEBUG('e', "Exit Done %d\n", threadID);
+    currentThread->space->ClearMem();
     currentThread->Finish();
   
   }
@@ -279,7 +386,6 @@ void sysCallCreate(){
 
 // Copy the string from user-land to kernel-land.
 
-  ASSERT(currentThread->space != NULL);
   for (int i=0; i<127; i++) {
     if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(whence)]) == '\0') break;
     whence++;
@@ -372,7 +478,7 @@ void sysCallRead(){
         result = -1;
       }
       for(int i = 0; i<size; i++) {
-        machine->mainMemory[bufStart+i] = stringarg[i];
+        machine->mainMemory[currentThread->space->AddrTranslation(bufStart+i)] = stringarg[i];
       }
 
   }
@@ -381,7 +487,7 @@ void sysCallRead(){
     if (file != NULL) {
       result = file->Read(stringarg, size);
       for(int i = 0; i<size; i++) {
-          machine->mainMemory[bufStart+i] = stringarg[i];
+          machine->mainMemory[currentThread->space->AddrTranslation(bufStart+i)] = stringarg[i];
       }
     }
     
@@ -592,6 +698,7 @@ void sysCallExec(){
     currentThread->space->InitRegisters();   // set the initial register values
     currentThread->space->RestoreState();    // load page table register
 
+    DEBUG('a', "Registers have been inited and restored\n");
     int sp = machine->ReadRegister(StackReg);
 
     int len = strlen(fileName) + 1;
@@ -603,44 +710,35 @@ void sysCallExec(){
     }
     argvAddr[0] = sp;
 
+    DEBUG('a', "filename loaded\n");
 
    // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
    // fprintf(stderr, "And now the filename %s\n", fileName);
-    int initialVal = 0;
-    if (!strcmp(argv[0], fileName)) {
-      initialVal = 1;
-     // fprintf(stderr, "%s\n", "we've found a filename match!");
-    }
-    for (i=initialVal; i<argc; i++) {
-      if (argv[i] != fileName) {
+
+    for (i=0; i<argc; i++) {
         len = strlen(argv[i]) + 1;
         sp -= len;
         for (int j = 0; j < len; j++){
           machine->mainMemory[currentThread->space->AddrTranslation(sp+j)] = argv[i][j];
           //fprintf(stderr, "We've read this char into memory %c\n",argv[i][j] );
         }
-        if (initialVal == 0)
-          argvAddr[i+1] = sp;
-        else
-          argvAddr[i] = sp;
+       
+        argvAddr[i+1] = sp;
         
         // Jose looks to do this once?
-      }
 
     //  fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
     }
 
     sp = sp & ~3;
     
-    if (initialVal == 0) {
-      argc++;
-    }
-
+    argc++;
     sp -= sizeof(int) *4;
 
     for(i = 0; i<argc; i++) {
       *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
     }
+
     DEBUG('a',"About to Write\n");
     machine->WriteRegister(4, argc);
    // printf("%d\n",argc );
@@ -648,6 +746,12 @@ void sysCallExec(){
     machine->WriteRegister(5, sp);
    // fprintf(stderr, "%s\n", "what about this one");
     machine->WriteRegister(StackReg, sp-8);
+
+    delete fileName;
+    for(i=0; i<128; i++) {
+      delete argv[i];
+    }
+    delete argv;
    // fprintf(stderr, "%s\n", "last one");
 
     // machine->Run();
