@@ -675,7 +675,7 @@ void sysCallExec(){
     }
     argvStart+=4;
     argc++;
-   // fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
+    //fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
   }
 
  // fprintf(stderr, "%s %d\n", "here is the num of args", argc);
@@ -732,9 +732,10 @@ void sysCallExec(){
 
     sp = sp & ~3;
     
-    argc++;
-    sp -= sizeof(int) *4;
+    
+    sp -= sizeof(int) *(2*argc);
 
+    argc++;
     for(i = 0; i<argc; i++) {
       *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
     }

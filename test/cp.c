@@ -1,0 +1,54 @@
+/* cp.c
+copies data from one file to another
+*/
+#include "syscall.h"
+
+int 
+main(int argc, char **argv) 
+{ 
+  int origFile;
+  int newFile;
+  char ch;
+
+  if (argc < 3) {
+  	prints("Not enough args\n", ConsoleOutput);
+  	Exit(-1);
+  }
+
+  origFile = Open(argv[1]);
+  newFile = Open(argv[2]);
+
+  if (newFile == -1) {
+  	Create(argv[2]);
+  	newFile = Open(argv[2]);
+  }
+
+  if(origFile == -1 || newFile == -1) {
+  	prints("Error finding file!\n", ConsoleOutput);
+  	Exit(-1);
+  }
+  else {
+  	while (Read(&ch, 1, origFile) == 1){
+      Write(&ch, 1, newFile);
+    }
+
+  }
+
+
+
+
+}
+
+prints(s,file)
+char *s;
+OpenFileId file;
+
+{
+  int count = 0;
+  char *p;
+
+  p = s;
+  while (*p++ != '\0') count++;
+  Write(s, count, file);  
+
+}
