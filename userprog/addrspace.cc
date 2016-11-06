@@ -42,7 +42,7 @@ SwapHeader (NoffHeader *noffH)
 	noffH->uninitData.virtualAddr = WordToHost(noffH->uninitData.virtualAddr);
 	noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
-
+#ifdef CHANGED
 AddrSpace::AddrSpace(AddrSpace *parentData){
     unsigned int tnumPages = parentData->getNumPages();
     unsigned int tsize = parentData->size;
@@ -73,9 +73,8 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
     }
     //inherit openfiles as well
 
-    
-
 }
+#endif
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
 // 	Create an address space to run a user program.

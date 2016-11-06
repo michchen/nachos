@@ -157,7 +157,7 @@ Initialize(int argc, char **argv)
     interrupt = new(std::nothrow) Interrupt;			// start up interrupt handling
     scheduler = new(std::nothrow) Scheduler();		// initialize the ready queue
 				// start the timer (if needed)
-
+    #ifdef CHANGED
     RandomInit((123 + 1));
 	timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
     threadToBeDestroyed = NULL;
@@ -169,6 +169,7 @@ Initialize(int argc, char **argv)
     writingReadingLock = new(std::nothrow) Lock("writeRead Lock");
     forkExecLock = new(std::nothrow) ForkExecLock("writeRead Lock");
     rwLock = new(std::nothrow) ReadWriteLock("write Read Lock");
+
     //rwCondition = new(std::nothrow) Condition("Condition Lock Write");
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
@@ -185,7 +186,8 @@ Initialize(int argc, char **argv)
     files[1] = output;
     processMonitor->addThread(currentThread,currentThread);	
     currentThread->setStatus(RUNNING);
-
+    #endif
+    
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
 

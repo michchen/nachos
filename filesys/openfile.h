@@ -55,7 +55,9 @@ class OpenFile {
     int Length() { Lseek(file, 0, 2); return Tell(file); }
     
     int totalLive;
+    #ifdef CHANGED
     int file;
+    #endif 
   private:
     int currentOffset;
 };

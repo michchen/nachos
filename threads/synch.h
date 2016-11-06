@@ -138,7 +138,7 @@ class Condition {
     List *threadqueue;
     // plus some other stuff you'll need to define
 };
-
+#ifdef CHANGED
 class ReadWriteLock{
     public:
         ReadWriteLock(const char* dname);
@@ -171,5 +171,6 @@ class ForkExecLock{
         lockStatus lockstat;
         Thread *owner;
 };
+#endif CHANGED
 #endif // SYNCH_H
 
