@@ -1,5 +1,6 @@
 #include "processMonitor.h"
 
+#ifdef CHANGED
 ProcessMonitor::ProcessMonitor(){
 	activeThreads = new ThreadBlocks *[MAX_THREAD_COUNT]();
 	waitingThreads = new List();
@@ -138,3 +139,5 @@ void ProcessMonitor::cleanUpDeadThreads(int threadID){
 		}
 	}
 }
+
+#endif

@@ -1,7 +1,7 @@
 #include "syscall.h"
 
 int
-main()
+main(int argc, char **argv)
 {
     SpaceId newProc;
     OpenFileId input = ConsoleInput;

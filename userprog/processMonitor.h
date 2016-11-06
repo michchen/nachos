@@ -5,7 +5,7 @@
 #include "syscall.h"
 
 #define MAX_THREAD_COUNT 100
-
+#ifdef CHANGED
 struct ThreadBlocks{
 	//Thread *thread;
 	int threadId;
@@ -46,4 +46,5 @@ class ProcessMonitor{
 		 List *waitingThreads;
 };
 
+#endif
 #endif //PROCESS_MONITOR_H
