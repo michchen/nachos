@@ -719,12 +719,11 @@ void sysCallExec(){
     status = currentThread->space->ExecFunc(exec);
     if (status == 2) {
       fprintf(stderr, "%s\n", "let's try some scripting");
-
-      
-      currentThread->space->InitRegisters();   // set the initial register values
-      currentThread->space->RestoreState();    // load page table register
       currentThread->openFiles[0] = exec;
       currentThread->inStatus = 2;
+      currentThread->space->InitRegisters();   // set the initial register values
+      currentThread->space->RestoreState();    // load page table register
+
       fprintf(stderr, "%s\n", "what");
       machine->Run();
 
@@ -750,7 +749,7 @@ void sysCallExec(){
       sp -= len;
 
       //fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
-    }
+    
 
 
       for (i = 0; i < len; i++) {
@@ -795,11 +794,11 @@ void sysCallExec(){
      // fprintf(stderr, "%s\n", "what about this one");
       machine->WriteRegister(StackReg, sp-8);
 
-      delete fileName;
+     /* delete fileName;
       for(i=0; i<128; i++) {
         delete argv[i];
       }
-      delete argv;
+      delete argv;*/
 
     DEBUG('a',"About to Write\n");
     machine->WriteRegister(4, argc);

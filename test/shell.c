@@ -81,11 +81,7 @@ main()
           	lastArg = i+1;
           	curarg++;
           }
-          if (buffer[i] == '#') {
-            while(buffer[i] != ' ' || buffer[i] != '\n') {
-              i++;
-            }
-          } 
+
 
       } while(buffer[i++] != '\n' );
 
