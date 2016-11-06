@@ -739,7 +739,7 @@ void sysCallExec(){
     DEBUG('a', "filename loaded\n");
 
    // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
-    fprintf(stderr, "And now the filename %s\n", fileName);
+    //fprintf(stderr, "And now the filename %s\n", fileName);
 
     for (i=0; i<argc; i++) {
         len = strlen(argv[i]) + 1;

@@ -156,8 +156,10 @@ Initialize(int argc, char **argv)
     stats = new(std::nothrow) Statistics();			// collect statistics
     interrupt = new(std::nothrow) Interrupt;			// start up interrupt handling
     scheduler = new(std::nothrow) Scheduler();		// initialize the ready queue
-    if (randomYield)				// start the timer (if needed)
-	   timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
+				// start the timer (if needed)
+
+    RandomInit((123 + 1));
+	timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
     threadToBeDestroyed = NULL;
 
     processMonitor = new(std::nothrow) ProcessMonitor();
