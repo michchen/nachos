@@ -273,7 +273,7 @@ ForkExecLock::ForkExecLock(const char* dname){
 void ForkExecLock::forkLock(){
     feLock->Acquire();
     while (lockstat != FREE){
-        printf("Fork Lock %d vs %d\n", currentThread->getThreadId(),owner->getThreadId());
+       // printf("Fork Lock %d vs %d\n", currentThread->getThreadId(),owner->getThreadId());
         feCondition->Wait(feLock);
 
     }
@@ -283,6 +283,7 @@ void ForkExecLock::forkLock(){
 }
 void ForkExecLock::forkUnlock(){
   	feLock->Acquire();
+  	//printf("Fork UnLock %d vs %d\n", currentThread->getThreadId(),owner->getThreadId());
     ASSERT(owner == currentThread);
     lockstat = FREE;
     owner = NULL;

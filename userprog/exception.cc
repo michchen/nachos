@@ -593,7 +593,7 @@ void sysCallFork(){
 
   //forkExec->P();
   DEBUG('e', "%s\n", "Checking Lock if Acquired from Fork\n");
-    forkExecLock->forkLock();
+  forkExecLock->forkLock();
   DEBUG('e', "%s\n", "Lock Acquired from Fork\n");
   DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
@@ -813,7 +813,8 @@ void sysCallExec(){
   }
   else{
     DEBUG('e', "%s\n", "Error Opening File");
-    //fprintf(stderr, "%s\n", "oh my god");
+    //fprintf(stderr, "%s\n", "oh my god");\
+    forkExecLock->forkUnlock();
     machine->WriteRegister(2,-1);
   }
 
