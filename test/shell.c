@@ -87,14 +87,15 @@ main()
       /*add null terminating string*/
       buffer[--i] = '\0';
 
-      for(i=1; i<6; i++) {
-      	argsNoFilename[i-1] = args[i];
+      for(j=1; j<6; j++) {
+      	argsNoFilename[j-1] = args[j];
       }
 
       prints("do we reach here", ConsoleOutput);
 
       if( i > 0 ) {
         newProc = Fork();
+        prints("here?\n", ConsoleOutput);
         if (newProc == 0) {
           error = Exec(args[0], argsNoFilename);
           if(error == -1){

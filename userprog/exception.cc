@@ -202,22 +202,27 @@ void sysCallDup(){
   OpenFile **files = currentThread->openFiles;
   OpenFile *current = files[fileId];
 
-  int open_spot;
+  int open_spot = -1;
   int i;
-  for(i = 2 ; i < MaxOpenFiles; i++){
+  for(i = 0 ; i < MaxOpenFiles; i++){
     if(files[i] == NULL){
-      files[i] = current;
-      open_spot = i;
-      break;
+      if (currentThread->inStatus == 0 && i == 0){}
+      else if (currentThread->outStatus == 0 && i == 1){}
+      else{
+        files[i] = current;
+        open_spot = i;
+        if (i == 0) {
+          currentThread->inStatus = 2;
+        }
+        if (i == 1) {
+          currentThread->outStatus = 2;
+        }
+        break;
+      }
     }
   }
-  if(i >= MaxOpenFiles){
-    DEBUG('e', "Could not duplicate file\n");
-    machine->WriteRegister(2,-1);
-  }
-  else{
-    machine->WriteRegister(2,open_spot);
-  }
+
+  machine->WriteRegister(2,open_spot);
   printf("%s %d\n","File descriptor ", open_spot);
   incrementPC();
 }
@@ -474,7 +479,7 @@ void sysCallRead(){
   if (id == 1) {
     DEBUG('e', "%s\n", "Can't read from stdout");
   }
-  else if (id == 0) {
+  else if (id == 0 && currentThread->inStatus == 0) {
       result = synchcon->Read(stringarg, size);
       if (result == 0) {
         DEBUG('e', "%s\n", "read failed");
@@ -532,9 +537,10 @@ void sysCallWrite(){
   if (id == 0) {
     DEBUG('e', "%s\n", "Can't write to stdin");
   }
-  else if (id == 1) {
+  else if (id == 1 && currentThread->outStatus == 0) {
     writeRead->P();
     writingReadingLock->Acquire();
+
     if(currentThread)
     //fprintf(stderr, "%s %s\n","  writing permission acquired to print out ",stringarg);
     for (int j = 0; j<size; j++) {
@@ -548,7 +554,9 @@ void sysCallWrite(){
   else {
     writeRead->P();
     OpenFile* file = currentThread->GetFile(id);
-    file->Write(stringarg, size);
+    printf("%s\n","attempting to write to the file" );
+    if (file != NULL)
+      file->Write(stringarg, size);
     writeRead->V();
   }
 
@@ -566,10 +574,22 @@ void sysCallClose(){
   fd = machine->ReadRegister(4);
 
   OpenFile* result = currentThread->RemoveFile(fd);
-    if(result == NULL) {
+  if(result == NULL) {
     DEBUG('e', "%s\n", "error closing a file");
+    if (fd == 0) {
+      currentThread->inStatus = 1;
+    }
+    if (fd == 1) {
+      currentThread->outStatus = 1;
+    }
   }
   else {
+    if (fd == 0) {
+      currentThread->inStatus = 1;
+    }
+    if (fd == 1) {
+      currentThread->outStatus = 1;
+    }
     result->totalLive--;
     if(result->totalLive == 0)
       delete result;    
@@ -592,13 +612,15 @@ void sysCallFork(){
   DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
-  for (int i = 2; i < MaxOpenFiles; i++){
+  for (int i = 0; i < MaxOpenFiles; i++){
     OpenFile *temp = currentThread->openFiles[i];
     if(forkedThread->openFiles[i] != NULL){
       temp->totalLive++;
       forkedThread->openFiles[i] = temp;
     }
   }
+  forkedThread->inStatus = currentThread->inStatus;
+  forkedThread->outStatus = currentThread->outStatus;
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
   //Todo: What to do with the space id
   //int arg = machine->ReadRegister(4);
