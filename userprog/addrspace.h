@@ -31,8 +31,9 @@ class AddrSpace {
 
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
+    #ifdef CHANGED
     unsigned int AddrTranslation(int virtAddr);
-    void ExecFunc(OpenFile *executable);
+    int ExecFunc(OpenFile *executable);
     
     TranslationEntry* getPageTable(){return pageTable;};
     int getNumPages(){return numPages;};
@@ -42,6 +43,7 @@ class AddrSpace {
     void ClearMem();
     
     unsigned int size;
+    #endif
 
   private:
 #ifndef USE_TLB

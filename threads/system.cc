@@ -152,6 +152,8 @@ Initialize(int argc, char **argv)
 	   timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
     threadToBeDestroyed = NULL;
 
+#ifdef CHANGED
+
     processMonitor = new(std::nothrow) ProcessMonitor();
     writeRead = new(std::nothrow) Semaphore("Write/Read Sema!",1);
     forkExec = new(std::nothrow)Semaphore("Fork/Exec Sema!",1);
@@ -163,7 +165,7 @@ Initialize(int argc, char **argv)
     currentThread = new(std::nothrow) Thread("main");	
     processMonitor->addThread(currentThread,currentThread);	
     currentThread->setStatus(RUNNING);
-
+#endif
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
 
