@@ -22,6 +22,7 @@ ProcessMonitor *processMonitor;
 unsigned int gspaceID;
 Semaphore *forkExec;
 Semaphore *rootSema;
+Lock *writingReadingLock;
 Semaphore *writeRead;
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
@@ -152,9 +153,10 @@ Initialize(int argc, char **argv)
     threadToBeDestroyed = NULL;
 
     processMonitor = new(std::nothrow) ProcessMonitor();
-    writeRead = new(std::nothrow) Semaphore("Write/Read Lock!",1);
-    forkExec = new(std::nothrow)Semaphore("Fork/Exec Lock!",1);
+    writeRead = new(std::nothrow) Semaphore("Write/Read Sema!",1);
+    forkExec = new(std::nothrow)Semaphore("Fork/Exec Sema!",1);
     rootSema = new(std::nothrow)Semaphore("Root Semaphore",0);
+    writingReadingLock = new(std::nothrow) Lock("writeRead Lock");
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 

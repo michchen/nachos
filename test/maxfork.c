@@ -4,7 +4,7 @@
  *
  */
 
-#define NUMKIDS 15
+#define NUMKIDS 3
 
 #include "syscall.h"
 
@@ -22,7 +22,7 @@ main()
 
   for (i=0; i<NUMKIDS; i++) {
     if ((kid[i] = Fork()) == 0) {
-      Exec("kid", args);
+      Exec("test/kid", args);
     } else {
       print("Kid ");
       printd(i, ConsoleOutput);

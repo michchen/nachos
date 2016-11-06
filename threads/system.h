@@ -37,6 +37,7 @@ extern unsigned int gspaceID;
 extern Semaphore *forkExec;
 extern Semaphore *writeRead;
 extern Semaphore *rootSema;
+extern Lock *writingReadingLock;
 
 #ifdef USER_PROGRAM
 #ifdef CHANGED

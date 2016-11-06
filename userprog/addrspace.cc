@@ -299,7 +299,9 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     for (int i = 0; i < numPages; i++) {
         pagemap->Clear(pageTable[i].physicalPage);
     }
-    //delete [] pageTable;
+    //delete [] pagemap;
+
+    delete [] pageTable;
     NoffHeader noffH;
     unsigned int size;
 #ifndef USE_TLB
@@ -331,7 +333,19 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
                     numPages, size);
     int bitmapAddr;
-
+    pageTable = new(std::nothrow) TranslationEntry[numPages];
+    for (i = 0; i < numPages; i++) {
+        pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
+        bitmapAddr = pagemap->Find();
+        ASSERT(bitmapAddr != -1);
+        pageTable[i].physicalPage = bitmapAddr;
+        pageTable[i].valid = true;
+        pageTable[i].use = false;
+        pageTable[i].dirty = false;
+        pageTable[i].readOnly = false;  // if the code segment was entirely on 
+                        // a separate page, we could set its 
+                        // pages to be read-only
+    }
     for (i = 0; i < numPages; i++) {  // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
         ASSERT(bitmapAddr != -1);
@@ -341,6 +355,7 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
     //bzero(machine->mainMemory, size);
+
     for (int j = 0; j < numPages; j++ ) {
         bzero(&(machine->mainMemory[AddrTranslation(pageTable[j].virtualPage)]), PageSize);
     }
