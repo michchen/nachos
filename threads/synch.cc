@@ -208,6 +208,27 @@ void Condition::Broadcast(Lock* conditionLock)
 		temp = (Thread *) threadqueue->Remove();
 		scheduler->ReadyToRun(temp);
 	}
+}
+
+ReadWriteLock::ReadWriteLock(const char* dname){
+	name = dname;
+	rwLock = new Lock("read Write Lock");
+    rwCondition = new Condition("Read Write Lock") ;
+    readerCount = 0;
+    writerCount = 0;
+    lockstat = FREE;
+    owner = currentThread;
+}
+void ReadWriteLock::lockWriting(){
+
+}
+void ReadWriteLock::lockUnlock(){
+
+}
+void ReadWriteLock::readLock(){
+
+}
+void ReadWriteLock::readUnlock(){
 
 }
 #endif //CHANGED

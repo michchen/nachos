@@ -28,6 +28,7 @@
 					// See definitions listed under #else
 class OpenFile {
   public:
+    OpenFile();
     OpenFile(int f) { file = f; currentOffset = 0; totalLive = 0; }	// open the file
     ~OpenFile() { Close(file); }			// close the file
 
@@ -54,8 +55,8 @@ class OpenFile {
     int Length() { Lseek(file, 0, 2); return Tell(file); }
     
     int totalLive;
-  private:
     int file;
+  private:
     int currentOffset;
 };
 

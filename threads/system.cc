@@ -20,6 +20,10 @@ Timer *timer;				// the hardware timer device,
 					// for invoking context switches
 ProcessMonitor *processMonitor;
 unsigned int gspaceID;
+int consoleIn;
+int consoleOut;
+int newconsoleIn;
+int newconsoleOut;
 Semaphore *forkExec;
 Semaphore *rootSema;
 Lock *writingReadingLock;
@@ -159,10 +163,20 @@ Initialize(int argc, char **argv)
     forkExec = new(std::nothrow)Semaphore("Fork/Exec Sema!",1);
     rootSema = new(std::nothrow)Semaphore("Root Semaphore",0);
     writingReadingLock = new(std::nothrow) Lock("writeRead Lock");
+    //rwCondition = new(std::nothrow) Condition("Condition Lock Write");
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 
     currentThread = new(std::nothrow) Thread("main");	
+    OpenFile **files = currentThread->openFiles;
+    OpenFile *input = new(std::nothrow) OpenFile(0);
+    OpenFile *output = new(std::nothrow) OpenFile(1);
+    consoleIn = 0;
+    consoleOut = 1;
+    newconsoleIn = 0;
+    newconsoleOut = 1;
+    files[0] = input;
+    files[1] = output;
     processMonitor->addThread(currentThread,currentThread);	
     currentThread->setStatus(RUNNING);
 #endif

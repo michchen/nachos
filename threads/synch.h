@@ -86,7 +86,6 @@ class Lock {
     lockstate currentState;            // the current thread that has the lock
     // plus some other stuff you'll need to define
 };
-
 // The following class defines a "condition variable".  A condition
 // variable does not have a value, but threads may be queued, waiting
 // on the variable.  These are only operations on a condition variable: 
@@ -139,4 +138,25 @@ class Condition {
     List *threadqueue;
     // plus some other stuff you'll need to define
 };
+
+class ReadWriteLock{
+    public:
+        ReadWriteLock(const char* dname);
+        ~ReadWriteLock();
+        const char* getName() { return name;};
+        void lockWriting();
+        void lockUnlock();
+        void readLock();
+        void readUnlock();
+    private:
+        const char* name;
+        Lock *rwLock;
+        Condition *rwCondition;
+        int readerCount;
+        int writerCount;
+        enum lockStatus{WRITING,READING,FREE};
+        lockStatus lockstat;
+        Thread *owner;
+};
 #endif // SYNCH_H
+

@@ -16,7 +16,6 @@
 #include "openfile.h"
 #include "system.h"
 #include <new>
-
 //----------------------------------------------------------------------
 // OpenFile::OpenFile
 // 	Open a Nachos file for reading and writing.  Bring the file header

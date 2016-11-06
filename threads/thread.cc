@@ -358,6 +358,7 @@ Thread::AddFile(OpenFile* file)
 OpenFile*
 Thread::RemoveFile(int fd)
 {
+    printf("OpenfileID : %d\n",fd);
     if (fd > MaxOpenFiles) {
         return NULL;
     }
@@ -365,6 +366,7 @@ Thread::RemoveFile(int fd)
         return NULL;
     }
     else {
+        printf("OpenfileID : %d\n",fd);
         OpenFile* temp = openFiles[fd];
         openFiles[fd] = NULL;
 

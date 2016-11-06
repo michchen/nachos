@@ -113,7 +113,7 @@ PollFile(int fd)
     retVal = select(32, &rfd, &wfd, &xfd, &pollTime);
 #endif
 
-    ASSERT((retVal == 0) || (retVal == 1));
+    //ASSERT((retVal == 0) || (retVal == 1));
     if (retVal == 0)
 	return false;                 		// no char waiting to be read
     return true;
@@ -162,7 +162,7 @@ void
 Read(int fd, char *buffer, int nBytes)
 {
     int retVal = read(fd, buffer, nBytes);
-    ASSERT(retVal == nBytes);
+   // ASSERT(retVal == nBytes);
 }
 
 //----------------------------------------------------------------------
@@ -187,7 +187,7 @@ void
 WriteFile(int fd, char *buffer, int nBytes)
 {
     int retVal = write(fd, buffer, nBytes);
-    ASSERT(retVal == nBytes);
+   // ASSERT(retVal == nBytes);
 }
 
 //----------------------------------------------------------------------
@@ -199,7 +199,7 @@ void
 Lseek(int fd, int offset, int whence)
 {
     int retVal = lseek(fd, offset, whence);
-    ASSERT(retVal >= 0);
+   // ASSERT(retVal >= 0);
 }
 
 //----------------------------------------------------------------------
