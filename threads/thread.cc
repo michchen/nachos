@@ -46,9 +46,12 @@ Thread::Thread(const char* threadName)
     parent = currentThread;
     SpaceId sid;
     curNumFiles = 0;
-    for(int i = 2; i < MaxOpenFiles; i++) {
+    for(int i = 0; i < MaxOpenFiles; i++) {
         openFiles[i] = NULL;
     }
+    outStatus = 0;
+    inStatus = 0;
+    // 0 = regular stdin/out, 1 = closed, 2 = redirected
 
 #endif
 #endif
