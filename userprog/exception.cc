@@ -42,8 +42,6 @@ void sysCallCp();
 void incrementPC();
 
 
-
-
 #ifdef USE_TLB
 
 //----------------------------------------------------------------------
@@ -202,27 +200,22 @@ void sysCallDup(){
   OpenFile **files = currentThread->openFiles;
   OpenFile *current = files[fileId];
 
-  int open_spot = -1;
+  int open_spot;
   int i;
-  for(i = 0 ; i < MaxOpenFiles; i++){
+  for(i = 2 ; i < MaxOpenFiles; i++){
     if(files[i] == NULL){
-      if ((currentThread->inStatus == 0 || currentThread->inStatus == 2) && i == 0){}
-      else if ((currentThread->outStatus == 0 || currentThread->outStatus == 2) && i == 1){}
-      else{
-        files[i] = current;
-        open_spot = i;
-        if (i == 0) {
-          currentThread->inStatus = 2;
-        }
-        if (i == 1) {
-          currentThread->outStatus = 2;
-        }
-        break;
-      }
+      files[i] = current;
+      open_spot = i;
+      break;
     }
   }
-
-  machine->WriteRegister(2,open_spot);
+  if(i >= MaxOpenFiles){
+    DEBUG('e', "Could not duplicate file\n");
+    machine->WriteRegister(2,-1);
+  }
+  else{
+    machine->WriteRegister(2,open_spot);
+  }
   printf("%s %d\n","File descriptor ", open_spot);
   incrementPC();
 }
@@ -345,6 +338,9 @@ void sysCallExit(){
   else{
     DEBUG('e',"Thread does not exist\n");
   }
+  //forkExecLock->Release();
+
+
   currentThread->Finish();
   incrementPC();
   //processMonitor->unlock();
@@ -370,11 +366,11 @@ void sysCallJoin(){
   else{
     DEBUG('e',"%s %d \n","Exit status is: ",exitStatus);
    // processMonitor->lock();
-  //  processMonitor->cleanUpDeadThreads(result);
+    processMonitor->cleanUpDeadThreads(result);
     processMonitor->removeThread(result);
     //processMonitor->unlock();
-    machine->WriteRegister(2,exitStatus);
   }
+  machine->WriteRegister(2,exitStatus);
 
   incrementPC();
 }
@@ -467,7 +463,7 @@ void sysCallOpen(){
 
 void sysCallRead(){
   DEBUG('e', "Read, initiated by user program.\n");
-  writingReadingLock->Acquire();
+  rwLock->readLock();
   //writeRead->P();
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
@@ -479,7 +475,7 @@ void sysCallRead(){
   if (id == 1) {
     DEBUG('e', "%s\n", "Can't read from stdout");
   }
-  else if (id == 0 && currentThread->inStatus == 0) {
+  else if (id == 0) {
       result = synchcon->Read(stringarg, size);
       if (result == 0) {
         DEBUG('e', "%s\n", "read failed");
@@ -510,7 +506,7 @@ void sysCallRead(){
   incrementPC();
   delete [] stringarg; 
  // writeRead->V();
-  writingReadingLock->Release();
+  rwLock->readUnlock();
 }
 
 void sysCallWrite(){
@@ -537,12 +533,10 @@ void sysCallWrite(){
   if (id == 0) {
     DEBUG('e', "%s\n", "Can't write to stdin");
   }
-  else if (id == 1 && currentThread->outStatus == 0) {
+  else if (id == 1) {
     writeRead->P();
     writingReadingLock->Acquire();
-
-    if(currentThread)
-    //fprintf(stderr, "%s %s\n","  writing permission acquired to print out ",stringarg);
+        //fprintf(stderr, "%s %s\n","  writing permission acquired to print out ",stringarg);
     for (int j = 0; j<size; j++) {
       synchcon->Write(stringarg[j], 1);
     }
@@ -554,9 +548,7 @@ void sysCallWrite(){
   else {
     writeRead->P();
     OpenFile* file = currentThread->GetFile(id);
-    printf("%s\n","attempting to write to the file" );
-    if (file != NULL)
-      file->Write(stringarg, size);
+    file->Write(stringarg, size);
     writeRead->V();
   }
 
@@ -574,22 +566,10 @@ void sysCallClose(){
   fd = machine->ReadRegister(4);
 
   OpenFile* result = currentThread->RemoveFile(fd);
-  if(result == NULL) {
+    if(result == NULL) {
     DEBUG('e', "%s\n", "error closing a file");
-    if (fd == 0) {
-      currentThread->inStatus = 1;
-    }
-    if (fd == 1) {
-      currentThread->outStatus = 1;
-    }
   }
   else {
-    if (fd == 0) {
-      currentThread->inStatus = 1;
-    }
-    if (fd == 1) {
-      currentThread->outStatus = 1;
-    }
     result->totalLive--;
     if(result->totalLive == 0)
       delete result;    
@@ -612,17 +592,16 @@ void sysCallFork(){
   DEBUG('e', "%s\n", "Checking Lock if Acquired from Fork\n");
   forkExecLock->forkLock();
   DEBUG('e', "%s\n", "Lock Acquired from Fork\n");
+  DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
-  for (int i = 0; i < MaxOpenFiles; i++){
+  for (int i = 2; i < MaxOpenFiles; i++){
     OpenFile *temp = currentThread->openFiles[i];
     if(forkedThread->openFiles[i] != NULL){
       temp->totalLive++;
       forkedThread->openFiles[i] = temp;
     }
   }
-  forkedThread->inStatus = currentThread->inStatus;
-  forkedThread->outStatus = currentThread->outStatus;
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
   //Todo: What to do with the space id
   //int arg = machine->ReadRegister(4);
@@ -648,7 +627,10 @@ void sysCallFork(){
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
-  forkExec->V();
+  //forkExecLock->Release();
+ // forkExec->V();
+  forkExecLock->forkUnlock();
+  DEBUG('e',"Fork Thread Unlocks \n");
 }
 
 //Extra info needed for the system!
@@ -658,9 +640,11 @@ void sysCallFork(){
 //Resources 
 
 void sysCallExec(){
-  forkExec->P();
-
+  //forkExec->P();
   DEBUG('e', "Execute, initiated by user program.\n");
+
+  forkExecLock->forkLock();
+   DEBUG('e', "Lock Acquired from Exec\n");
   char *fileName;
   int argStart = machine->ReadRegister(4);
   int argvStart = machine->ReadRegister(5);
@@ -752,12 +736,22 @@ void sysCallExec(){
       currentThread->space->InitRegisters();   // set the initial register values
       currentThread->space->RestoreState();    // load page table register
 
+
       DEBUG('a', "Registers have been inited and restored\n");
       int sp = machine->ReadRegister(StackReg);
 
+   // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
+    //fprintf(stderr, "And now the filename %s\n", fileName);
+
+
       int len = strlen(fileName) + 1;
 
+
       sp -= len;
+
+      //fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+    }
+
 
       for (i = 0; i < len; i++) {
         machine->mainMemory[currentThread->space->AddrTranslation(sp+i)] = fileName[i];
@@ -806,45 +800,28 @@ void sysCallExec(){
         delete argv[i];
       }
       delete argv;
-     // fprintf(stderr, "%s\n", "last one");
 
-      // machine->Run();
+    DEBUG('a',"About to Write\n");
+    machine->WriteRegister(4, argc);
+   // printf("%d\n",argc );
+    //fprintf(stderr, "%s\n", "did we write one");
+    machine->WriteRegister(5, sp);
+   // fprintf(stderr, "%s\n", "what about this one");
+    machine->WriteRegister(StackReg, sp-8);
+   DEBUG('e', "%s\n", "Exec Lock Released\n");
 
-
-      // //Create a new Thread
-      // Thread *newProcess = new Thread("Executed Program Thread");
-      // //Allocate a new address space object for the new Thread.
-      // space = new(std::nothrow) AddrSpace(exec);
-      // newProcess->space = space;
-
-      // //return the address space identifier to the calling process
-      // machine->WriteRegister(2,newProcess->getThreadId());
-
-      // //saveUser state just in case of failure (Maybe we dont need this?)
-      // currentThread->SaveUserState();
-
-      // //Prep registers to look like just starting
-      // currentThread->space->InitRegisters();
-      // currentThread->space->RestoreState();
-      // //Run the Process
-      // newProcess->Fork(machine->Run(),0);
-      // //Inheriting open files from former execution????
-
-      // //Should not have reached here so return failure.
-      // currentThread->RestoreUserState();
-      // DEBUG('e', "%s\n", "Forking has failed somehow");
-      // machine->WriteRegister(2,-1);
 
     }
 
   }
   else{
     DEBUG('e', "%s\n", "Error Opening File");
-    //fprintf(stderr, "%s\n", "oh my god");\
-    forkExecLock->forkUnlock();
+    //fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
+    forkExecLock->forkUnlock();
   }
 
-  forkExec->V();
+ // forkExec->V();
+  // forkExecLock->Release();
 }
 #endif
