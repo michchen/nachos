@@ -215,20 +215,41 @@ ReadWriteLock::ReadWriteLock(const char* dname){
 	rwLock = new Lock("read Write Lock");
     rwCondition = new Condition("Read Write Lock") ;
     readerCount = 0;
-    writerCount = 0;
     lockstat = FREE;
     owner = currentThread;
 }
-void ReadWriteLock::lockWriting(){
-
+void ReadWriteLock::writeLock(){
+    rwLock->Acquire();
+    while (lockstat != FREE)
+        rwCondition->Wait(rwLock);
+    owner = currentThread;
+    lockstat = WRITING;
+    rwLock->Release();
 }
-void ReadWriteLock::lockUnlock(){
-
+void ReadWriteLock::writeUnlock(){
+  	rwLock->Acquire();
+    ASSERT(lockstat == WRITING);
+    ASSERT(owner == currentThread);
+    lockstat = FREE;
+    owner = NULL;
+    rwCondition->Broadcast(rwLock);
+    rwLock->Release();
 }
 void ReadWriteLock::readLock(){
-
+    rwLock->Acquire();
+    while (lockstat != FREE)
+        rwCondition->Wait(rwLock);
+    owner = currentThread;
+    lockstat = READING;
+    rwLock->Release();
 }
 void ReadWriteLock::readUnlock(){
-
+  	rwLock->Acquire();
+    ASSERT(lockstat == READING);
+    ASSERT(owner == currentThread);
+    lockstat = FREE;
+    owner = NULL;
+    rwCondition->Broadcast(rwLock);
+    rwLock->Release();
 }
 #endif //CHANGED

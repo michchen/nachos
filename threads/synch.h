@@ -144,8 +144,8 @@ class ReadWriteLock{
         ReadWriteLock(const char* dname);
         ~ReadWriteLock();
         const char* getName() { return name;};
-        void lockWriting();
-        void lockUnlock();
+        void writeLock();
+        void writeUnlock();
         void readLock();
         void readUnlock();
     private:

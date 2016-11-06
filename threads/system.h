@@ -40,6 +40,7 @@ extern Semaphore *writeRead;
 extern Semaphore *rootSema;
 extern Lock *writingReadingLock;
 extern Condition *wrCondition;
+extern ReadWriteLock *rwLock;
 extern  int consoleIn;
 extern  int consoleOut;
 extern  int newconsoleIn;

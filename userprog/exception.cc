@@ -204,7 +204,7 @@ void sysCallDup(){
 
   int open_spot;
   int i;
-  for(i = 0 ; i < MaxOpenFiles; i++){
+  for(i = 2 ; i < MaxOpenFiles; i++){
     if(files[i] == NULL){
       files[i] = current;
       open_spot = i;
@@ -216,13 +216,6 @@ void sysCallDup(){
     machine->WriteRegister(2,-1);
   }
   else{
-    current->totalLive++;
-    if(current->file == 0){
-      newconsoleIn = open_spot;
-    }
-    else if(current ->file == 1){
-      newconsoleOut = open_spot;
-    }
     machine->WriteRegister(2,open_spot);
   }
   printf("%s %d\n","File descriptor ", open_spot);
@@ -469,7 +462,8 @@ void sysCallOpen(){
 
 void sysCallRead(){
   DEBUG('e', "Read, initiated by user program.\n");
-  writeRead->P();
+  writingReadingLock->Acquire();
+  //writeRead->P();
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -480,7 +474,7 @@ void sysCallRead(){
   if (id == 1) {
     DEBUG('e', "%s\n", "Can't read from stdout");
   }
-  else if (id == consoleIn) {
+  else if (id == 0) {
       result = synchcon->Read(stringarg, size);
       if (result == 0) {
         DEBUG('e', "%s\n", "read failed");
@@ -510,13 +504,15 @@ void sysCallRead(){
 
   incrementPC();
   delete [] stringarg; 
-  writeRead->V();
+ // writeRead->V();
+  writingReadingLock->Release();
 }
 
 void sysCallWrite(){
   //DEBUG('e', "Write, initiated by user program.\n");
+  //writingReadingLock->Acquire();
   //writeRead->Acquire();
- 
+  rwLock->writeLock();
   //fprintf(stderr, "%s\n","write Lock acquired");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
@@ -533,10 +529,10 @@ void sysCallWrite(){
 
   //fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
-  if (id == consoleIn) {
+  if (id == 0) {
     DEBUG('e', "%s\n", "Can't write to stdin");
   }
-  else if (id == consoleOut) {
+  else if (id == 1) {
     writeRead->P();
     writingReadingLock->Acquire();
     if(currentThread)
@@ -558,6 +554,8 @@ void sysCallWrite(){
 
 
   incrementPC();
+ // writingReadingLock->Release();
+  rwLock->writeUnlock();
   //fprintf(stderr, "%s\n","write Lock released");
 }
 
@@ -573,15 +571,8 @@ void sysCallClose(){
   }
   else {
     result->totalLive--;
-    if(result->file == 0){
-        consoleIn = newconsoleIn;
-    }
-    if(result ->file == 1){
-        consoleOut = newconsoleOut;
-    }
-    if(result->totalLive == 0){
+    if(result->totalLive == 0)
       delete result;    
-    }
     DEBUG('e', "Deleting file descriptor %d with only %d of it left open\n", fd,result->totalLive);
   }
   incrementPC();

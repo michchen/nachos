@@ -28,6 +28,8 @@ Semaphore *forkExec;
 Semaphore *rootSema;
 Lock *writingReadingLock;
 Semaphore *writeRead;
+ReadWriteLock *rwLock;
+
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -156,13 +158,12 @@ Initialize(int argc, char **argv)
 	   timer = new(std::nothrow) Timer(TimerInterruptHandler, 0, randomYield);
     threadToBeDestroyed = NULL;
 
-#ifdef CHANGED
-
     processMonitor = new(std::nothrow) ProcessMonitor();
     writeRead = new(std::nothrow) Semaphore("Write/Read Sema!",1);
     forkExec = new(std::nothrow)Semaphore("Fork/Exec Sema!",1);
     rootSema = new(std::nothrow)Semaphore("Root Semaphore",0);
     writingReadingLock = new(std::nothrow) Lock("writeRead Lock");
+    rwLock = new(std::nothrow) ReadWriteLock("write Read Lock");
     //rwCondition = new(std::nothrow) Condition("Condition Lock Write");
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
@@ -179,7 +180,7 @@ Initialize(int argc, char **argv)
     files[1] = output;
     processMonitor->addThread(currentThread,currentThread);	
     currentThread->setStatus(RUNNING);
-#endif
+
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
 
