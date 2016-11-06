@@ -4,7 +4,7 @@
  *
  */
 
-#define NUMKIDS 3
+#define NUMKIDS 15
 
 #include "syscall.h"
 

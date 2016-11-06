@@ -33,7 +33,7 @@ class AddrSpace {
     void RestoreState();		// info on a context switch 
     #ifdef CHANGED
     unsigned int AddrTranslation(int virtAddr);
-    int ExecFunc(OpenFile *executable);
+    void ExecFunc(OpenFile *executable);
     
     TranslationEntry* getPageTable(){return pageTable;};
     int getNumPages(){return numPages;};

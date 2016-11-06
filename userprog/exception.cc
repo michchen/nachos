@@ -340,6 +340,9 @@ void sysCallExit(){
   else{
     DEBUG('e',"Thread does not exist\n");
   }
+  //forkExecLock->Release();
+
+
   currentThread->Finish();
   incrementPC();
   //processMonitor->unlock();
@@ -462,7 +465,7 @@ void sysCallOpen(){
 
 void sysCallRead(){
   DEBUG('e', "Read, initiated by user program.\n");
-  writingReadingLock->Acquire();
+  rwLock->readLock();
   //writeRead->P();
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
@@ -505,7 +508,7 @@ void sysCallRead(){
   incrementPC();
   delete [] stringarg; 
  // writeRead->V();
-  writingReadingLock->Release();
+  rwLock->readUnlock();
 }
 
 void sysCallWrite(){
@@ -588,7 +591,10 @@ void runMachine(int spaceId){
 
 void sysCallFork(){
 
-  forkExec->P();
+  //forkExec->P();
+  DEBUG('e', "%s\n", "Checking Lock if Acquired from Fork\n");
+    forkExecLock->forkLock();
+  DEBUG('e', "%s\n", "Lock Acquired from Fork\n");
   DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
@@ -624,7 +630,10 @@ void sysCallFork(){
   //Return to parent process
 
   machine->WriteRegister(2,spaceId);
-  forkExec->V();
+  //forkExecLock->Release();
+ // forkExec->V();
+  forkExecLock->forkUnlock();
+  DEBUG('e',"Fork Thread Unlocks \n");
 }
 
 //Extra info needed for the system!
@@ -634,9 +643,11 @@ void sysCallFork(){
 //Resources 
 
 void sysCallExec(){
-  forkExec->P();
-
+  //forkExec->P();
   DEBUG('e', "Execute, initiated by user program.\n");
+
+  forkExecLock->forkLock();
+   DEBUG('e', "Lock Acquired from Exec\n");
   char *fileName;
   int argStart = machine->ReadRegister(4);
   int argvStart = machine->ReadRegister(5);
@@ -728,7 +739,7 @@ void sysCallExec(){
     DEBUG('a', "filename loaded\n");
 
    // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
-   // fprintf(stderr, "And now the filename %s\n", fileName);
+    fprintf(stderr, "And now the filename %s\n", fileName);
 
     for (i=0; i<argc; i++) {
         len = strlen(argv[i]) + 1;
@@ -742,7 +753,7 @@ void sysCallExec(){
         
         // Jose looks to do this once?
 
-    //  fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+      //fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
     }
 
     sp = sp & ~3;
@@ -761,12 +772,13 @@ void sysCallExec(){
     machine->WriteRegister(5, sp);
    // fprintf(stderr, "%s\n", "what about this one");
     machine->WriteRegister(StackReg, sp-8);
-
-    delete fileName;
-    for(i=0; i<128; i++) {
-      delete argv[i];
-    }
-    delete argv;
+      forkExecLock->forkUnlock();
+   DEBUG('e', "%s\n", "Exec Lock Released\n");
+   // delete fileName;
+   // for(i=0; i<128; i++) {
+   //   delete argv[i];
+   // }
+   // delete argv;
    // fprintf(stderr, "%s\n", "last one");
 
     // machine->Run();
@@ -805,6 +817,7 @@ void sysCallExec(){
     machine->WriteRegister(2,-1);
   }
 
-  forkExec->V();
+ // forkExec->V();
+  // forkExecLock->Release();
 }
 #endif

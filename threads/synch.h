@@ -77,11 +77,11 @@ class Lock {
 					// holds this lock.  Useful for
 					// checking in Release, and in
 					// Condition variable ops below.
-
+    Thread* locker;
   private:
     const char* name;				// for debugging          
     List *lockqueue;                
-    Thread* locker;
+    //Thread* locker;
     enum lockstate {FREE, BUSY};
     lockstate currentState;            // the current thread that has the lock
     // plus some other stuff you'll need to define
@@ -152,9 +152,22 @@ class ReadWriteLock{
         const char* name;
         Lock *rwLock;
         Condition *rwCondition;
-        int readerCount;
-        int writerCount;
         enum lockStatus{WRITING,READING,FREE};
+        lockStatus lockstat;
+        Thread *owner;
+};
+class ForkExecLock{
+    public:
+        ForkExecLock(const char* dname);
+        ~ForkExecLock();
+        const char* getName() { return name;};
+        void forkLock();
+        void forkUnlock();
+    private:
+        const char* name;
+        Lock *feLock;
+        Condition *feCondition;
+        enum lockStatus{BUSY,FREE};
         lockStatus lockstat;
         Thread *owner;
 };

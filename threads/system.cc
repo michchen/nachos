@@ -27,8 +27,10 @@ int newconsoleOut;
 Semaphore *forkExec;
 Semaphore *rootSema;
 Lock *writingReadingLock;
+//Lock * forkExecLock;
 Semaphore *writeRead;
 ReadWriteLock *rwLock;
+ForkExecLock *forkExecLock;
 
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
@@ -163,6 +165,7 @@ Initialize(int argc, char **argv)
     forkExec = new(std::nothrow)Semaphore("Fork/Exec Sema!",1);
     rootSema = new(std::nothrow)Semaphore("Root Semaphore",0);
     writingReadingLock = new(std::nothrow) Lock("writeRead Lock");
+    forkExecLock = new(std::nothrow) ForkExecLock("writeRead Lock");
     rwLock = new(std::nothrow) ReadWriteLock("write Read Lock");
     //rwCondition = new(std::nothrow) Condition("Condition Lock Write");
     // We didn't explicitly allocate the current thread we are running in.
