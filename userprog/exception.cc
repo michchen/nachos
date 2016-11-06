@@ -678,7 +678,7 @@ void sysCallExec(){
   // }
 
 
-  ASSERT(currentThread->space != NULL);
+  //ASSERT(currentThread->space != NULL);
   for (i=0; i<127; i++) {
     if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
     argStart++;
@@ -728,99 +728,114 @@ void sysCallExec(){
   if(exec != NULL){
 
     int argvAddr[argc+1];
+    int status;
+    int fd;
 
     //fprintf(stderr, "%s\n", "Trying to ExecFunction");
-    currentThread->space->ExecFunc(exec);
+    status = currentThread->space->ExecFunc(exec);
+    if (status == 2) {
+      fprintf(stderr, "%s\n", "let's try some scripting");
+
+      
+      currentThread->space->InitRegisters();   // set the initial register values
+      currentThread->space->RestoreState();    // load page table register
+      currentThread->openFiles[0] = exec;
+      currentThread->inStatus = 2;
+      fprintf(stderr, "%s\n", "what");
+      machine->Run();
+
+    }
     //fprintf(stderr, "%s\n", "Done to ExecFunction");
-    delete exec;    //delete the executable
+    else {
+      delete exec;    //delete the executable
 
-    currentThread->space->InitRegisters();   // set the initial register values
-    currentThread->space->RestoreState();    // load page table register
+      currentThread->space->InitRegisters();   // set the initial register values
+      currentThread->space->RestoreState();    // load page table register
 
-    DEBUG('a', "Registers have been inited and restored\n");
-    int sp = machine->ReadRegister(StackReg);
+      DEBUG('a', "Registers have been inited and restored\n");
+      int sp = machine->ReadRegister(StackReg);
 
-    int len = strlen(fileName) + 1;
+      int len = strlen(fileName) + 1;
 
-    sp -= len;
+      sp -= len;
 
-    for (i = 0; i < len; i++) {
-      machine->mainMemory[currentThread->space->AddrTranslation(sp+i)] = fileName[i];
+      for (i = 0; i < len; i++) {
+        machine->mainMemory[currentThread->space->AddrTranslation(sp+i)] = fileName[i];
+      }
+      argvAddr[0] = sp;
+
+      DEBUG('a', "filename loaded\n");
+
+     // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
+     // fprintf(stderr, "And now the filename %s\n", fileName);
+
+      for (i=0; i<argc; i++) {
+          len = strlen(argv[i]) + 1;
+          sp -= len;
+          for (int j = 0; j < len; j++){
+            machine->mainMemory[currentThread->space->AddrTranslation(sp+j)] = argv[i][j];
+            //fprintf(stderr, "We've read this char into memory %c\n",argv[i][j] );
+          }
+         
+          argvAddr[i+1] = sp;
+          
+          // Jose looks to do this once?
+
+      //  fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+      }
+
+      sp = sp & ~3;
+      
+      argc++;
+      sp -= sizeof(int) *4;
+
+      for(i = 0; i<argc; i++) {
+        *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
+      }
+
+      DEBUG('a',"About to Write\n");
+      machine->WriteRegister(4, argc);
+     // printf("%d\n",argc );
+      //fprintf(stderr, "%s\n", "did we write one");
+      machine->WriteRegister(5, sp);
+     // fprintf(stderr, "%s\n", "what about this one");
+      machine->WriteRegister(StackReg, sp-8);
+
+      delete fileName;
+      for(i=0; i<128; i++) {
+        delete argv[i];
+      }
+      delete argv;
+     // fprintf(stderr, "%s\n", "last one");
+
+      // machine->Run();
+
+
+      // //Create a new Thread
+      // Thread *newProcess = new Thread("Executed Program Thread");
+      // //Allocate a new address space object for the new Thread.
+      // space = new(std::nothrow) AddrSpace(exec);
+      // newProcess->space = space;
+
+      // //return the address space identifier to the calling process
+      // machine->WriteRegister(2,newProcess->getThreadId());
+
+      // //saveUser state just in case of failure (Maybe we dont need this?)
+      // currentThread->SaveUserState();
+
+      // //Prep registers to look like just starting
+      // currentThread->space->InitRegisters();
+      // currentThread->space->RestoreState();
+      // //Run the Process
+      // newProcess->Fork(machine->Run(),0);
+      // //Inheriting open files from former execution????
+
+      // //Should not have reached here so return failure.
+      // currentThread->RestoreUserState();
+      // DEBUG('e', "%s\n", "Forking has failed somehow");
+      // machine->WriteRegister(2,-1);
+
     }
-    argvAddr[0] = sp;
-
-    DEBUG('a', "filename loaded\n");
-
-   // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
-   // fprintf(stderr, "And now the filename %s\n", fileName);
-
-    for (i=0; i<argc; i++) {
-        len = strlen(argv[i]) + 1;
-        sp -= len;
-        for (int j = 0; j < len; j++){
-          machine->mainMemory[currentThread->space->AddrTranslation(sp+j)] = argv[i][j];
-          //fprintf(stderr, "We've read this char into memory %c\n",argv[i][j] );
-        }
-       
-        argvAddr[i+1] = sp;
-        
-        // Jose looks to do this once?
-
-    //  fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
-    }
-
-    sp = sp & ~3;
-    
-    argc++;
-    sp -= sizeof(int) *4;
-
-    for(i = 0; i<argc; i++) {
-      *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
-    }
-
-    DEBUG('a',"About to Write\n");
-    machine->WriteRegister(4, argc);
-   // printf("%d\n",argc );
-    //fprintf(stderr, "%s\n", "did we write one");
-    machine->WriteRegister(5, sp);
-   // fprintf(stderr, "%s\n", "what about this one");
-    machine->WriteRegister(StackReg, sp-8);
-
-    delete fileName;
-    for(i=0; i<128; i++) {
-      delete argv[i];
-    }
-    delete argv;
-   // fprintf(stderr, "%s\n", "last one");
-
-    // machine->Run();
-
-
-    // //Create a new Thread
-    // Thread *newProcess = new Thread("Executed Program Thread");
-    // //Allocate a new address space object for the new Thread.
-    // space = new(std::nothrow) AddrSpace(exec);
-    // newProcess->space = space;
-
-    // //return the address space identifier to the calling process
-    // machine->WriteRegister(2,newProcess->getThreadId());
-
-    // //saveUser state just in case of failure (Maybe we dont need this?)
-    // currentThread->SaveUserState();
-
-    // //Prep registers to look like just starting
-    // currentThread->space->InitRegisters();
-    // currentThread->space->RestoreState();
-    // //Run the Process
-    // newProcess->Fork(machine->Run(),0);
-    // //Inheriting open files from former execution????
-
-    // //Should not have reached here so return failure.
-    // currentThread->RestoreUserState();
-    // DEBUG('e', "%s\n", "Forking has failed somehow");
-    // machine->WriteRegister(2,-1);
-
-
 
   }
   else{

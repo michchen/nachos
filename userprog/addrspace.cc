@@ -91,6 +91,7 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
+
 AddrSpace::AddrSpace(OpenFile *executable)
 {
     NoffHeader noffH;
@@ -147,7 +148,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (int j = 0; j < numPages; j++ ) {
         bzero(&(machine->mainMemory[AddrTranslation(pageTable[j].virtualPage)]), PageSize);
     }
-    bzero(machine->mainMemory,size);
+    //bzero(machine->mainMemory,size);
     int virtaddr;
     int addrtrans;
 // then, copy in the code and data segments into memory
@@ -256,7 +257,7 @@ void AddrSpace::RestoreState()
 #endif
 }
 
-
+#ifdef CHANGED
 unsigned int AddrSpace::AddrTranslation(int virtAddr)
 {
     unsigned int vpn, offset;
@@ -294,25 +295,30 @@ unsigned int AddrSpace::AddrTranslation(int virtAddr)
     return physaddr;
 }
 
-void
+int
 AddrSpace::ExecFunc(OpenFile *executable) {
     for (int i = 0; i < numPages; i++) {
         pagemap->Clear(pageTable[i].physicalPage);
     }
-    
     //delete [] pagemap;
 
-    //delete [] pageTable;
+    delete [] pageTable;
     NoffHeader noffH;
     unsigned int size;
 #ifndef USE_TLB
     unsigned int i;
 #endif
 
+    int returnVal = 0;
+
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if((noffH.noffMagic == 0x52435323)){
-        printf("REady for scripting");
-        ASSERT(false);
+        executable = fileSystem->Open("test/shell");
+        fprintf(stderr, "%s\n", "this maybe?" );
+        executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+        returnVal = 2;
+        fprintf(stderr, "%s\n", "what's the dealio");
+        //ASSERT(false);
     }
     if ((noffH.noffMagic != NOFFMAGIC) && 
         (WordToHost(noffH.noffMagic) == NOFFMAGIC))
@@ -338,7 +344,9 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     for (i = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
-        ASSERT(bitmapAddr != -1);
+        if (bitmapAddr == -1) {
+            returnVal = -1;
+        }
         pageTable[i].physicalPage = bitmapAddr;
         pageTable[i].valid = true;
         pageTable[i].use = false;
@@ -349,7 +357,9 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     }
     for (i = 0; i < numPages; i++) {  // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
-        ASSERT(bitmapAddr != -1);
+        if (bitmapAddr == -1) {
+            returnVal = -1;
+        }
         pageTable[i].physicalPage = bitmapAddr;
     }
 
@@ -369,7 +379,6 @@ AddrSpace::ExecFunc(OpenFile *executable) {
             noffH.code.virtualAddr, noffH.code.size);
         virtaddr = noffH.code.virtualAddr;
         while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
-
             addrtrans = AddrTranslation(virtaddr);
             executable->ReadAt(&(machine->mainMemory[addrtrans]),
                  1, noffH.code.inFileAddr + (virtaddr - noffH.code.virtualAddr));
@@ -388,7 +397,8 @@ AddrSpace::ExecFunc(OpenFile *executable) {
         }
     }
 
-    DEBUG('e', "Done with translating pages\n");
+    return returnVal;
+
 }
 
 int
@@ -426,3 +436,5 @@ AddrSpace::ClearMem() {
         pagemap->Clear(pageTable[i].physicalPage);
     }
 }
+
+#endif

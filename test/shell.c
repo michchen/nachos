@@ -1,3 +1,5 @@
+/* this? */
+
 #include "syscall.h"
 
 int
@@ -78,6 +80,11 @@ main()
           	args[curarg][curIndex] = '\0'; 
           	lastArg = i+1;
           	curarg++;
+          }
+          if (buffer[i] == '#') {
+            while(buffer[i] != ' ' || buffer[i] != '\n') {
+              i++;
+            }
           } 
 
       } while(buffer[i++] != '\n' );
@@ -89,13 +96,11 @@ main()
 
       for(j=1; j<6; j++) {
       	argsNoFilename[j-1] = args[j];
+        prints(argsNoFilename[j-1], ConsoleOutput);
       }
-
-      prints("do we reach here", ConsoleOutput);
 
       if( i > 0 ) {
         newProc = Fork();
-        prints("here?\n", ConsoleOutput);
         if (newProc == 0) {
           error = Exec(args[0], argsNoFilename);
           if(error == -1){

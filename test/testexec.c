@@ -4,11 +4,11 @@ int
 main(){
 	char *args[3];
 	prints("about to enter the exec\n", ConsoleOutput);
-	args[0] = "../test/halt";
+	args[0] = "test/halt";
 	args[1] = "Hello there";
-    args[2] = (char *)0;
+  args[2] = (char *)0;
 
-	Exec("../test/halt", args);
+	Exec("test/testScript", args);
 }
 
 
