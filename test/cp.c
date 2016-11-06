@@ -16,14 +16,6 @@ main(int argc, char **argv)
   	Exit(-1);
   }
 
-  for (i=0; i<argc; i++) {
-    prints("Arg[",ConsoleOutput);
-    printd(i,ConsoleOutput);
-    prints("]=<",ConsoleOutput);
-    prints(argv[i],ConsoleOutput);
-    prints(">\n",ConsoleOutput);
-  } 
-
   origFile = Open(argv[1]);
   newFile = Open(argv[2]);
 

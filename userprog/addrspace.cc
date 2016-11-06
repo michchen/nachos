@@ -313,16 +313,18 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if((noffH.noffMagic == 0x52435323)){
         executable = fileSystem->Open("test/shell");
-        fprintf(stderr, "%s\n", "this maybe?" );
+
         executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
         returnVal = 2;
-        fprintf(stderr, "%s\n", "what's the dealio");
+
         //ASSERT(false);
     }
-    if ((noffH.noffMagic != NOFFMAGIC) && 
-        (WordToHost(noffH.noffMagic) == NOFFMAGIC))
-        SwapHeader(&noffH);
-    ASSERT(noffH.noffMagic == NOFFMAGIC);
+    else {
+        if ((noffH.noffMagic != NOFFMAGIC) && 
+            (WordToHost(noffH.noffMagic) == NOFFMAGIC))
+            SwapHeader(&noffH);
+        ASSERT(noffH.noffMagic == NOFFMAGIC);
+    }
 
 // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 

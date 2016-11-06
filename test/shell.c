@@ -8,38 +8,7 @@ main()
     SpaceId newProc;
     OpenFileId input = ConsoleInput;
     OpenFileId output = ConsoleOutput;
-    /*
-    char prompt[2], ch, buffer[60];
-    int i;
-    char *args[128];
-    int curArg;
 
-
-    prompt[0] = '-';
-    prompt[1] = '-';
-
-
-    while( 1 )
-    {
-	Write(prompt, 2, output);
-
-	i = 0;
-	curArg = 0;
-
-	args[0] = ' ';
-
-	do {
-		do {
-			i++;
-	    	Read(&buffer[i], 1, input); 
-	    	
-	    	args[curArg] += buffer[i];
-	    } while (buffer[i] != ' ' && buffer[i] != '\n');
-	    curArg++;
-	    args[curArg] = ' ';
-	    prints(args[curArg]);
-	} while( buffer[i] != '\n' );
-  */
     char prompt[3], ch, buffer[300], arg1[60], arg2[60], arg3[60], arg4[60], arg5[60], arg6[60];
     int i,error, curarg;
     char *args[6]; 
@@ -92,7 +61,6 @@ main()
 
       for(j=1; j<6; j++) {
       	argsNoFilename[j-1] = args[j];
-        prints(argsNoFilename[j-1], ConsoleOutput);
       }
 
       if( i > 0 ) {
@@ -107,7 +75,6 @@ main()
           }
         }
         else {
-          prints("The Parent is Here\n", ConsoleOutput);
           Join(newProc);
         }
       }

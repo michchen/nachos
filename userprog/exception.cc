@@ -37,8 +37,6 @@ void sysCallClose();
 void sysCallRead();
 void sysCallWrite();
 void sysCallDup();
-void sysCallCat();
-void sysCallCp();
 void incrementPC();
 
 
@@ -156,12 +154,6 @@ ExceptionHandler(ExceptionType which)
           case SC_Dup:
             sysCallDup();
             break;
-          case SC_Cat:
-            sysCallCat();
-            break;
-          case SC_Cp:
-            sysCallCp();
-            break;
           default:
             printf("Undefined SYSCALL %d\n", type);
             ASSERT(false);
@@ -225,102 +217,6 @@ void sysCallDup(){
   incrementPC();
 }
 
-
-void sysCallCat(){
-  DEBUG('e', "Cat, initiated by user program.\n");
-  int nameStart = machine->ReadRegister(4);
-
-  char *fileName = new(std::nothrow) char[128];
-  int fd;
-  char *buffer = new(std::nothrow) char[1];
-
-  for (int i=0; i<127; i++) {
-    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(nameStart)]) == '\0') break;
-    nameStart++;
-  }
-  fileName[127]='\0';
-
-  OpenFile *file = fileSystem->Open(fileName);
-
-  if(file == NULL) {
-    DEBUG('e', "%s\n", "no file found");
-    fd = -1;
-  }
-  else {
-    int result;
-    while(result != -1) {
-      result = file->Read(buffer, 1);
-      if (result != -1) {
-        char ch = buffer[0];
-        synchcon->Write(ch, 1);
-      }
-    }
-    
-  }
-
-  machine->WriteRegister(2, fd);
-
-  incrementPC();
-
-  delete fileName;
-  delete buffer;
-}
-
-void sysCallCp() {
-  DEBUG('e', "Cp, initiated by user program.\n");
-  int origStart = machine->ReadRegister(4);
-  int newStart = machine->ReadRegister(5);
-
-  char *origName = new(std::nothrow) char[128];
-  char *newName = new(std::nothrow) char[128];
-
-  int fd;
-  char *buffer = new(std::nothrow) char[1];
-
-  for (int i=0; i<127; i++) {
-    if ((origName[i]=machine->mainMemory[currentThread->space->AddrTranslation(origStart)]) == '\0') break;
-    origStart++;
-  }
-  origName[127]='\0'; 
-
-  for (int i=0; i<127; i++) {
-    if ((newName[i]=machine->mainMemory[currentThread->space->AddrTranslation(newStart)]) == '\0') break;
-    newStart++;
-  }
-  newName[127]='\0'; 
-
-  OpenFile *origFile = fileSystem->Open(origName);
-  OpenFile *newFile = fileSystem->Open(newName);
-
-  if (newFile == NULL) {
-    bool returnVal = fileSystem->Create(newName,1);
-    if (returnVal == true)
-      newFile = fileSystem->Open(newName);
-  }
-
-  if(origFile == NULL || newFile == NULL) {
-    DEBUG('e', "%s\n", "no file found");
-    fd = -1;
-  }
-  else {
-    int result;
-    while(result != -1) {
-      result = origFile->Read(buffer, 1);
-      if (result != -1) {
-        newFile->Write(buffer, 1);
-      }
-    }
-  }
-
-  machine->WriteRegister(2, fd);
-
-  incrementPC();
-
-  delete origName;
-  delete newName;
-  delete buffer;
-
-}
 
 void sysCallHalt(){
   DEBUG('e', "Shutdown, initiated by user program.\n");
@@ -516,11 +412,9 @@ void sysCallRead(){
 }
 
 void sysCallWrite(){
-  //DEBUG('e', "Write, initiated by user program.\n");
-  //writingReadingLock->Acquire();
-  //writeRead->Acquire();
+
   rwLock->writeLock();
-  //fprintf(stderr, "%s\n","write Lock acquired");
+
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -627,11 +521,9 @@ void sysCallFork(){
   forkedThread->inStatus = currentThread->inStatus;
   forkedThread->outStatus = currentThread->outStatus;
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
-  //Todo: What to do with the space id
-  //int arg = machine->ReadRegister(4);
-  //processMonitor->lock();
+
   int spaceId = processMonitor->addThread(forkedThread, currentThread);
-  //processMonitor->unlock();
+
 
   if(spaceId ==-1){
     DEBUG('e',"CREATION FAILURE");
@@ -644,15 +536,12 @@ void sysCallFork(){
 
   forkedThread->SaveUserState();
   forkedThread->Fork((VoidFunctionPtr) runMachine,spaceId);
-  //printf("Thread %d SpaceID in exception %d\n", currentThread->getThreadId(),spaceId);
-  //processMonitor->sleepParent(spaceId);
+
   rootSema->P();
- // printf("SpaceID in exception after waking %d\n", spaceId);
-  //Return to parent process
+
 
   machine->WriteRegister(2,spaceId);
-  //forkExecLock->Release();
- // forkExec->V();
+
   forkExecLock->forkUnlock();
   DEBUG('e',"Fork Thread Unlocks \n");
 }
@@ -676,15 +565,6 @@ void sysCallExec(){
   int i;
   char** argv;
 
- // fprintf(stderr, "%s %d\n", "this is the initial arg", argvStart);
-
-  //fprintf(stderr, "%s %d\n", "doing some stuff", argc);
-
-  // if (argc < 0) {
-  //   DEBUG('a', "Argc is negative, switching it to 0\n");
-  //   argc = 0;
-  // }
-
 
   ASSERT(currentThread->space != NULL);
   for (i=0; i<127; i++) {
@@ -693,29 +573,20 @@ void sysCallExec(){
   }
 
 
-  // char *start = new(std::nothrow) char[128];
-  // for (i = 0; i < 127; i++){
-  //   if ((start[i] = machine->mainMemory[currentThread->space->AddrTranslation(argvStart)]) == '\0') break;
-  //   //fprintf(stderr, "%s %c\n","attempting to read", start[i] );
-  // }
-
   int curAddr;
-  //fprintf(stderr, "%s %s\n","here is the start", start );
 
   argv = new(std::nothrow) char*[128];
   int argc=0;
-  //fprintf(stderr, "%s %c\n", "Do i read in any data from register 5?", machine->mainMemory[currentThread->space->AddrTranslation(argvData)]);
+  
   for ( i = 0; i < 127; i++) {
     argv[i] = new(std::nothrow) char[128];
     curAddr = currentThread->space->ReadMemory(argvStart, 4);
-  //  fprintf(stderr, "%s %d\n","here is the curaddr", curAddr );
+
     if (curAddr == 0) {
       break;
     }
     for (int j=0; j<127; j++) {
-      //fprintf(stderr, "%s %c\n", "let's try before the loop", machine->mainMemory[currentThread->space->AddrTranslation(curAddr)] );
       if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(curAddr)]) == '\0') {
-    //    fprintf(stderr, "%s\n", "breaking out");
         break;
       }
       curAddr++;
@@ -725,9 +596,6 @@ void sysCallExec(){
    // fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
   }
 
- // fprintf(stderr, "%s %d\n", "here is the num of args", argc);
-  //Initialize its registers
-  //fprintf(stderr, "%s %s\n", "about to do the open", fileName);
   OpenFile *exec = fileSystem->Open(fileName);
 
   //Invoke it through machine running.
@@ -736,76 +604,79 @@ void sysCallExec(){
   if(exec != NULL){
 
     int argvAddr[argc+1];
+    int status;
 
     //fprintf(stderr, "%s\n", "Trying to ExecFunction");
-    currentThread->space->ExecFunc(exec);
-    //fprintf(stderr, "%s\n", "Done to ExecFunction");
-    delete exec;    //delete the executable
+    status = currentThread->space->ExecFunc(exec);
 
-    currentThread->space->InitRegisters();   // set the initial register values
-    currentThread->space->RestoreState();    // load page table register
+    if (status == 2) {
+      currentThread->openFiles[0] = exec;
+      currentThread->inStatus = 2;
 
-    DEBUG('a', "Registers have been inited and restored\n");
-    int sp = machine->ReadRegister(StackReg);
+      currentThread->space->InitRegisters();   // set the initial register values
+      currentThread->space->RestoreState();    // load page table register
 
-    int len = strlen(fileName) + 1;
-
-    sp -= len;
-
-    for (i = 0; i < len; i++) {
-      machine->mainMemory[currentThread->space->AddrTranslation(sp+i)] = fileName[i];
     }
-    argvAddr[0] = sp;
+    else{
+      //fprintf(stderr, "%s\n", "Done to ExecFunction");
+      delete exec;    //delete the executable
 
-    DEBUG('a', "filename loaded\n");
+      currentThread->space->InitRegisters();   // set the initial register values
+      currentThread->space->RestoreState();    // load page table register
 
-   // fprintf(stderr, "%s %s\n","the argv[0] val", argv[0] );
-    //fprintf(stderr, "And now the filename %s\n", fileName);
+      DEBUG('a', "Registers have been inited and restored\n");
+      int sp = machine->ReadRegister(StackReg);
 
-    for (i=0; i<argc; i++) {
-        len = strlen(argv[i]) + 1;
-        sp -= len;
-        for (int j = 0; j < len; j++){
-          machine->mainMemory[currentThread->space->AddrTranslation(sp+j)] = argv[i][j];
-          //fprintf(stderr, "We've read this char into memory %c\n",argv[i][j] );
-        }
-       
-        argvAddr[i+1] = sp;
-        
-        // Jose looks to do this once?
+      int len = strlen(fileName) + 1;
 
-      //fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+      sp -= len;
+
+      for (i = 0; i < len; i++) {
+        machine->mainMemory[currentThread->space->AddrTranslation(sp+i)] = fileName[i];
+      }
+      argvAddr[0] = sp;
+
+      DEBUG('a', "filename loaded\n");
+
+      for (i=0; i<argc; i++) {
+          len = strlen(argv[i]) + 1;
+          sp -= len;
+          for (int j = 0; j < len; j++){
+            machine->mainMemory[currentThread->space->AddrTranslation(sp+j)] = argv[i][j];
+          }
+         
+          argvAddr[i+1] = sp;
+          
+
+
+        //fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+      }
+
+      sp = sp & ~3;
+      
+      argc++;
+      sp -= sizeof(int) *4;
+
+      for(i = 0; i<argc; i++) {
+        *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
+      }
+
+      DEBUG('a',"About to Write\n");
+      machine->WriteRegister(4, argc);
+
+      machine->WriteRegister(5, sp);
+
+      machine->WriteRegister(StackReg, sp-8);
     }
-
-    sp = sp & ~3;
-    
-    argc++;
-    sp -= sizeof(int) *4;
-
-    for(i = 0; i<argc; i++) {
-      *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
-    }
-
-    DEBUG('a',"About to Write\n");
-    machine->WriteRegister(4, argc);
-   // printf("%d\n",argc );
-    //fprintf(stderr, "%s\n", "did we write one");
-    machine->WriteRegister(5, sp);
-   // fprintf(stderr, "%s\n", "what about this one");
-    machine->WriteRegister(StackReg, sp-8);
-      forkExecLock->forkUnlock();
+    forkExecLock->forkUnlock();
    DEBUG('e', "%s\n", "Exec Lock Released\n");
 
 
   }
   else{
     DEBUG('e', "%s\n", "Error Opening File");
-    //fprintf(stderr, "%s\n", "oh my god");
     machine->WriteRegister(2,-1);
     forkExecLock->forkUnlock();
   }
-
- // forkExec->V();
-  // forkExecLock->Release();
 }
 #endif

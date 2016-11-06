@@ -15,19 +15,11 @@ main(int argc, char **argv)
   	prints("Not enough args\n", ConsoleOutput);
   	Exit(-1);
   }
-  
-  for (i=0; i<argc; i++) {
-    prints("Arg[",ConsoleOutput);
-    printd(i,ConsoleOutput);
-    prints("]=<",ConsoleOutput);
-    prints(argv[i],ConsoleOutput);
-    prints(">\n",ConsoleOutput);
-  } 
 
   if (argc == 4) {
-  	prints("trying to do redirected output", ConsoleOutput);
+  	
   	if (argv[2][1] == '\0'){
-  		prints("looks like it's only one char long\n", ConsoleOutput);
+  		
   		fd = Open(argv[1]);
   		dupfd = Open(argv[3]);
   		if (dupfd == -1) {

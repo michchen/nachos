@@ -29,8 +29,6 @@
 #define SC_Close	8
 #define SC_Fork		9
 #define SC_Dup		10
-#define SC_Cat  	11
-#define SC_Cp		12
 
 #ifndef IN_ASM
 
