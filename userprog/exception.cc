@@ -216,13 +216,6 @@ void sysCallDup(){
     machine->WriteRegister(2,-1);
   }
   else{
-    current->totalLive++;
-    if(current->file == 0){
-      newconsoleIn = open_spot;
-    }
-    else if(current ->file == 1){
-      newconsoleOut = open_spot;
-    }
     machine->WriteRegister(2,open_spot);
   }
   printf("%s %d\n","File descriptor ", open_spot);
@@ -480,7 +473,7 @@ void sysCallRead(){
   if (id == 1) {
     DEBUG('e', "%s\n", "Can't read from stdout");
   }
-  else if (id == consoleIn) {
+  else if (id == 0) {
       result = synchcon->Read(stringarg, size);
       if (result == 0) {
         DEBUG('e', "%s\n", "read failed");
@@ -533,10 +526,10 @@ void sysCallWrite(){
 
   //fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
-  if (id == consoleIn) {
+  if (id == 0) {
     DEBUG('e', "%s\n", "Can't write to stdin");
   }
-  else if (id == consoleOut) {
+  else if (id == 1) {
     writeRead->P();
     writingReadingLock->Acquire();
     if(currentThread)
@@ -573,15 +566,8 @@ void sysCallClose(){
   }
   else {
     result->totalLive--;
-    if(result->file == 0){
-        consoleIn = newconsoleIn;
-    }
-    if(result ->file == 1){
-        consoleOut = newconsoleOut;
-    }
-    if(result->totalLive == 0){
+    if(result->totalLive == 0)
       delete result;    
-    }
     DEBUG('e', "Deleting file descriptor %d with only %d of it left open\n", fd,result->totalLive);
   }
   incrementPC();
