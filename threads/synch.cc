@@ -131,18 +131,20 @@ void Lock::Acquire()
 void Lock::Release() 
 {
 	Thread *thread;
-	
-	ASSERT(isHeldByCurrentThread());
-
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-	//fprintf(stderr, "%s\n","write Lock is realsing");
-	thread = (Thread *) lockqueue->Remove();
-	if(thread != NULL){
-	//	fprintf(stderr, "%s %d\n","write Lock is Released for thread  ",thread->getThreadId());
-		scheduler->ReadyToRun(thread);
+	if(locker !=NULL){
+		ASSERT(isHeldByCurrentThread());
+
+		
+		//fprintf(stderr, "%s\n","write Lock is realsing");
+		thread = (Thread *) lockqueue->Remove();
+		if(thread != NULL){
+		//	fprintf(stderr, "%s %d\n","write Lock is Released for thread  ",thread->getThreadId());
+			scheduler->ReadyToRun(thread);
+		}
+		currentState = FREE;
+		locker = NULL;
 	}
-	currentState = FREE;
-	locker = NULL;
 
 	(void) interrupt->SetLevel(oldLevel);
 }
@@ -169,44 +171,50 @@ Condition::~Condition()
 void Condition::Wait(Lock* conditionLock) 
 { 
 	//ASSERT(false);
-	ASSERT(conditionLock->isHeldByCurrentThread());
-
-	//Semaphore *temp = new Semaphore(name,0);
-	threadqueue->Append((Thread *) currentThread);
-	
+	//printf("Within Condition %d vs \n", currentThread->getThreadId());
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-	
-	//printf("Lock realsed\n");
-	conditionLock->Release();				// release the lock before going to sleep to avoid deadlock
-	currentThread->Sleep();
+	if(conditionLock->locker !=NULL){
+		ASSERT(conditionLock->isHeldByCurrentThread());
 
-	(void) interrupt->SetLevel(oldLevel);
-	
-	//printf("Lock re-acquired %s\n",conditionLock->name);								// tell the thread to sleep
+		//Semaphore *temp = new Semaphore(name,0);
+		threadqueue->Append((Thread *) currentThread);
+		
+		
+		//printf("Lock realsed\n");
+		conditionLock->Release();				// release the lock before going to sleep to avoid deadlock
+		currentThread->Sleep();
+		
+		//printf("Lock re-acquired %s\n",conditionLock->name);								// tell the thread to sleep
 		conditionLock->Acquire();				// re-acquire the lock upon wakeup (given to us in specs)
 	//delete temp;
+	}
+	(void) interrupt->SetLevel(oldLevel);
 }
 void Condition::Signal(Lock* conditionLock) 
 {
-	ASSERT(conditionLock->isHeldByCurrentThread());
+	if(conditionLock->locker != NULL){
+		ASSERT(conditionLock->isHeldByCurrentThread());
 
-	//Semaphore *temp; 
-	Thread *temp;
-	if(!threadqueue->IsEmpty())
-	{
-		temp = (Thread *) threadqueue->Remove();
-		scheduler->ReadyToRun(temp);
+		//Semaphore *temp; 
+		Thread *temp;
+		if(!threadqueue->IsEmpty())
+		{
+			temp = (Thread *) threadqueue->Remove();
+			scheduler->ReadyToRun(temp);
+		}
 	}
 
 }
 void Condition::Broadcast(Lock* conditionLock) 
 { 
-	ASSERT(conditionLock->isHeldByCurrentThread());
+	if(conditionLock->locker != NULL){
+		ASSERT(conditionLock->isHeldByCurrentThread());
 
-	Thread *temp;
-	while(!threadqueue->IsEmpty()){
-		temp = (Thread *) threadqueue->Remove();
-		scheduler->ReadyToRun(temp);
+		Thread *temp;
+		while(!threadqueue->IsEmpty()){
+			temp = (Thread *) threadqueue->Remove();
+			scheduler->ReadyToRun(temp);
+		}
 	}
 }
 
@@ -214,7 +222,7 @@ ReadWriteLock::ReadWriteLock(const char* dname){
 	name = dname;
 	rwLock = new Lock("read Write Lock");
     rwCondition = new Condition("Read Write Lock") ;
-    readerCount = 0;
+
     lockstat = FREE;
     owner = currentThread;
 }
@@ -237,8 +245,10 @@ void ReadWriteLock::writeUnlock(){
 }
 void ReadWriteLock::readLock(){
     rwLock->Acquire();
-    while (lockstat != FREE)
+    while (lockstat != FREE){
+    	printf("%d vs %d\n", currentThread->getThreadId(),owner->getThreadId());
         rwCondition->Wait(rwLock);
+    }
     owner = currentThread;
     lockstat = READING;
     rwLock->Release();
@@ -252,4 +262,32 @@ void ReadWriteLock::readUnlock(){
     rwCondition->Broadcast(rwLock);
     rwLock->Release();
 }
+
+ForkExecLock::ForkExecLock(const char* dname){
+	name = dname;
+	feLock = new Lock("read Write Lock");
+    feCondition = new Condition("Read Write Lock") ;
+    lockstat = FREE;
+    owner = currentThread;
+}
+void ForkExecLock::forkLock(){
+    feLock->Acquire();
+    while (lockstat != FREE){
+        printf("Fork Lock %d vs %d\n", currentThread->getThreadId(),owner->getThreadId());
+        feCondition->Wait(feLock);
+
+    }
+    owner = currentThread;
+    lockstat = BUSY;
+    feLock->Release();
+}
+void ForkExecLock::forkUnlock(){
+  	feLock->Acquire();
+    ASSERT(owner == currentThread);
+    lockstat = FREE;
+    owner = NULL;
+    feCondition->Broadcast(feLock);
+    feLock->Release();
+}
+
 #endif //CHANGED

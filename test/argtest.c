@@ -48,12 +48,14 @@ char *s;
 OpenFileId file;
 
 {
-  while (*s != '\0') {
-    Write(s,1,file);
-    s++;
-  }
-}
+  int count = 0;
+  char *p;
 
+  p = s;
+  while (*p++ != '\0') count++;
+  Write(s, count, file);  
+
+}
 /* Print an integer "n" on open file descriptor "file". */
 
 printd(n,file)

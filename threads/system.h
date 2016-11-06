@@ -39,6 +39,7 @@ extern Semaphore *forkExec;
 extern Semaphore *writeRead;
 extern Semaphore *rootSema;
 extern Lock *writingReadingLock;
+extern ForkExecLock *forkExecLock;
 extern Condition *wrCondition;
 extern ReadWriteLock *rwLock;
 extern  int consoleIn;
