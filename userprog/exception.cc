@@ -608,8 +608,10 @@ void runMachine(int spaceId){
 
 void sysCallFork(){
 
-  forkExec->P();
-  DEBUG('e', "Fork, initiated by user program.\n");
+  //forkExec->P();
+  DEBUG('e', "%s\n", "Checking Lock if Acquired from Fork\n");
+  forkExecLock->forkLock();
+  DEBUG('e', "%s\n", "Lock Acquired from Fork\n");
   Thread *forkedThread = new Thread("Forked Thread");
   //To do copy the parents address space and open files.
   for (int i = 0; i < MaxOpenFiles; i++){
@@ -823,7 +825,8 @@ void sysCallExec(){
   }
   else{
     DEBUG('e', "%s\n", "Error Opening File");
-    //fprintf(stderr, "%s\n", "oh my god");
+    //fprintf(stderr, "%s\n", "oh my god");\
+    forkExecLock->forkUnlock();
     machine->WriteRegister(2,-1);
   }
 
