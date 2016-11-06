@@ -8,6 +8,7 @@ main(int argc, char **argv)
 { 
   char ch;
   int fd;
+  int fd2;
   int i;
   int dupfd;
   if (argc == 1) {
@@ -40,10 +41,10 @@ main(int argc, char **argv)
 		else {
 			Close(ConsoleOutput);
 			Dup(dupfd);
-			Close(dupfd);
 		  	while (Read(&ch, 1, fd) == 1){
 		    	Write(&ch, 1, ConsoleOutput);
 		  }
+      Close(dupfd);
 		}
   	}
   }

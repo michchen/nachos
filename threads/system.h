@@ -11,6 +11,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "thread.h"
+#include "openfile.h"
 #include "scheduler.h"
 #include "interrupt.h"
 #include "stats.h"
@@ -38,6 +39,12 @@ extern Semaphore *forkExec;
 extern Semaphore *writeRead;
 extern Semaphore *rootSema;
 extern Lock *writingReadingLock;
+extern Condition *wrCondition;
+extern  int consoleIn;
+extern  int consoleOut;
+extern  int newconsoleIn;
+extern  int newconsoleOut;
+
 
 #ifdef USER_PROGRAM
 #ifdef CHANGED

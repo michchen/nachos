@@ -181,6 +181,8 @@ ExceptionHandler(ExceptionType which)
         interrupt->Halt();
         break;
     }
+
+
 }
 
 void incrementPC()
@@ -202,7 +204,7 @@ void sysCallDup(){
 
   int open_spot;
   int i;
-  for(i = 2 ; i < MaxOpenFiles; i++){
+  for(i = 0 ; i < MaxOpenFiles; i++){
     if(files[i] == NULL){
       files[i] = current;
       open_spot = i;
@@ -214,8 +216,16 @@ void sysCallDup(){
     machine->WriteRegister(2,-1);
   }
   else{
+    current->totalLive++;
+    if(current->file == 0){
+      newconsoleIn = open_spot;
+    }
+    else if(current ->file == 1){
+      newconsoleOut = open_spot;
+    }
     machine->WriteRegister(2,open_spot);
   }
+  printf("%s %d\n","File descriptor ", open_spot);
   incrementPC();
 }
 
@@ -470,7 +480,7 @@ void sysCallRead(){
   if (id == 1) {
     DEBUG('e', "%s\n", "Can't read from stdout");
   }
-  else if (id == 0) {
+  else if (id == consoleIn) {
       result = synchcon->Read(stringarg, size);
       if (result == 0) {
         DEBUG('e', "%s\n", "read failed");
@@ -506,9 +516,8 @@ void sysCallRead(){
 void sysCallWrite(){
   //DEBUG('e', "Write, initiated by user program.\n");
   //writeRead->Acquire();
-  //writingReadingLock->Acquire();
+ 
   //fprintf(stderr, "%s\n","write Lock acquired");
-  writeRead->P();
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -524,29 +533,32 @@ void sysCallWrite(){
 
   //fprintf(stderr, "%s %s\n", "this is what I get from memory", stringarg);
 
-  if (id == 0) {
+  if (id == consoleIn) {
     DEBUG('e', "%s\n", "Can't write to stdin");
   }
-  else if (id == 1) {
-    //fprintf(stderr, "%s\n","  writing permission acquired");
+  else if (id == consoleOut) {
+    writeRead->P();
+    writingReadingLock->Acquire();
+    if(currentThread)
+    //fprintf(stderr, "%s %s\n","  writing permission acquired to print out ",stringarg);
     for (int j = 0; j<size; j++) {
       synchcon->Write(stringarg[j], 1);
     }
     //fprintf(stderr, "%s\n","  writing permission released");
+    writeRead->V();
+    writingReadingLock->Release();
    // synchcon->WriteDone();
   }
   else {
-   // writeRead->P();
+    writeRead->P();
     OpenFile* file = currentThread->GetFile(id);
     file->Write(stringarg, size);
-    //writeRead->V();
+    writeRead->V();
   }
 
 
   incrementPC();
   //fprintf(stderr, "%s\n","write Lock released");
-  //writingReadingLock->Release();
-  writeRead->V();
 }
 
 void sysCallClose(){
@@ -561,9 +573,16 @@ void sysCallClose(){
   }
   else {
     result->totalLive--;
-    if(result->totalLive == 0)
+    if(result->file == 0){
+        consoleIn = newconsoleIn;
+    }
+    if(result ->file == 1){
+        consoleOut = newconsoleOut;
+    }
+    if(result->totalLive == 0){
       delete result;    
-    DEBUG('t', "Deleting file descriptor %d with only %d of it left open\n", fd,result->totalLive);
+    }
+    DEBUG('e', "Deleting file descriptor %d with only %d of it left open\n", fd,result->totalLive);
   }
   incrementPC();
 }
