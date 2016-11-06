@@ -204,7 +204,7 @@ void sysCallDup(){
 
   int open_spot;
   int i;
-  for(i = 0 ; i < MaxOpenFiles; i++){
+  for(i = 2 ; i < MaxOpenFiles; i++){
     if(files[i] == NULL){
       files[i] = current;
       open_spot = i;
@@ -462,7 +462,8 @@ void sysCallOpen(){
 
 void sysCallRead(){
   DEBUG('e', "Read, initiated by user program.\n");
-  writeRead->P();
+  writingReadingLock->Acquire();
+  //writeRead->P();
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
   OpenFileId id = machine->ReadRegister(6);
@@ -503,13 +504,15 @@ void sysCallRead(){
 
   incrementPC();
   delete [] stringarg; 
-  writeRead->V();
+ // writeRead->V();
+  writingReadingLock->Release();
 }
 
 void sysCallWrite(){
   //DEBUG('e', "Write, initiated by user program.\n");
+  //writingReadingLock->Acquire();
   //writeRead->Acquire();
- 
+  rwLock->writeLock();
   //fprintf(stderr, "%s\n","write Lock acquired");
   int bufStart = machine->ReadRegister(4);
   int size = machine->ReadRegister(5);
@@ -551,6 +554,8 @@ void sysCallWrite(){
 
 
   incrementPC();
+ // writingReadingLock->Release();
+  rwLock->writeUnlock();
   //fprintf(stderr, "%s\n","write Lock released");
 }
 

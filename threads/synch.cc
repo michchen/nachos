@@ -220,7 +220,7 @@ ReadWriteLock::ReadWriteLock(const char* dname){
 }
 void ReadWriteLock::writeLock(){
     rwLock->Acquire();
-    while (lockstat != WRITING )
+    while (lockstat != FREE)
         rwCondition->Wait(rwLock);
     owner = currentThread;
     lockstat = WRITING;
