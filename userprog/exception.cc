@@ -38,6 +38,7 @@ void sysCallRead();
 void sysCallWrite();
 void sysCallDup();
 void incrementPC();
+void sysCallCheckpoint();
 
 
 #ifdef USE_TLB
@@ -154,9 +155,13 @@ ExceptionHandler(ExceptionType which)
           case SC_Dup:
             sysCallDup();
             break;
+          case SC_Checkpoint:
+            sysCallCheckpoint();
+            break;
           default:
             printf("Undefined SYSCALL %d\n", type);
-            ASSERT(false);
+            machine->WriteRegister(2, -1);
+            sysCallExit();
             break;
         }
       break;
@@ -168,7 +173,8 @@ ExceptionHandler(ExceptionType which)
 
       default: 
         printf("Unexpected exception caught for user mode %d %d\n",which,type);
-        interrupt->Halt();
+        machine->WriteRegister(2, -1);
+        sysCallExit();
         break;
     }
 
@@ -326,7 +332,7 @@ void sysCallOpen(){
 
   // Copy the string from user-land to kernel-land.
 
-  ASSERT(currentThread->space != NULL);
+  //ASSERT(currentThread->space != NULL);
   for (int i=0; i<127; i++) {
     if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(whence)]) == '\0') break;
     whence++;
@@ -412,6 +418,7 @@ void sysCallRead(){
 }
 
 void sysCallWrite(){
+  DEBUG('e', "Write, initiated by user program.\n");
 
   rwLock->writeLock();
 
@@ -450,7 +457,7 @@ void sysCallWrite(){
   else {
     writeRead->P();
     OpenFile* file = currentThread->GetFile(id);
-    printf("%s\n","attempting to write to the file" );
+    //printf("%s\n","attempting to write to the file" );
     if (file != NULL)
       file->Write(stringarg, size);
     writeRead->V();
@@ -510,6 +517,7 @@ void sysCallFork(){
   DEBUG('e', "%s\n", "Lock Acquired from Fork\n");
   DEBUG('e', "Fork, initiated by user program.\n");
   Thread *forkedThread = new Thread("Forked Thread");
+  int spaceId;
   //To do copy the parents address space and open files.
   for (int i = 0; i < MaxOpenFiles; i++){
     OpenFile *temp = currentThread->openFiles[i];
@@ -522,22 +530,31 @@ void sysCallFork(){
   forkedThread->outStatus = currentThread->outStatus;
   forkedThread->space = new(std::nothrow) AddrSpace(currentThread->space);
 
-  int spaceId = processMonitor->addThread(forkedThread, currentThread);
+  if (forkedThread->space->errorState != true) {
+    DEBUG('e',"successful creation of addrspace");
+    spaceId = processMonitor->addThread(forkedThread, currentThread);
+  }
+  else {
+    spaceId = -1;
+    DEBUG('e',"CREATION FAILURE");
+  }
 
 
   if(spaceId ==-1){
     DEBUG('e',"CREATION FAILURE");
-    return;
+    incrementPC();
   }
-  incrementPC();
-  currentThread->SaveUserState();
+  else {
+    incrementPC();
+    currentThread->SaveUserState();
 
-  machine->WriteRegister(2,0);
+    machine->WriteRegister(2,0);
 
-  forkedThread->SaveUserState();
-  forkedThread->Fork((VoidFunctionPtr) runMachine,spaceId);
+    forkedThread->SaveUserState();
+    forkedThread->Fork((VoidFunctionPtr) runMachine,spaceId);
 
-  rootSema->P();
+    rootSema->P();
+  }
 
 
   machine->WriteRegister(2,spaceId);
@@ -551,13 +568,15 @@ void sysCallFork(){
 // The parent-process id
 // The parent is waiting to join?
 //Resources 
-
+ 
 void sysCallExec(){
   //forkExec->P();
   DEBUG('e', "Execute, initiated by user program.\n");
 
+  DEBUG('e', "Attempt to grab lock\n");
+
   forkExecLock->forkLock();
-   DEBUG('e', "Lock Acquired from Exec\n");
+  DEBUG('e', "Lock Acquired from Exec\n");
   char *fileName;
   int argStart = machine->ReadRegister(4);
   int argvStart = machine->ReadRegister(5);
@@ -565,38 +584,53 @@ void sysCallExec(){
   int i;
   char** argv;
 
-
-  ASSERT(currentThread->space != NULL);
-  for (i=0; i<127; i++) {
-    if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
-    argStart++;
-  }
-
-
+  OpenFile *exec;
   int curAddr;
+  int argc;
 
-  argv = new(std::nothrow) char*[128];
-  int argc=0;
-  
-  for ( i = 0; i < 127; i++) {
-    argv[i] = new(std::nothrow) char[128];
-    curAddr = currentThread->space->ReadMemory(argvStart, 4);
 
-    if (curAddr == 0) {
-      break;
+  if (currentThread->space != NULL) {
+    
+    for (i=0; i<127; i++) {
+      if ((fileName[i]=machine->mainMemory[currentThread->space->AddrTranslation(argStart)]) == '\0') break;
+      argStart++;
     }
-    for (int j=0; j<127; j++) {
-      if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(curAddr)]) == '\0') {
+
+    DEBUG('e', "The pointers to the filename have been read in\n");
+
+
+    argv = new(std::nothrow) char*[128];
+    argc=0;
+    
+    for ( i = 0; i < 127; i++) {
+      argv[i] = new(std::nothrow) char[128];
+      curAddr = currentThread->space->ReadMemory(argvStart, 4);
+
+      if (curAddr == 0 || curAddr == -1) {
         break;
       }
-      curAddr++;
+      for (int j=0; j<127; j++) {
+        if ((argv[i][j]=machine->mainMemory[currentThread->space->AddrTranslation(curAddr)]) == '\0') {
+          break;
+        }
+        curAddr++;
+      }
+      argvStart+=4;
+      argc++;
+     // fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
     }
-    argvStart+=4;
-    argc++;
-   // fprintf(stderr, "%s %s\n","here is what we get from reading in", argv[i] );
+  }
+  else {
+    curAddr = -1;
   }
 
-  OpenFile *exec = fileSystem->Open(fileName);
+  if (curAddr != -1){
+
+    exec = fileSystem->Open(fileName);
+  }
+  else {
+    exec = NULL;
+  }
 
   //Invoke it through machine running.
   incrementPC();
@@ -617,14 +651,17 @@ void sysCallExec(){
       currentThread->space->RestoreState();    // load page table register
 
     }
-    else{
+    else if (status == 3) {
+      // do the checkpoint things
+    }
+    else if (status != -1) {
       //fprintf(stderr, "%s\n", "Done to ExecFunction");
       delete exec;    //delete the executable
 
       currentThread->space->InitRegisters();   // set the initial register values
       currentThread->space->RestoreState();    // load page table register
 
-      DEBUG('a', "Registers have been inited and restored\n");
+      DEBUG('e', "Registers have been inited and restored\n");
       int sp = machine->ReadRegister(StackReg);
 
       int len = strlen(fileName) + 1;
@@ -636,7 +673,7 @@ void sysCallExec(){
       }
       argvAddr[0] = sp;
 
-      DEBUG('a', "filename loaded\n");
+      DEBUG('e', "filename loaded\n");
 
       for (i=0; i<argc; i++) {
           len = strlen(argv[i]) + 1;
@@ -649,7 +686,7 @@ void sysCallExec(){
           
 
 
-        //fprintf(stderr, "Reading the data into the memory %s\n", argv[i]);
+        DEBUG('e', "Reading the data into the memory %s\n", argv[i]);
       }
 
       sp = sp & ~3;
@@ -661,12 +698,16 @@ void sysCallExec(){
         *(unsigned int *)&machine->mainMemory[currentThread->space->AddrTranslation((sp+i*4))] = (unsigned int) argvAddr[i];
       }
 
-      DEBUG('a',"About to Write\n");
+      DEBUG('e',"About to Write\n");
       machine->WriteRegister(4, argc);
 
       machine->WriteRegister(5, sp);
 
       machine->WriteRegister(StackReg, sp-8);
+    }
+    else {
+      DEBUG('e', "%s\n", "Error from ExecFunc");
+      machine->WriteRegister(2,-1);
     }
     forkExecLock->forkUnlock();
    DEBUG('e', "%s\n", "Exec Lock Released\n");
@@ -677,6 +718,87 @@ void sysCallExec(){
     DEBUG('e', "%s\n", "Error Opening File");
     machine->WriteRegister(2,-1);
     forkExecLock->forkUnlock();
+  }
+}
+
+void sysCallCheckpoint() {
+  int whence;
+  char *stringarg;
+  stringarg = new(std::nothrow) char[128];
+  whence = machine->ReadRegister(4);
+  int returnVal;
+  returnVal = 0;
+
+  for (int i=0; i<127; i++) {
+    if ((stringarg[i]=machine->mainMemory[currentThread->space->AddrTranslation(whence)]) == '\0') break;
+    whence++;
+  }
+  stringarg[127]='\0'; 
+
+  OpenFile *file = fileSystem->Open(stringarg);
+
+  if(file == NULL) {
+    DEBUG('e', "%s\n", "no file found, about to create");
+    bool result = fileSystem->Create(stringarg,1);
+
+    if(result == false) {
+      DEBUG('e',"issue creating the file");
+    }
+
+    file = fileSystem->Open(stringarg);
+    if (file == NULL) {
+      returnVal = -1;
+    }
+  }
+  if (returnVal != -1) {
+    // need a cookie to demonstrate that the file is a checkpoint file
+    // cookie is 0xbaebee
+    char buffer[10];
+    file->Write( "CHECKDIS\n", sizeof("CHECKDIS\n"));
+    printf("%x\n", "CHECKDIS");
+    incrementPC();
+    currentThread->SaveUserState();
+    int numPages = currentThread->space->getNumPages();
+    int* registers = currentThread->getUserRegisters();
+    TranslationEntry* pageTable = currentThread->space->getPageTable();
+    machine->WriteRegister(2, 1);
+    for (int i = 0; i < NumTotalRegs; i++) {
+      file->Write((char*)registers[i], sizeof((char*)registers[i]));
+      printf("%d\n",registers[i] );
+      file->Write("|", sizeof("|"));
+    }
+    file->Write("\n", sizeof("\n"));
+    file->Write((char *)numPages, sizeof((char *)numPages));
+    file->Write("\n", sizeof("\n"));
+    for (int i = 0; i < numPages; i++) {
+      for (int j = 0; j < 128; j++) {
+        //write in pages
+
+      }
+      // file->Write((char*)pageTable[i].virtualPage, sizeof((char*)pageTable[i].virtualPage));
+      // file->Write(" ", sizeof(" "));
+      // file->Write((char*)pageTable[i].physicalPage, sizeof((char*)pageTable[i].physicalPage));
+      // file->Write(" ", sizeof(" "));
+      // file->Write((char*)pageTable[i].valid, sizeof((char*)pageTable[i].valid));
+      // file->Write(" ", sizeof(" "));
+      // file->Write((char*)pageTable[i].readOnly, sizeof((char*)pageTable[i].readOnly));
+      // file->Write(" ", sizeof(" "));
+      // file->Write((char*)pageTable[i].use, sizeof((char*)pageTable[i].use));
+      // file->Write(" ", sizeof(" "));
+      // file->Write((char*)pageTable[i].dirty, sizeof((char*)pageTable[i].dirty));
+      // file->Write("|", sizeof("|"));
+    }
+
+    file->Write("\n", sizeof("\n"));
+
+    file->Read(buffer, sizeof((char *)0x00baebee));
+    printf("%d\n", (int)buffer );
+
+    machine->WriteRegister(2, 0);
+  }
+  else {
+    DEBUG('e', "%s\n", "Error opening/creating a file");
+    machine->WriteRegister(2, -1);
   }
 }
 #endif

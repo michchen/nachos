@@ -49,12 +49,15 @@ AddrSpace::AddrSpace(AddrSpace *parentData){
     numPages = tnumPages;
     size = tsize;
     int bitmapAddr;
+    errorState = false;
     pageTable = new(std::nothrow) TranslationEntry[tnumPages];
    // fprintf(stderr, "%s %d %d\n", "here is the number of pages", tnumPages,tsize);
     for (unsigned int i = 0; i < tnumPages; i++) {
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
-        ASSERT(bitmapAddr != -1);
+        if (bitmapAddr == -1) {
+            errorState = true;
+        }
         pageTable[i].physicalPage = bitmapAddr;
         pageTable[i].valid = true;
         pageTable[i].use = false;
@@ -98,6 +101,8 @@ AddrSpace::AddrSpace(OpenFile *executable)
     unsigned int i;
 #endif
 
+    errorState = false;
+
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if((noffH.noffMagic == 0x52435323 )){
         printf("Scripting detected!\n");
@@ -106,7 +111,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
     if ((noffH.noffMagic != NOFFMAGIC) && 
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
     	SwapHeader(&noffH);
-    ASSERT(noffH.noffMagic == NOFFMAGIC);
+    if (noffH.noffMagic != NOFFMAGIC) {
+        errorState = true;
+    }
 
 // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
@@ -115,7 +122,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+    if (numPages > NumPhysPages) {
+        errorState = true;
+    }		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
@@ -130,7 +139,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
     	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
-        ASSERT(bitmapAddr != -1);
+        if (bitmapAddr == -1) {
+            errorState = true;
+        }
     	pageTable[i].physicalPage = bitmapAddr;
     	pageTable[i].valid = true;
     	pageTable[i].use = false;
@@ -158,7 +169,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
         //fprintf(stderr, "%s %d\n", "this shit", virtaddr);
         while (virtaddr < (noffH.code.size + noffH.code.virtualAddr)) {
             addrtrans = AddrTranslation(virtaddr);
-            ASSERT(addrtrans != -1);
+            if (addrtrans == -1) {
+                errorState = true;
+            }
             executable->ReadAt(&(machine->mainMemory[addrtrans]),
 			     1, noffH.code.inFileAddr + (virtaddr - noffH.code.virtualAddr));
             virtaddr++;
@@ -172,7 +185,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
         virtaddr = noffH.code.virtualAddr;
         while (virtaddr < (noffH.initData.size + noffH.initData.virtualAddr)) {
             addrtrans = AddrTranslation(virtaddr);
-            ASSERT(addrtrans != -1);
+            if (addrtrans == -1) {
+                errorState = true;
+            }
             executable->ReadAt(&(machine->mainMemory[addrtrans]),
 			1, noffH.initData.inFileAddr + (virtaddr-noffH.initData.virtualAddr));
             virtaddr++;
@@ -309,8 +324,10 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 #endif
 
     int returnVal = 0;
+    errorState = false;
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    printf("%x\n", noffH.noffMagic);
     if((noffH.noffMagic == 0x52435323)){
         executable = fileSystem->Open("test/shell");
 
@@ -319,11 +336,30 @@ AddrSpace::ExecFunc(OpenFile *executable) {
 
         //ASSERT(false);
     }
+    else if (noffH.noffMagic == 0x43454843) {
+        DEBUG('e', "Let's do some checkpoint magic\n");
+        //printf("%s\n", "checkpoint?");
+        returnVal = 3;
+
+        char registerBuf[128];
+
+        //move the currency counter past the cookie
+        executable->Read(registerBuf, 9);
+        bzero(registerBuf, 128);
+        //don't need that shit so blast it away
+
+        
+
+
+        return returnVal;
+    }
     else {
         if ((noffH.noffMagic != NOFFMAGIC) && 
             (WordToHost(noffH.noffMagic) == NOFFMAGIC))
             SwapHeader(&noffH);
-        ASSERT(noffH.noffMagic == NOFFMAGIC);
+        if (noffH.noffMagic != NOFFMAGIC) {
+            return -1;
+        }
     }
 
 // how big is address space?
@@ -333,7 +369,9 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages);       // check we're not trying
+    if (numPages > NumPhysPages) {
+        return -1;
+    }      // check we're not trying
                         // to run anything too big --
                         // at least until we have
                         // virtual memory
@@ -359,7 +397,7 @@ AddrSpace::ExecFunc(OpenFile *executable) {
     for (i = 0; i < numPages; i++) {  // for now, virtual page # = phys page #
         bitmapAddr = pagemap->Find();
         if (bitmapAddr == -1) {
-            returnVal = -1;
+            return -1;
         }
         pageTable[i].physicalPage = bitmapAddr;
     }
@@ -425,7 +463,7 @@ AddrSpace::ReadMemory(int virtAddr, int size) {
         data = *(unsigned int *) &machine->mainMemory[physicalAddress];
         break;
 
-      default: ASSERT(false);
+      default: data = -1;
     }
     
     return data;
@@ -433,7 +471,11 @@ AddrSpace::ReadMemory(int virtAddr, int size) {
 
 void
 AddrSpace::ClearMem() {
-    for (int i = 0; i < numPages; i++) {
+    int pagesToClear = numPages;
+    if (pagesToClear > NumPhysPages) {
+        pagesToClear = NumPhysPages;
+    }
+    for (int i = 0; i < pagesToClear; i++) {
         pagemap->Clear(pageTable[i].physicalPage);
     }
 }

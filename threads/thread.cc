@@ -397,5 +397,11 @@ Thread::GetFile(int fd)
         return openFiles[fd];
     }
 }
+
+int*
+Thread::getUserRegisters()
+{
+    return userRegisters;
+}
 #endif
 #endif

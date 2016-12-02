@@ -11,10 +11,11 @@ main(int argc, char **argv)
   char ch;
   int i;
 
-  if (argc < 3) {
+ if (argc < 3) {
   	prints("Not enough args\n", ConsoleOutput);
   	Exit(-1);
   }
+
 
   origFile = Open(argv[1]);
   newFile = Open(argv[2]);

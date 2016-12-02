@@ -34,7 +34,7 @@ CPP = /usr/bin/cpp -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR) -DCHANGED -nostartfiles
 
-all: halt shell dup matmult sort save hellocons fromcons hellofile fileio testexec arghalt newfork kid parent_child argtest argkid deepfork deepkid1 deepkid2 arg_seq_child fork maxfork seq_child share sharekid cat cp
+all: halt shell dup matmult sort save hellocons fromcons hellofile fileio testexec arghalt newfork kid parent_child argtest argkid deepfork deepkid1 deepkid2 arg_seq_child fork maxfork seq_child share sharekid cat cp bogus1 bogus2 bogusfork toobig duptest atomicfile hugekid atomicfile2 scripting
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -209,3 +209,56 @@ cp: cp.o start.o
 	$(LD) $(LDFLAGS) start.o cp.o -o cp.coff
 	../bin/coff2noff cp.coff cp
 
+bogus1.o: bogus1.c
+	$(CC) $(CFLAGS) -c bogus1.c
+bogus1: bogus1.o start.o
+	$(LD) $(LDFLAGS) start.o bogus1.o -o bogus1.coff
+	../bin/coff2noff bogus1.coff bogus1
+
+bogus2.o: bogus2.c
+	$(CC) $(CFLAGS) -c bogus2.c
+bogus2: bogus2.o start.o
+	$(LD) $(LDFLAGS) start.o bogus2.o -o bogus2.coff
+	../bin/coff2noff bogus2.coff bogus2
+
+bogusfork.o: bogusfork.c
+	$(CC) $(CFLAGS) -c bogusfork.c
+bogusfork: bogusfork.o start.o
+	$(LD) $(LDFLAGS) start.o bogusfork.o -o bogusfork.coff
+	../bin/coff2noff bogusfork.coff bogusfork
+
+toobig.o: toobig.c
+	$(CC) $(CFLAGS) -c toobig.c
+toobig: toobig.o start.o
+	$(LD) $(LDFLAGS) start.o toobig.o -o toobig.coff
+	../bin/coff2noff toobig.coff toobig
+
+duptest.o: duptest.c
+	$(CC) $(CFLAGS) -c duptest.c
+duptest: duptest.o start.o
+	$(LD) $(LDFLAGS) start.o duptest.o -o duptest.coff
+	../bin/coff2noff duptest.coff duptest
+
+atomicfile.o: atomicfile.c
+	$(CC) $(CFLAGS) -c atomicfile.c
+atomicfile: atomicfile.o start.o
+	$(LD) $(LDFLAGS) start.o atomicfile.o -o atomicfile.coff
+	../bin/coff2noff atomicfile.coff atomicfile
+
+hugekid.o: hugekid.c
+	$(CC) $(CFLAGS) -c hugekid.c
+hugekid: hugekid.o start.o
+	$(LD) $(LDFLAGS) start.o hugekid.o -o hugekid.coff
+	../bin/coff2noff hugekid.coff hugekid
+
+atomicfile2.o: atomicfile2.c
+	$(CC) $(CFLAGS) -c atomicfile2.c
+atomicfile2: atomicfile2.o start.o
+	$(LD) $(LDFLAGS) start.o atomicfile2.o -o atomicfile2.coff
+	../bin/coff2noff atomicfile2.coff atomicfile2
+
+scripting.o: scripting.c
+	$(CC) $(CFLAGS) -c scripting.c
+scripting: scripting.o start.o
+	$(LD) $(LDFLAGS) start.o scripting.o -o scripting.coff
+	../bin/coff2noff scripting.coff scripting

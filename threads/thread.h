@@ -153,7 +153,7 @@ class Thread {
     int AddFile(OpenFile* file);
     OpenFile* RemoveFile(int fd);
     OpenFile* GetFile(int fd);
-
+    int* getUserRegisters();
     AddrSpace *space;			// User code this thread is running.
 #endif
 };

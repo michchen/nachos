@@ -43,6 +43,8 @@ class AddrSpace {
     void ClearMem();
     
     unsigned int size;
+
+    bool errorState;   // true if there is an error in the constructor, false otherwise
     #endif
 
   private:

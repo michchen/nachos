@@ -29,6 +29,7 @@
 #define SC_Close	8
 #define SC_Fork		9
 #define SC_Dup		10
+#define SC_Checkpoint 11
 
 #ifndef IN_ASM
 
@@ -113,8 +114,12 @@ void Write(char *buffer, int size, OpenFileId id);
  */
 int Read(char *buffer, int size, OpenFileId id);
 
+
+int CheckPoint(char *name);
+
 /* Close the file, we're done reading and writing to it. */
 void Close(OpenFileId id);
+
 
 
 #endif /* IN_ASM */

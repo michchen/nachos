@@ -47,6 +47,7 @@ main()
           		curIndex++;
           	}
           	args[curarg][curIndex] = '\0'; 
+            
           	lastArg = i+1;
           	curarg++;
           }
@@ -61,10 +62,14 @@ main()
 
       for(j=1; j<6; j++) {
       	argsNoFilename[j-1] = args[j];
+
       }
 
       if( i > 0 ) {
         newProc = Fork();
+        for (i = 0; i < 300; i++) {
+          buffer[i] = ' ';
+        }
         if (newProc == 0) {
           error = Exec(args[0], argsNoFilename);
           if(error == -1){
@@ -73,6 +78,7 @@ main()
             prints("!\n",ConsoleOutput);
             Exit(-1);
           }
+          prints("post exec", ConsoleOutput);
         }
         else {
           Join(newProc);
